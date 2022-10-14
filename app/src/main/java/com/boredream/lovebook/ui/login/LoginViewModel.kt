@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.source.UserRepository
+import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
 import com.boredream.lovebook.utils.DataStoreUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,11 +34,15 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
     fun login() {
         Log.i("DDD", "login")
         // _loginUiState.value = LoginUiState(isLoading = true)
+        _baseUiState.value = BaseUiState(showLoading = true)
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
             // TODO 协程的错误处理
             val loginResponse = repository.login(username.value ?: "", password.value ?: "")
+            _baseUiState.value = BaseUiState(showLoading = false)
+
+            // TODO isSuccess 判断的封装
             if (loginResponse.isSuccess()) {
                 // 登录成功，保存token，继续获取用户信息
                 DataStoreUtils.putData("token", loginResponse.data)
@@ -45,7 +50,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
                 if (userInfoResponse.isSuccess()) {
                     // 获取信息获取成功，完成登录
                     Log.i("DDD", "login success")
-                    _loginUiState.value = LoginUiState(isLoading = false, isLoginSuccess = true)
+                    _loginUiState.value = LoginUiState(isLoginSuccess = true)
                 } else {
                     requestError(userInfoResponse)
                 }
@@ -59,7 +64,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
      * 请求失败
      */
     private fun <T> requestError(response: ResponseEntity<T>) {
-        _loginUiState.value = LoginUiState(isLoading = false, isLoginSuccess = false, errorTip = response.msg)
+        _loginUiState.value = LoginUiState(isLoginSuccess = false, errorTip = response.msg)
     }
 
     fun test() {

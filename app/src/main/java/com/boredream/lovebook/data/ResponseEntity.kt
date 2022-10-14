@@ -5,5 +5,5 @@ data class ResponseEntity<T>(
     val code: Int,
     val msg: String
 ) {
-    fun isSuccess() = code == 200
+    fun isSuccess() = code == 0
 }
