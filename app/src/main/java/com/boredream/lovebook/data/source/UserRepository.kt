@@ -2,6 +2,8 @@ package com.boredream.lovebook.data.source
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.dto.LoginDto
+import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +17,7 @@ class UserRepository @Inject constructor() : BaseRepository() {
      * 登录
      */
     suspend fun login(username: String, password: String): ResponseEntity<String> {
-        val response = service.login(username, password)
+        val response = service.login(LoginDto(username, password))
         if (response.isSuccess()) {
             token = response.data
         }

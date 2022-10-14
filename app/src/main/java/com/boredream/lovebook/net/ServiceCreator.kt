@@ -1,10 +1,18 @@
 package com.boredream.lovebook.net
 
+import android.annotation.SuppressLint
 import com.boredream.lovebook.utils.DataStoreUtils
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.X509TrustManager
+import kotlin.collections.ArrayList
 
 object ServiceCreator {
 
@@ -18,6 +26,7 @@ object ServiceCreator {
         val okHttpClientBuilder = OkHttpClient().newBuilder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            .sslSocketFactory(createSSLSocketFactory(), createTrustManager())
             .addInterceptor {
                 // set request token
                 val request = it.request()
@@ -30,11 +39,11 @@ object ServiceCreator {
                 it.proceed(builder.build())
             }
 
-        return Retrofit.Builder().apply {
-            baseUrl(HOST)
-            client(okHttpClientBuilder.build())
-            addConverterFactory(GsonConverterFactory.create())
-        }.build()
+        return Retrofit.Builder()
+            .baseUrl(HOST)
+            .client(okHttpClientBuilder.build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     /**
@@ -42,4 +51,26 @@ object ServiceCreator {
      */
     fun <T> create(service: Class<T>): T = create().create(service)
 
+    private fun createSSLSocketFactory(): SSLSocketFactory {
+        val sc: SSLContext = SSLContext.getInstance("TLS")
+        sc.init(null, arrayOf(createTrustManager()), SecureRandom())
+        return sc.socketFactory
+    }
+
+    @SuppressLint("CustomX509TrustManager", "TrustAllX509TrustManager")
+    private fun createTrustManager(): X509TrustManager {
+        return object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+            }
+
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return emptyArray()
+            }
+        }
+    }
 }

@@ -4,6 +4,9 @@ import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.PageResult
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.dto.LoginDto
+import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -12,8 +15,7 @@ interface ApiService {
 
     @POST("user/login")
     suspend fun login(
-        @Query("username") username: String,
-        @Query("password") password: String
+        @Body dto: LoginDto
     ): ResponseEntity<String>
 
     @GET("user/info")

@@ -11,6 +11,9 @@ import com.boredream.lovebook.utils.DataStoreUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +32,11 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
      */
     fun login() {
         Log.i("DDD", "login")
-        _loginUiState.value = LoginUiState(isLoading = true)
+        // _loginUiState.value = LoginUiState(isLoading = true)
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
+            // TODO 协程的错误处理
             val loginResponse = repository.login(username.value ?: "", password.value ?: "")
             if (loginResponse.isSuccess()) {
                 // 登录成功，保存token，继续获取用户信息

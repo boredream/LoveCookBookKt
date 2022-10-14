@@ -11,7 +11,7 @@ import com.boredream.lovebook.BR
 abstract class BaseActivity<VM: BaseViewModel, BD: ViewDataBinding>: AppCompatActivity() {
 
     protected lateinit var viewModel: VM
-    protected lateinit var binding: BD
+    private lateinit var binding: BD
 
     protected abstract fun getLayoutId(): Int
 
@@ -21,8 +21,8 @@ abstract class BaseActivity<VM: BaseViewModel, BD: ViewDataBinding>: AppCompatAc
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         viewModel = ViewModelProvider(this)[getViewModelClass()]
-//        // mBinding?.setLifecycleOwner(this)
-//        binding.setVariable(BR.vm, viewModel)
+        binding.lifecycleOwner = this
+        binding.setVariable(BR.vm, viewModel)
     }
 
 }
