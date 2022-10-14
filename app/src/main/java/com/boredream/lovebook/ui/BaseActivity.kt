@@ -10,8 +10,8 @@ import com.boredream.lovebook.BR
 
 abstract class BaseActivity<VM: BaseViewModel, BD: ViewDataBinding>: AppCompatActivity() {
 
-    protected var viewModel: VM? = null
-    protected var binding: BD? = null
+    protected lateinit var viewModel: VM
+    protected lateinit var binding: BD
 
     protected abstract fun getLayoutId(): Int
 
@@ -20,9 +20,9 @@ abstract class BaseActivity<VM: BaseViewModel, BD: ViewDataBinding>: AppCompatAc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, getLayoutId())
-        viewModel = ViewModelProvider(this).get(getViewModelClass())
-        // mBinding?.setLifecycleOwner(this)
-        binding?.setVariable(BR.vm, viewModel)
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
+//        // mBinding?.setLifecycleOwner(this)
+//        binding.setVariable(BR.vm, viewModel)
     }
 
 }

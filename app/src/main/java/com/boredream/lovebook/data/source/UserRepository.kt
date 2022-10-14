@@ -2,8 +2,11 @@ package com.boredream.lovebook.data.source
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object UserRepository: BaseRepository() {
+@Singleton
+class UserRepository @Inject constructor() : BaseRepository() {
 
     var token: String? = null
     var curUser: User? = null
@@ -13,7 +16,7 @@ object UserRepository: BaseRepository() {
      */
     suspend fun login(username: String, password: String): ResponseEntity<String> {
         val response = service.login(username, password)
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             token = response.data
         }
         return response
@@ -24,10 +27,13 @@ object UserRepository: BaseRepository() {
      */
     suspend fun getUserInfo(): ResponseEntity<User> {
         val response = service.getUserInfo()
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             curUser = response.data
         }
         return response
     }
 
+    fun test() {
+        println("I am a Test test")
+    }
 }

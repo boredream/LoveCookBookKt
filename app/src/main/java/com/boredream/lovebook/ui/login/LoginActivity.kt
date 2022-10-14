@@ -7,7 +7,9 @@ import com.boredream.lovebook.MainActivity
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ActivityLoginBinding
 import com.boredream.lovebook.ui.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity: BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_login
@@ -17,7 +19,7 @@ class LoginActivity: BaseActivity<LoginViewModel, ActivityLoginBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel!!.loginUiState.observe(this@LoginActivity) {
+        viewModel.loginUiState.observe(this@LoginActivity) {
             if(it.isLoginSuccess) {
                 MainActivity.start(this@LoginActivity, MainActivity::class.java);
             } else if(it.errorTip != null) {
@@ -25,8 +27,9 @@ class LoginActivity: BaseActivity<LoginViewModel, ActivityLoginBinding>() {
             }
         }
 
-        viewModel!!.username.value = "18501683421"
-        viewModel!!.password.value = "123456"
+        viewModel.username.value = "18501683421"
+        viewModel.password.value = "123456"
+        viewModel.test()
     }
 
 }

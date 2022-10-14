@@ -8,13 +8,14 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.source.UserRepository
 import com.boredream.lovebook.ui.BaseViewModel
 import com.boredream.lovebook.utils.DataStoreUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val repository: UserRepository) : BaseViewModel() {
 
-class LoginViewModel: BaseViewModel() {
-
-    private val repository = UserRepository
     val username = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
@@ -57,4 +58,7 @@ class LoginViewModel: BaseViewModel() {
         _loginUiState.value = LoginUiState(isLoading = false, isLoginSuccess = false, errorTip = response.msg)
     }
 
+    fun test() {
+        repository.test()
+    }
 }
