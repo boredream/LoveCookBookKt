@@ -14,14 +14,14 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 import kotlin.collections.ArrayList
 
-object ServiceCreator {
+object ServiceCreator4Test {
 
     private const val HOST = "https://www.papikoala.cn/api/"
     private const val TOKEN_KEY = "token"
     private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 10L
 
-    private fun create(): Retrofit {
+    private fun create(token: String): Retrofit {
         // okHttpClientBuilder
         val okHttpClientBuilder = OkHttpClient().newBuilder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -32,8 +32,6 @@ object ServiceCreator {
                 val request = it.request()
                 val builder = request.newBuilder()
 
-                // TODO 接口里不应该包含 DataStoreUtils（包含context）
-                val token = DataStoreUtils.readStringData(TOKEN_KEY, "")
                 if (token.isNotEmpty()) {
                     builder.addHeader(TOKEN_KEY, token)
                 }
@@ -50,7 +48,7 @@ object ServiceCreator {
     /**
      * get ServiceApi
      */
-    fun <T> create(service: Class<T>): T = create().create(service)
+    fun <T> create(service: Class<T>, token: String): T = create(token).create(service)
 
     private fun createSSLSocketFactory(): SSLSocketFactory {
         val sc: SSLContext = SSLContext.getInstance("TLS")

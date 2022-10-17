@@ -24,7 +24,6 @@ interface ApiService {
     suspend fun getTheDayList(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 100,
-        @Query("queryDate") queryDate: String,
     ): ResponseEntity<PageResultDto<TheDay>>
 
 }

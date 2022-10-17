@@ -3,12 +3,13 @@ package com.boredream.lovebook.data.source
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
 import com.boredream.lovebook.data.dto.LoginDto
+import com.boredream.lovebook.net.ServiceFactory
 import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor() : BaseRepository() {
+class UserRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseRepository(serviceFactory) {
 
     var token: String? = null
     var curUser: User? = null

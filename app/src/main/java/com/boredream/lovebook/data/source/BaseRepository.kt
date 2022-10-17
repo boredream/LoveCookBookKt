@@ -1,10 +1,10 @@
 package com.boredream.lovebook.data.source
 
 import com.boredream.lovebook.net.ApiService
-import com.boredream.lovebook.net.ServiceCreator
+import com.boredream.lovebook.net.ServiceFactory
 
-open class BaseRepository {
+open class BaseRepository(serviceFactory: ServiceFactory) {
 
-    protected val service: ApiService = ServiceCreator.create(ApiService::class.java)
+    protected val service: ApiService = serviceFactory.create()
 
 }
