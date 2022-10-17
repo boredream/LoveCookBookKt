@@ -1,5 +1,7 @@
 package com.boredream.lovebook
 
+import com.boredream.lovebook.data.source.UserRepository
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +14,10 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val repo = UserRepository()
+        runBlocking {
+            val response = repo.login("18501683421", "123456")
+            println(response)
+        }
     }
 }

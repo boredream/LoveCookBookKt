@@ -33,7 +33,6 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
      */
     fun login() {
         Log.i("DDD", "login")
-        // _loginUiState.value = LoginUiState(isLoading = true)
         _baseUiState.value = BaseUiState(showLoading = true)
 
         fetchJob?.cancel()
@@ -65,9 +64,5 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
      */
     private fun <T> requestError(response: ResponseEntity<T>) {
         _loginUiState.value = LoginUiState(isLoginSuccess = false, errorTip = response.msg)
-    }
-
-    fun test() {
-        repository.test()
     }
 }

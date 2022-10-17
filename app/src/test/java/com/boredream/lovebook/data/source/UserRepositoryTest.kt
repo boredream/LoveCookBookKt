@@ -1,7 +1,12 @@
 package com.boredream.lovebook.data.source
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
+@ExperimentalCoroutinesApi
+@RunWith(JUnit4::class)
 class UserRepositoryTest {
 
     private val repo = UserRepository()

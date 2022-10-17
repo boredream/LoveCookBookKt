@@ -34,8 +34,4 @@ class UserRepository @Inject constructor() : BaseRepository() {
         }
         return response
     }
-
-    fun test() {
-        println("I am a Test test")
-    }
 }

@@ -20,8 +20,6 @@ class LoginActivity: BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         super.onCreate(savedInstanceState)
 
         viewModel.loginUiState.observe(this@LoginActivity) {
-            viewModel.test()
-
             if(it.isLoginSuccess) {
                 MainActivity.start(this@LoginActivity, MainActivity::class.java);
             } else if(it.errorTip != null) {
