@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.source.TheDayRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
@@ -22,10 +23,14 @@ class TheDayViewModel @Inject constructor(private val repository: TheDayReposito
     private val _uiState = MutableLiveData<TheDayUiState>()
     val uiState: LiveData<TheDayUiState> = _uiState
 
-    /**
-     * 登陆
-     */
-    fun loadData() {
+    private val _dataList = MutableLiveData<List<TheDay>>()
+    val dataList: LiveData<List<TheDay>> = _dataList
+
+    fun loadTogetherInfo() {
+        _uiState.value = TheDayUiState()
+    }
+
+    fun loadTheDayList() {
         Log.i("DDD", "TheDayViewModel loadData")
         _baseUiState.value = BaseUiState(showLoading = true)
 
@@ -35,7 +40,7 @@ class TheDayViewModel @Inject constructor(private val repository: TheDayReposito
             _baseUiState.value = BaseUiState(showLoading = false)
 
             if (response.isSuccess()) {
-                _uiState.value = TheDayUiState(response.data.records)
+                _dataList.value = response.data.records
             } else {
                 requestError(response)
             }
