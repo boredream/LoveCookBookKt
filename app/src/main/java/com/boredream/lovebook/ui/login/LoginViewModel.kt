@@ -12,9 +12,6 @@ import com.boredream.lovebook.utils.DataStoreUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,8 +20,8 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
     val username = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
-    private val _loginUiState = MutableLiveData<LoginUiState>()
-    val loginUiState: LiveData<LoginUiState> = _loginUiState
+    private val _uiState = MutableLiveData<LoginUiState>()
+    val uiState: LiveData<LoginUiState> = _uiState
 
     private var fetchJob: Job? = null
 
@@ -49,7 +46,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
                 if (userInfoResponse.isSuccess()) {
                     // 获取信息获取成功，完成登录
                     Log.i("DDD", "login success")
-                    _loginUiState.value = LoginUiState(isLoginSuccess = true)
+                    _uiState.value = LoginUiState(isLoginSuccess = true)
                 } else {
                     requestError(userInfoResponse)
                 }
@@ -63,6 +60,6 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
      * 请求失败
      */
     private fun <T> requestError(response: ResponseEntity<T>) {
-        _loginUiState.value = LoginUiState(isLoginSuccess = false, errorTip = response.msg)
+        _uiState.value = LoginUiState(isLoginSuccess = false, errorTip = response.msg)
     }
 }
