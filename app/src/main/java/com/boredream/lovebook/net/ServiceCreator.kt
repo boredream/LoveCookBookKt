@@ -21,6 +21,8 @@ object ServiceCreator {
     private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 10L
 
+    lateinit var tokenFactory: () -> String
+
     private fun create(): Retrofit {
         // okHttpClientBuilder
         val okHttpClientBuilder = OkHttpClient().newBuilder()
@@ -32,8 +34,8 @@ object ServiceCreator {
                 val request = it.request()
                 val builder = request.newBuilder()
 
-                // TODO 接口里不应该包含 DataStoreUtils（包含context）
-                val token = DataStoreUtils.readStringData(TOKEN_KEY, "")
+                // 接口里不应该包含context相关 ( sp / db ... )
+                val token = tokenFactory()
                 if (token.isNotEmpty()) {
                     builder.addHeader(TOKEN_KEY, token)
                 }

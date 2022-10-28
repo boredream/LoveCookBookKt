@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data.source
 
-import com.boredream.lovebook.TestConstants
+import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.net.ServiceFactory
 import kotlinx.coroutines.runBlocking
@@ -16,8 +16,7 @@ class TheDayRepositoryTest {
     @Before
     fun setUp() {
         val factory = ServiceFactory()
-        factory.isTest = true
-        factory.testToken = TestConstants.token
+        factory.testToken = TestDataConstants.token
         repo = TheDayRepository(factory)
     }
 

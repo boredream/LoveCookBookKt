@@ -1,6 +1,6 @@
 package com.boredream.lovebook.ui.login
 
-import com.boredream.lovebook.TestConstants
+import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.source.UserRepository
 import com.boredream.lovebook.net.ServiceFactory
 import org.junit.Before
@@ -14,8 +14,7 @@ class LoginViewModelTest {
     @Before
     fun setUp() {
         val factory = ServiceFactory()
-        factory.isTest = true
-        factory.testToken = TestConstants.token
+        factory.testToken = TestDataConstants.token
         repo = UserRepository(factory)
         vm = LoginViewModel(repo)
     }

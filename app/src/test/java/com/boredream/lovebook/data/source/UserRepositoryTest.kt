@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data.source
 
-import com.boredream.lovebook.TestConstants
+import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.net.ServiceFactory
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -15,8 +15,7 @@ class UserRepositoryTest {
     @Before
     fun setUp() {
         val factory = ServiceFactory()
-        factory.isTest = true
-        factory.testToken = TestConstants.token
+        factory.testToken = TestDataConstants.token
         repo = UserRepository(factory)
     }
 
