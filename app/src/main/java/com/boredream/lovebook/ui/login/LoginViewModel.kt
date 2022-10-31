@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.source.UserRepository
+import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
 import com.boredream.lovebook.utils.DataStoreUtils
@@ -41,7 +41,6 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
             // TODO isSuccess 判断的封装
             if (loginResponse.isSuccess()) {
                 // 登录成功，保存token，继续获取用户信息
-                DataStoreUtils.putData("token", loginResponse.data)
                 val userInfoResponse = repository.getUserInfo()
                 if (userInfoResponse.isSuccess()) {
                     // 获取信息获取成功，完成登录

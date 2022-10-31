@@ -1,17 +1,20 @@
-package com.boredream.lovebook.data.source
+package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.constant.GlobalConstant
 import com.boredream.lovebook.data.dto.LoginDto
+import com.boredream.lovebook.data.repo.source.UserLocalDataSource
 import com.boredream.lovebook.net.ServiceFactory
-import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseRepository(serviceFactory) {
+class UserRepository @Inject constructor(
+    serviceFactory: ServiceFactory,
+    private val localDataSource: UserLocalDataSource
+) : BaseRepository(serviceFactory) {
 
-    var token: String? = null
     var curUser: User? = null
 
     /**
@@ -20,7 +23,7 @@ class UserRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseR
     suspend fun login(username: String, password: String): ResponseEntity<String> {
         val response = service.login(LoginDto(username, password))
         if (response.isSuccess()) {
-            token = response.data
+            localDataSource.saveToken(response.data)
         }
         return response
     }
@@ -32,7 +35,13 @@ class UserRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseR
         val response = service.getUserInfo()
         if (response.isSuccess()) {
             curUser = response.data
+            localDataSource.saveUser(response.data)
         }
         return response
     }
+
+    fun getLocalUser(): User? {
+        return localDataSource.getUser()
+    }
+
 }

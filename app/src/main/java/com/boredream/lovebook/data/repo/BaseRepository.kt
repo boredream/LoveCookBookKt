@@ -1,4 +1,4 @@
-package com.boredream.lovebook.data.source
+package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.net.ServiceFactory

@@ -1,5 +1,6 @@
 package com.boredream.lovebook.net
 
+import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
@@ -16,6 +17,8 @@ interface ApiService {
 
     @GET("user/info")
     suspend fun getUserInfo(): ResponseEntity<User>
+
+    // the day
 
     @GET("the_day/page")
     suspend fun getTheDayList(
@@ -38,5 +41,29 @@ interface ApiService {
     suspend fun deleteTheDay(
         @Path("id") id: String,
     ): ResponseEntity<Boolean>
+
+    // diary
+    @GET("diary/page")
+    suspend fun getDiaryList(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20,
+    ): ResponseEntity<PageResultDto<Diary>>
+
+    @POST("diary")
+    suspend fun addDiary(
+        @Body dto: Diary,
+    ): ResponseEntity<Boolean>
+
+    @PUT("diary/{id}")
+    suspend fun updateDiary(
+        @Body dto: Diary,
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    @DELETE("diary/{id}")
+    suspend fun deleteDiary(
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
 
 }

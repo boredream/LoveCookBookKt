@@ -13,6 +13,7 @@ import com.boredream.lovebook.databinding.ActivityMainBinding
 import com.boredream.lovebook.ui.BaseActivity
 import com.boredream.lovebook.ui.BaseFragment
 import com.boredream.lovebook.ui.FragmentController
+import com.boredream.lovebook.ui.diary.DiaryFragment
 import com.boredream.lovebook.ui.theday.TheDayFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
@@ -41,7 +42,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         val navView: BottomNavigationView = binding.navView
         val fragmentList = ArrayList<BaseFragment<*, *>>()
         fragmentList.add(TheDayFragment())
-        fragmentList.add(TheDayFragment())
+        fragmentList.add(DiaryFragment())
         fragmentList.add(TheDayFragment())
 
         val controller = FragmentController(navView, supportFragmentManager, R.id.fl_fragment, fragmentList)

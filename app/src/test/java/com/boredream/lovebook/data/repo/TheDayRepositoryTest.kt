@@ -1,4 +1,4 @@
-package com.boredream.lovebook.data.source
+package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.TheDay
@@ -35,7 +35,7 @@ class TheDayRepositoryTest {
             val theDay = TheDay()
             theDay.name = "test"
             theDay.theDayDate = "1900-02-14"
-            val response = repo.addTheDay(theDay)
+            val response = repo.add(theDay)
             assertTrue(response.data)
         }
     }
@@ -47,7 +47,7 @@ class TheDayRepositoryTest {
             theDay.id = "22"
             theDay.name = "test"
             theDay.theDayDate = "1990-02-14"
-            val response = repo.updateTheDay(theDay)
+            val response = repo.update(theDay)
             assertTrue(response.data)
         }
     }
@@ -55,7 +55,7 @@ class TheDayRepositoryTest {
     @Test
     fun delete() {
         runBlocking {
-            val response = repo.deleteTheDay("22")
+            val response = repo.delete("22")
             assertTrue(response.data)
         }
     }

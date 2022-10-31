@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data
 
-class TheDay : BaseEntity() {
+class TheDay : Belong2UserEntity() {
 
     companion object {
 

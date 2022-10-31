@@ -1,4 +1,4 @@
-package com.boredream.lovebook.data.source
+package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.net.ServiceFactory
@@ -9,8 +9,8 @@ import javax.inject.Singleton
 class TheDayRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseRepository(serviceFactory) {
 
     suspend fun getList() = service.getTheDayList()
-    suspend fun addTheDay(theDay: TheDay) = service.addTheDay(theDay)
-    suspend fun updateTheDay(theDay: TheDay) = service.updateTheDay(theDay, theDay.id ?: "")
-    suspend fun deleteTheDay(id: String) = service.deleteTheDay(id)
+    suspend fun add(data: TheDay) = service.addTheDay(data)
+    suspend fun update(data: TheDay) = service.updateTheDay(data, data.id)
+    suspend fun delete(id: String) = service.deleteTheDay(id)
 
 }

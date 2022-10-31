@@ -1,6 +1,5 @@
 package com.boredream.lovebook.ui.theday
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +32,11 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         adapter = TheDayListAdapter(dataList)
         getBinding().rvTheDay.adapter = adapter
 
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            dataList.clear()
+            dataList.addAll(it)
+            adapter.notifyItemRangeChanged(0, it.size)
+        }
         viewModel.dataList.observe(viewLifecycleOwner) {
             dataList.clear()
             dataList.addAll(it)

@@ -12,6 +12,7 @@ import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.ItemTheDayBinding
 import java.util.*
 
+// TODO: adapter类似一个页面，也要搭配个vm吗？
 class TheDayListAdapter(private val dataList: ArrayList<TheDay>)
     : RecyclerView.Adapter<TheDayListAdapter.BindingHolder>() {
 

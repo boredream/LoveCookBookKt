@@ -6,7 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
-import com.boredream.lovebook.data.source.TheDayRepository
+import com.boredream.lovebook.data.repo.TheDayRepository
+import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class TheDayViewModel @Inject constructor(private val repository: TheDayRepository) : BaseViewModel() {
+class TheDayViewModel @Inject constructor(
+    private val theDayRepository: TheDayRepository,
+    private val userRepository: UserRepository,
+) : BaseViewModel() {
 
     private var fetchJob: Job? = null
 
@@ -27,7 +31,13 @@ class TheDayViewModel @Inject constructor(private val repository: TheDayReposito
     val dataList: LiveData<List<TheDay>> = _dataList
 
     fun loadTogetherInfo() {
-        _uiState.value = TheDayUiState()
+        // 直接从本地取
+        val user = userRepository.getLocalUser() ?: return
+        val togetherDayTitle = if(user.cpUser != null) "我们已恋爱" else "点我设置"
+        val togetherDay = user.cpTogetherDate ?: "0"
+        val leftAvatar = user.avatar
+        val rightAvatar = user.cpUser?.avatar
+        _uiState.value = TheDayUiState(togetherDayTitle, togetherDay, leftAvatar, rightAvatar)
     }
 
     fun loadTheDayList() {
@@ -36,7 +46,7 @@ class TheDayViewModel @Inject constructor(private val repository: TheDayReposito
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
-            val response = repository.getList()
+            val response = theDayRepository.getList()
             _baseUiState.value = BaseUiState(showLoading = false)
 
             if (response.isSuccess()) {
