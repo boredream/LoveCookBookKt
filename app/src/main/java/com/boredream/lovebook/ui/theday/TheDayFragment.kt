@@ -9,6 +9,7 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.FragmentTheDayBinding
 import com.boredream.lovebook.ui.BaseFragment
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -33,9 +34,13 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         getBinding().rvTheDay.adapter = adapter
 
         viewModel.uiState.observe(viewLifecycleOwner) {
-            dataList.clear()
-            dataList.addAll(it)
-            adapter.notifyItemRangeChanged(0, it.size)
+            // TODO: glide 如何 mvvm 优化
+            Glide.with(this).load(it.leftAvatar).into(getBinding().ivLeft)
+            Glide.with(this).load(it.rightAvatar).into(getBinding().ivRight)
+        }
+        viewModel.showPickDayState.observe(viewLifecycleOwner) {
+            // TODO: show dialog
+            viewModel.setTogetherDay("2022-12-21")
         }
         viewModel.dataList.observe(viewLifecycleOwner) {
             dataList.clear()

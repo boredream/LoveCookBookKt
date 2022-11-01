@@ -10,6 +10,8 @@ import retrofit2.http.*
 
 interface ApiService {
 
+    // ******** user ********
+
     @POST("user/login")
     suspend fun login(
         @Body dto: LoginDto,
@@ -18,7 +20,14 @@ interface ApiService {
     @GET("user/info")
     suspend fun getUserInfo(): ResponseEntity<User>
 
-    // the day
+    @PUT("user/{id}")
+    suspend fun updateUserInfo(
+        @Body dto: User,
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+
+    // ******** the day ********
 
     @GET("the_day/page")
     suspend fun getTheDayList(
@@ -42,7 +51,9 @@ interface ApiService {
         @Path("id") id: String,
     ): ResponseEntity<Boolean>
 
-    // diary
+
+    // ******** diary ********
+
     @GET("diary/page")
     suspend fun getDiaryList(
         @Query("page") page: Int = 1,

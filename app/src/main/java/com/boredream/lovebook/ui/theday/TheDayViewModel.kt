@@ -27,6 +27,9 @@ class TheDayViewModel @Inject constructor(
     private val _uiState = MutableLiveData<TheDayUiState>()
     val uiState: LiveData<TheDayUiState> = _uiState
 
+    private val _showPickDayState = MutableLiveData<Boolean>()
+    val showPickDayState: LiveData<Boolean> = _showPickDayState
+
     private val _dataList = MutableLiveData<List<TheDay>>()
     val dataList: LiveData<List<TheDay>> = _dataList
 
@@ -40,6 +43,28 @@ class TheDayViewModel @Inject constructor(
         _uiState.value = TheDayUiState(togetherDayTitle, togetherDay, leftAvatar, rightAvatar)
     }
 
+    fun pickTogetherDay() {
+        _showPickDayState.value = true
+    }
+
+    fun setTogetherDay(date: String) {
+        Log.i("DDD", "TheDayViewModel setTogetherDay")
+        _baseUiState.value = BaseUiState(showLoading = true)
+
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
+            val response = userRepository.updateTogetherDay(date)
+            _baseUiState.value = BaseUiState(showLoading = false)
+
+            // TODO:
+            if (response.isSuccess()) {
+
+            } else {
+                requestError(response)
+            }
+        }
+    }
+
     fun loadTheDayList() {
         Log.i("DDD", "TheDayViewModel loadData")
         _baseUiState.value = BaseUiState(showLoading = true)
@@ -50,7 +75,7 @@ class TheDayViewModel @Inject constructor(
             _baseUiState.value = BaseUiState(showLoading = false)
 
             if (response.isSuccess()) {
-                _dataList.value = response.data.records
+                _dataList.value = response.data?.records
             } else {
                 requestError(response)
             }

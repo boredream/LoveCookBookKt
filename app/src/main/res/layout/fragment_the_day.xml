@@ -31,6 +31,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@{vm.uiState.togetherDayTitle}"
+            android:onClick="@{() -> vm.pickTogetherDay()}"
             tools:text="我们已恋爱"
             android:textColor="@color/white"
             android:textSize="@dimen/txt_body"

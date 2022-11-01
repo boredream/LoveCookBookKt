@@ -1,15 +1,14 @@
-package com.boredream.lovebook.ui.diary
+package com.boredream.lovebook.ui.theday
 
 import com.boredream.lovebook.TestDataConstants
-import com.boredream.lovebook.data.repo.DiaryRepository
+import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.net.ServiceFactory
-import com.boredream.lovebook.ui.login.LoginViewModel
-import com.boredream.lovebook.ui.theday.TheDayViewModel
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
@@ -32,7 +31,13 @@ class TheDayViewModelTest {
     }
 
     @Test
-    fun loadTogetherInfo() {
+    fun loadTogetherInfo_noCp() {
+        val user = TestDataConstants.user
+        user.cpUser = null
+        every { runBlocking {
+            userRepo.getUserInfo()
+        } } returns TestDataConstants.successResponse(user)
 
+        vm.loadTogetherInfo()
     }
 }

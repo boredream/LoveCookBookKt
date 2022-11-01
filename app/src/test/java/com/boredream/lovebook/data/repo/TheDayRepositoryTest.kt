@@ -36,7 +36,7 @@ class TheDayRepositoryTest {
             theDay.name = "test"
             theDay.theDayDate = "1900-02-14"
             val response = repo.add(theDay)
-            assertTrue(response.data)
+            assertTrue(response.getSuccessData())
         }
     }
 
@@ -48,7 +48,7 @@ class TheDayRepositoryTest {
             theDay.name = "test"
             theDay.theDayDate = "1990-02-14"
             val response = repo.update(theDay)
-            assertTrue(response.data)
+            assertTrue(response.getSuccessData())
         }
     }
 
@@ -56,7 +56,7 @@ class TheDayRepositoryTest {
     fun delete() {
         runBlocking {
             val response = repo.delete("22")
-            assertTrue(response.data)
+            assertTrue(response.getSuccessData())
         }
     }
 

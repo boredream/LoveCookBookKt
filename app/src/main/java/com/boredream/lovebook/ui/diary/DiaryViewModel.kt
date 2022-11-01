@@ -41,7 +41,7 @@ class DiaryViewModel @Inject constructor(private val repository: DiaryRepository
                 if(!loadMore) {
                     _dataList.value?.clear()
                 }
-                _dataList.value?.addAll(response.data.records)
+                _dataList.value?.addAll(response.getSuccessData().records)
             } else {
                 requestError(response)
             }

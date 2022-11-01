@@ -26,6 +26,11 @@ class UserRepositoryTest {
                 localDataSource.saveUser(any())
             }
         } returns Unit
+        every {
+            runBlocking {
+                localDataSource.saveToken(any())
+            }
+        } returns Unit
         every { localDataSource.getToken() } returns TestDataConstants.token
         every { localDataSource.getUser() } returns TestDataConstants.user
 
@@ -35,7 +40,7 @@ class UserRepositoryTest {
     @Test
     fun login() {
         runBlocking {
-            val response = repo.login("18501683421", "123456")
+            val response = repo.login("18501683422", "123456")
             print(response)
             assertNotNull(response.data)
         }
@@ -49,4 +54,15 @@ class UserRepositoryTest {
             assertNotNull(response.data)
         }
     }
+
+    @Test
+    fun setTogetherDay() {
+        runBlocking {
+            val response = repo.updateTogetherDay("2020-02-14")
+            print(response)
+            assertNotNull(response.data)
+        }
+    }
+
+
 }

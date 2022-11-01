@@ -2,7 +2,6 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
-import com.boredream.lovebook.data.constant.GlobalConstant
 import com.boredream.lovebook.data.dto.LoginDto
 import com.boredream.lovebook.data.repo.source.UserLocalDataSource
 import com.boredream.lovebook.net.ServiceFactory
@@ -15,33 +14,34 @@ class UserRepository @Inject constructor(
     private val localDataSource: UserLocalDataSource
 ) : BaseRepository(serviceFactory) {
 
-    var curUser: User? = null
-
-    /**
-     * 登录
-     */
     suspend fun login(username: String, password: String): ResponseEntity<String> {
         val response = service.login(LoginDto(username, password))
         if (response.isSuccess()) {
-            localDataSource.saveToken(response.data)
+            localDataSource.saveToken(response.getSuccessData())
         }
         return response
     }
 
-    /**
-     * 登录
-     */
     suspend fun getUserInfo(): ResponseEntity<User> {
         val response = service.getUserInfo()
         if (response.isSuccess()) {
-            curUser = response.data
-            localDataSource.saveUser(response.data)
+            localDataSource.saveUser(response.getSuccessData())
         }
         return response
     }
 
     fun getLocalUser(): User? {
         return localDataSource.getUser()
+    }
+
+    suspend fun updateTogetherDay(togetherDay: String): ResponseEntity<Boolean> {
+        val curUser = getLocalUser() ?: return ResponseEntity.notExistError()
+        curUser.cpTogetherDate = togetherDay
+        val response = service.updateUserInfo(curUser, curUser.id)
+        if (response.isSuccess()) {
+            localDataSource.saveUser(curUser)
+        }
+        return response
     }
 
 }

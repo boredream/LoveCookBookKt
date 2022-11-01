@@ -28,16 +28,16 @@ class DiaryRepositoryTest {
             data.content = "test diary"
             data.diaryDate = "2050-02-14"
             val addResponse = repo.add(data)
-            assertTrue(addResponse.data)
+            assertTrue(addResponse.getSuccessData())
 
             // update
             data.content += " update"
             val updateResponse = repo.update(data)
-            assertTrue(updateResponse.data)
+            assertTrue(updateResponse.getSuccessData())
 
             // query
             val getResponse = repo.getList(1)
-            val records = getResponse.data.records
+            val records = getResponse.getSuccessData().records
             assertNotNull(records)
             assertNotSame(0, records.size)
             var matchData: Diary? = null
@@ -51,7 +51,7 @@ class DiaryRepositoryTest {
 
             // delete
             val deleteResponse = repo.delete("9999999")
-            assertTrue(deleteResponse.data)
+            assertTrue(deleteResponse.getSuccessData())
 
         }
     }
