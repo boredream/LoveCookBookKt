@@ -5,11 +5,14 @@ import com.boredream.lovebook.data.repo.source.UserLocalDataSource
 import com.boredream.lovebook.net.ServiceFactory
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class UserRepositoryTest {
 
     private lateinit var localDataSource: UserLocalDataSource
@@ -38,30 +41,24 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun login() {
-        runBlocking {
-            val response = repo.login("18501683422", "123456")
-            print(response)
-            assertNotNull(response.data)
-        }
+    fun login() = runTest {
+        val response = repo.login("18501683422", "123456")
+        print(response)
+        assertNotNull(response.data)
     }
 
     @Test
-    fun getUserInfo() {
-        runBlocking {
-            val response = repo.getUserInfo()
-            print(response)
-            assertNotNull(response.data)
-        }
+    fun getUserInfo() = runTest {
+        val response = repo.getUserInfo()
+        print(response)
+        assertNotNull(response.data)
     }
 
     @Test
-    fun setTogetherDay() {
-        runBlocking {
-            val response = repo.updateTogetherDay("2020-02-14")
-            print(response)
-            assertNotNull(response.data)
-        }
+    fun setTogetherDay() = runTest {
+        val response = repo.updateTogetherDay("2020-02-14")
+        print(response)
+        assertNotNull(response.data)
     }
 
 

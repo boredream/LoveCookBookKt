@@ -11,6 +11,10 @@ data class ResponseEntity<T>(
     fun getSuccessData() = data!!
 
     companion object {
+        fun <T> success(data: T) : ResponseEntity<T> {
+            return ResponseEntity(data, 0, "success")
+        }
+
         fun <T> notExistError() : ResponseEntity<T> {
             return ResponseEntity(null, 404, "目标不存在")
         }

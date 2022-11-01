@@ -1,5 +1,7 @@
 package com.boredream.lovebook.ui.theday
 
+import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,7 +42,13 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         }
         viewModel.showPickDayState.observe(viewLifecycleOwner) {
             // TODO: show dialog
-            viewModel.setTogetherDay("2022-12-21")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val dialog = DatePickerDialog(requireContext())
+                dialog.setOnDateSetListener { view, year, month, dayOfMonth ->
+                    viewModel.setTogetherDay(String.format("%d-%d-%d", year, month, dayOfMonth))
+                }
+                dialog.show()
+            }
         }
         viewModel.dataList.observe(viewLifecycleOwner) {
             dataList.clear()

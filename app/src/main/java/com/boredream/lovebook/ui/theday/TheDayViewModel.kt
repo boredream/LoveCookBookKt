@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.constant.TimeConstants
+import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
@@ -36,8 +38,18 @@ class TheDayViewModel @Inject constructor(
     fun loadTogetherInfo() {
         // 直接从本地取
         val user = userRepository.getLocalUser() ?: return
-        val togetherDayTitle = if(user.cpUser != null) "我们已恋爱" else "点我设置"
-        val togetherDay = user.cpTogetherDate ?: "0"
+        val togetherDayTitle: String
+        val togetherDay: String
+        if(user.cpTogetherDate != null) {
+            togetherDayTitle = "我们已恋爱"
+            val span = -TimeUtils.getTimeSpanByNow(user.cpTogetherDate,
+                TimeUtils.getSafeDateFormat("yyyy-MM-dd"),
+                TimeConstants.DAY)
+            togetherDay = span.toString()
+        } else {
+            togetherDayTitle = "点我设置"
+            togetherDay = "0"
+        }
         val leftAvatar = user.avatar
         val rightAvatar = user.cpUser?.avatar
         _uiState.value = TheDayUiState(togetherDayTitle, togetherDay, leftAvatar, rightAvatar)
@@ -55,10 +67,9 @@ class TheDayViewModel @Inject constructor(
         fetchJob = viewModelScope.launch {
             val response = userRepository.updateTogetherDay(date)
             _baseUiState.value = BaseUiState(showLoading = false)
-
-            // TODO:
             if (response.isSuccess()) {
-
+                // 请求成功后，刷新信息
+                loadTogetherInfo()
             } else {
                 requestError(response)
             }

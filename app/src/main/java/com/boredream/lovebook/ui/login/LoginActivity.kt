@@ -27,7 +27,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
             }
         }
 
-        viewModel.username.value = "18501683421"
+        viewModel.username.value = "18501683422"
         viewModel.password.value = "123456"
     }
 
