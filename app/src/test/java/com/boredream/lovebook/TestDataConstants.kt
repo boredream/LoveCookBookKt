@@ -5,14 +5,16 @@ import com.boredream.lovebook.data.User
 
 object TestDataConstants {
 
-    var user: User = User()
-    const val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwiZXhwIjoxNjY5ODcxNzI3fQ.3bKD6UKKq-smx__XbKfHJwnD4pm-sx0DJAo8NFdRpZY"
+    var user: User = createUser()
+    const val token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwiZXhwIjoxNjY5ODcxNzI3fQ.3bKD6UKKq-smx__XbKfHJwnD4pm-sx0DJAo8NFdRpZY"
 
-    fun <T> successResponse(data: T) : ResponseEntity<T> {
+    fun <T> successResponse(data: T): ResponseEntity<T> {
         return ResponseEntity(data, 0, "success")
     }
 
-    init {
+    fun createUser(): User {
+        val user = User()
         user.id = "5"
         user.username = "18501683422"
         user.nickname = "papi"
@@ -29,6 +31,7 @@ object TestDataConstants {
         user.cpUser?.birthday = "1990-02-14"
         user.cpUser?.avatar = "https://file.papikoala.cn/image1657166004355.jpg"
         user.cpUser?.cpTogetherDate = "2020-02-05"
+        return user
     }
-    
+
 }
