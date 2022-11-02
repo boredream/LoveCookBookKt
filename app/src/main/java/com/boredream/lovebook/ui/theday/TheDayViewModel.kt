@@ -13,7 +13,7 @@ import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
 import com.boredream.lovebook.ui.StartActivityLiveEvent
-import com.boredream.lovebook.ui.login.LoginActivity
+import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -80,7 +80,7 @@ class TheDayViewModel @Inject constructor(
     }
 
     fun addTheDay() {
-        _baseEvent.value = StartActivityLiveEvent(LoginActivity::class.java)
+        _baseEvent.value = StartActivityLiveEvent(TheDayDetailActivity::class.java)
     }
 
     fun loadTheDayList() {

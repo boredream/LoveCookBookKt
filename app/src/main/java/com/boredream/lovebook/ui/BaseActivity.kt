@@ -1,11 +1,14 @@
 package com.boredream.lovebook.ui
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.BR
 
 
@@ -29,6 +32,8 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
 
         loadingDialog = ProgressDialog(this)
         loadingDialog.setMessage("加载中...")
+
+        // TODO: 和fragment合并
         viewModel.baseUiState.observe(this) {
             // TODO dialog ?
             if (it.showLoading) {
@@ -37,6 +42,14 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
                 loadingDialog.dismiss()
             }
         }
+        viewModel.baseEvent.observe(this) {
+            when(it) {
+                is StartActivityLiveEvent<*> -> startActivity(Intent(this, it.activity))
+                is FinishSelfActivityLiveEvent -> finish()
+                is ToastLiveEvent -> ToastUtils.showShort(it.toast)
+            }
+        }
+
     }
 
 }

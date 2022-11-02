@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.BR
 
 
@@ -50,9 +51,8 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
         }
         viewModel.baseEvent.observe(viewLifecycleOwner) {
             when(it) {
-                is StartActivityLiveEvent<*> -> {
-                    startActivity(Intent(activity, it.activity))
-                }
+                is StartActivityLiveEvent<*> -> startActivity(Intent(activity, it.activity))
+                is ToastLiveEvent -> ToastUtils.showShort(it.toast)
             }
         }
 
