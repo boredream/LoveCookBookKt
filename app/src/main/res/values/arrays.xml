@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="the_day_type">
+        <item>累计天数</item>
+        <item>按年倒计时</item>
+    </string-array>
+
+</resources>

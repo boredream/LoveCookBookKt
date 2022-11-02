@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BaseSelectInputView">
+        <attr name="name" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerInputView">
+        <attr name="items" format="reference" />
+    </declare-styleable>
+
+</resources>
