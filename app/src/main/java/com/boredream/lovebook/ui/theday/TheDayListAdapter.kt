@@ -10,6 +10,7 @@ import com.boredream.lovebook.BR
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.ItemTheDayBinding
+import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import java.util.*
 
 // TODO: adapter类似一个页面，也要搭配个vm吗？
@@ -49,6 +50,10 @@ class TheDayListAdapter(private val dataList: ArrayList<TheDay>)
                 TimeConstants.DAY)
             holder.binding.tvNotifyPre.text = "已经"
             holder.binding.tvNotifyDay.text = span.toString()
+        }
+
+        holder.itemView.setOnClickListener {
+            TheDayDetailActivity.start(holder.itemView.context, data)
         }
     }
 

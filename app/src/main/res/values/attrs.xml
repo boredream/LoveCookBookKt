@@ -3,6 +3,7 @@
 
     <declare-styleable name="BaseSelectInputView">
         <attr name="name" format="string" />
+        <attr name="select" format="string" />
     </declare-styleable>
 
     <declare-styleable name="SpinnerInputView">

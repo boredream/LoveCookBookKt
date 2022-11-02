@@ -1,11 +1,7 @@
 package com.boredream.lovebook.data
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+open class BaseEntity : java.io.Serializable {
 
-@Parcelize
-open class BaseEntity : Parcelable {
-
-    open lateinit var id: String
+    var id: String? = null
 
 }

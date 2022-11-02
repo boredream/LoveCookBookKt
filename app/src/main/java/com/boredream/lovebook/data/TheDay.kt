@@ -18,6 +18,6 @@ class TheDay : Belong2UserEntity() {
 
     var name: String? = null
     var theDayDate: String? = null
-    var notifyType = TheDay.NOTIFY_TYPE_TOTAL_COUNT
+    var notifyType = NOTIFY_TYPE_TOTAL_COUNT
 
 }

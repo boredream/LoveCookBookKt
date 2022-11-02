@@ -38,6 +38,7 @@ class SpinnerInputView : BaseSelectInputView, DialogInterface.OnClickListener {
     }
 
     fun setItem(items: Array<CharSequence>) {
+        this.items = items
         dialog = AlertDialog.Builder((context))
             .setItems(items, this)
             .setNegativeButton("取消", null)

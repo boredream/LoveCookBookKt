@@ -9,7 +9,8 @@ import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
-import com.boredream.lovebook.vm.SingleLiveEvent
+import com.boredream.lovebook.ui.FinishSelfActivityLiveEvent
+import com.boredream.lovebook.ui.ToastLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -23,33 +24,40 @@ class TheDayDetailViewModel @Inject constructor(
 
     private var fetchJob: Job? = null
 
-    private val _uiState = MutableLiveData<TheDayDetailUiState>()
-    val uiState: LiveData<TheDayDetailUiState> = _uiState
+    // TODO: 可变的 不可变的 分开UIState
 
-    private val _showPickDayState = SingleLiveEvent<Boolean>()
-    val showPickDayState: LiveData<Boolean> = _showPickDayState
+    private val _uiState = MutableLiveData<TheDay>()
+    val uiState: LiveData<TheDay> = _uiState
 
     fun load(theDay: TheDay?) {
-        if (theDay == null) return
-
-        // TODO: 初始化数据
-        _uiState.value = TheDayDetailUiState(theDay.name, theDay.theDayDate)
+        theDay?.let {
+            _uiState.value = it
+        }
     }
 
-    fun commit() {
+    fun commit(name: String, theDayDate: String, notifyTypeTitle: String) {
+        // TODO: MVVM 直接从 LiveData里获取，不要从外部传入
         Log.i("DDD", "login")
         _baseUiState.value = BaseUiState(showLoading = true)
 
         // TODO: validate
-        val theDay = TheDay()
+        val theDay = _uiState.value ?: TheDay()
+        theDay.name = name
+        theDay.theDayDate = theDayDate
+        theDay.notifyType = if ("累计天数" == notifyTypeTitle)
+            TheDay.NOTIFY_TYPE_TOTAL_COUNT else TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
-            val response = repository.add(theDay)
+            val response =
+                if (theDay.id != null) repository.update(theDay)
+                else repository.add(theDay)
             _baseUiState.value = BaseUiState(showLoading = false)
 
             if (response.isSuccess()) {
-                // TODO: success
+                // TODO: 我这里care成功后的操作细节吗？
+                _baseEvent.value = ToastLiveEvent("提交成功")
+                _baseEvent.value = FinishSelfActivityLiveEvent()
             } else {
                 requestError(response)
             }

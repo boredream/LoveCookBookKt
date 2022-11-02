@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ViewBaseSelectInputBinding
 import com.boredream.lovebook.listener.OnCall
@@ -18,8 +19,9 @@ abstract class BaseSelectInputView : LinearLayout {
         set(value) {
             field = value
 
-            dataBinding.tvContent.text = data
-            onDataSelectListener?.call(data)
+            dataBinding.tvContent.text = value
+            onDataSelectListener?.call(value)
+            LogUtils.iTag("BaseSelectInputView", "setData $value")
         }
 
     constructor(context: Context?) : this(context, null)
@@ -38,7 +40,9 @@ abstract class BaseSelectInputView : LinearLayout {
         val a = context?.obtainStyledAttributes(attrs, R.styleable.BaseSelectInputView, defStyleAttr, 0)
         a?.let {
             val name = it.getString(R.styleable.BaseSelectInputView_name)
+            val select = it.getString(R.styleable.BaseSelectInputView_select)
             dataBinding.tvName.text = name
+            dataBinding.tvContent.text = select
             a.recycle()
         }
 

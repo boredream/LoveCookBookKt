@@ -10,7 +10,7 @@ class TheDayRepository @Inject constructor(serviceFactory: ServiceFactory) : Bas
 
     suspend fun getList() = service.getTheDayList()
     suspend fun add(data: TheDay) = service.addTheDay(data)
-    suspend fun update(data: TheDay) = service.updateTheDay(data, data.id)
+    suspend fun update(data: TheDay) = service.updateTheDay(data, data.id!!)
     suspend fun delete(id: String) = service.deleteTheDay(id)
 
 }

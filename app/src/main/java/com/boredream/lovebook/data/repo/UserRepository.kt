@@ -37,7 +37,7 @@ class UserRepository @Inject constructor(
     suspend fun updateTogetherDay(togetherDay: String): ResponseEntity<Boolean> {
         val curUser = getLocalUser() ?: return ResponseEntity.notExistError()
         curUser.cpTogetherDate = togetherDay
-        val response = service.updateUserInfo(curUser, curUser.id)
+        val response = service.updateUserInfo(curUser, curUser.id!!)
         if (response.isSuccess()) {
             localDataSource.saveUser(curUser)
         }
