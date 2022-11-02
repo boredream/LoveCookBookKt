@@ -1,6 +1,7 @@
 package com.boredream.lovebook.ui
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,13 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
                 loadingDialog.show()
             } else {
                 loadingDialog.dismiss()
+            }
+        }
+        viewModel.baseEvent.observe(viewLifecycleOwner) {
+            when(it) {
+                is StartActivityLiveEvent<*> -> {
+                    startActivity(Intent(activity, it.activity))
+                }
             }
         }
 

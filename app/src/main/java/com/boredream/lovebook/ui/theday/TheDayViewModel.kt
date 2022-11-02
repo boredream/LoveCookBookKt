@@ -12,6 +12,9 @@ import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
+import com.boredream.lovebook.ui.StartActivityLiveEvent
+import com.boredream.lovebook.ui.login.LoginActivity
+import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -29,7 +32,7 @@ class TheDayViewModel @Inject constructor(
     private val _uiState = MutableLiveData<TheDayUiState>()
     val uiState: LiveData<TheDayUiState> = _uiState
 
-    private val _showPickDayState = MutableLiveData<Boolean>()
+    private val _showPickDayState = SingleLiveEvent<Boolean>()
     val showPickDayState: LiveData<Boolean> = _showPickDayState
 
     private val _dataList = MutableLiveData<List<TheDay>>()
@@ -74,6 +77,10 @@ class TheDayViewModel @Inject constructor(
                 requestError(response)
             }
         }
+    }
+
+    fun addTheDay() {
+        _baseEvent.value = StartActivityLiveEvent(LoginActivity::class.java)
     }
 
     fun loadTheDayList() {
