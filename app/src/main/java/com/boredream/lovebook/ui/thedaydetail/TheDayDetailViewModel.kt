@@ -35,15 +35,13 @@ class TheDayDetailViewModel @Inject constructor(
         }
     }
 
-    fun commit(name: String, theDayDate: String, notifyTypeTitle: String) {
-        // TODO: MVVM 直接从 LiveData里获取，不要从外部传入
+    fun commit(notifyTypeTitle: String) {
         Log.i("DDD", "login")
         _baseUiState.value = BaseUiState(showLoading = true)
 
         // TODO: validate
+
         val theDay = _uiState.value ?: TheDay()
-        theDay.name = name
-        theDay.theDayDate = theDayDate
         theDay.notifyType = if ("累计天数" == notifyTypeTitle)
             TheDay.NOTIFY_TYPE_TOTAL_COUNT else TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN
 

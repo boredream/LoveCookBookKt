@@ -38,8 +38,7 @@ class TheDayDetailActivity : BaseActivity<TheDayDetailViewModel, ActivityTheDayD
         }
 
         viewModel.uiState.observe(this@TheDayDetailActivity) {
-            // TODO: 如何mvvm
-            binding.divDate.data = it.theDayDate ?: ""
+            // TODO 需要转一层的数据，如何MVVM？
             binding.sivType.data = if (it.notifyType == TheDay.NOTIFY_TYPE_TOTAL_COUNT)
                 "累计天数" else "按年倒计天数"
         }
