@@ -2,10 +2,10 @@ package com.boredream.lovebook.ui.theday
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.blankj.utilcode.util.TimeUtils
+import com.boredream.lovebook.MainDispatcherRule
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
-import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
 import com.boredream.lovebook.net.ServiceFactory
@@ -13,13 +13,9 @@ import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -33,6 +29,9 @@ class TheDayViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     @MockK
     private lateinit var repo: TheDayRepository
 
@@ -44,7 +43,6 @@ class TheDayViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        Dispatchers.setMain(StandardTestDispatcher())
         val factory = ServiceFactory()
         factory.testToken = TestDataConstants.token
         vm = TheDayViewModel(repo, userRepo)
@@ -104,10 +102,6 @@ class TheDayViewModelTest {
         every {
             userRepo.getLocalUser()
         } returns user
-
-        // TODO: 提取成rule？
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
 
         vm.setTogetherDay(togetherDate)
         assertNotNull(vm.uiState.value)

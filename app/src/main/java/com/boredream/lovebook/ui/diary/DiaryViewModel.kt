@@ -38,10 +38,12 @@ class DiaryViewModel @Inject constructor(private val repository: DiaryRepository
 
             if (response.isSuccess()) {
                 page = requestPage
+                val list = _dataList.value ?: ArrayList()
                 if(!loadMore) {
-                    _dataList.value?.clear()
+                    list.clear()
                 }
-                _dataList.value?.addAll(response.getSuccessData().records)
+                list.addAll(response.getSuccessData().records)
+                _dataList.value = list
             } else {
                 requestError(response)
             }
