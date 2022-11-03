@@ -56,21 +56,23 @@ abstract class BaseSelectInputView : LinearLayout {
     protected abstract fun startSelect()
 
     companion object {
+
+        // 双向数据绑定 data -> view
         @BindingAdapter("app:data")
         @JvmStatic fun setData(view: BaseSelectInputView, newValue: String) {
             // Important to break potential infinite loops.
             if (view.data != newValue) {
-                Log.i("DDD", "setData: $newValue")
                 view.data = newValue
             }
         }
 
+        // 双向数据绑定 view -> data
         @InverseBindingAdapter(attribute = "app:data")
         @JvmStatic fun getData(view: BaseSelectInputView) : String {
-            Log.i("DDD", "getData: $view.data")
             return view.data
         }
 
+        // 双向数据绑定 view add listener
         @BindingAdapter("app:dataAttrChanged")
         @JvmStatic fun setDataListeners(
             view: BaseSelectInputView,

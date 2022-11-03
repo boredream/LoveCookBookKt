@@ -24,8 +24,6 @@ class TheDayDetailViewModel @Inject constructor(
 
     private var fetchJob: Job? = null
 
-    // TODO: 可变的 不可变的 分开UIState
-
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
 
