@@ -36,8 +36,6 @@ class DiaryViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        val factory = ServiceFactory()
-        factory.testToken = TestDataConstants.token
         vm = DiaryViewModel(repo)
     }
 

@@ -30,6 +30,10 @@ class UserRepository @Inject constructor(
         return response
     }
 
+    fun getLocalToken(): String? {
+        return localDataSource.getToken()
+    }
+
     fun getLocalUser(): User? {
         return localDataSource.getUser()
     }

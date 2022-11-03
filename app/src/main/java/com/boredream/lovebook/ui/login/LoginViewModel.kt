@@ -34,23 +34,27 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
-            // TODO 协程的错误处理
-            val loginResponse = repository.login(username.value ?: "", password.value ?: "")
-            _baseUiState.value = BaseUiState(showLoading = false)
+            try {
+                val loginResponse = repository.login(username.value ?: "", password.value ?: "")
+                _baseUiState.value = BaseUiState(showLoading = false)
 
-            // TODO isSuccess 判断的封装
-            if (loginResponse.isSuccess()) {
-                // 登录成功，保存token，继续获取用户信息
-                val userInfoResponse = repository.getUserInfo()
-                if (userInfoResponse.isSuccess()) {
-                    // 获取信息获取成功，完成登录
-                    Log.i("DDD", "login success")
-                    _uiState.value = LoginUiState(isLoginSuccess = true)
+                // TODO isSuccess 判断的封装
+                if (loginResponse.isSuccess()) {
+                    // 登录成功，保存token，继续获取用户信息
+
+                    val userInfoResponse = repository.getUserInfo()
+                    if (userInfoResponse.isSuccess()) {
+                        // 获取信息获取成功，完成登录
+                        Log.i("DDD", "login success")
+                        _uiState.value = LoginSuccess
+                    } else {
+                        requestError(userInfoResponse.msg)
+                    }
                 } else {
-                    requestError(userInfoResponse)
+                    requestError(loginResponse.msg)
                 }
-            } else {
-                requestError(loginResponse)
+            } catch (e: Exception) {
+                requestError(e.message ?: "位置错误 $e")
             }
         }
     }
@@ -58,7 +62,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
     /**
      * 请求失败
      */
-    private fun <T> requestError(response: ResponseEntity<T>) {
-        _uiState.value = LoginUiState(isLoginSuccess = false, errorTip = response.msg)
+    private fun requestError(reason: String) {
+        _uiState.value = LoginFail(reason)
     }
 }

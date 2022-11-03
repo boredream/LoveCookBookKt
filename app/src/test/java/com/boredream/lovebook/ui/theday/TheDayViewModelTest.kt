@@ -43,8 +43,6 @@ class TheDayViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        val factory = ServiceFactory()
-        factory.testToken = TestDataConstants.token
         vm = TheDayViewModel(repo, userRepo)
     }
 
