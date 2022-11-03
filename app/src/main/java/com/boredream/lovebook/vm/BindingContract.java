@@ -26,11 +26,11 @@ public class BindingContract {
     public static class Convert {
 
         @InverseMethod("notifyTypeStringToInt")
-        public static String notifyTypeIntToString(int value) {
-            return value == TheDay.NOTIFY_TYPE_TOTAL_COUNT ? "累计天数" : "按年倒计天数";
+        public static String notifyTypeIntToString(Integer value) {
+            return value != null && value == TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN ? "按年倒计天数" : "累计天数";
         }
 
-        public static int notifyTypeStringToInt(String value) {
+        public static Integer notifyTypeStringToInt(String value) {
             return Objects.equals(value, "累计天数")
                     ? TheDay.NOTIFY_TYPE_TOTAL_COUNT
                     : TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN;

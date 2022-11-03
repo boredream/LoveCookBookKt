@@ -36,7 +36,6 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
         fetchJob = viewModelScope.launch {
             try {
                 val loginResponse = repository.login(username.value ?: "", password.value ?: "")
-                _baseUiState.value = BaseUiState(showLoading = false)
 
                 // TODO isSuccess 判断的封装
                 if (loginResponse.isSuccess()) {
@@ -54,8 +53,9 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
                     requestError(loginResponse.msg)
                 }
             } catch (e: Exception) {
-                requestError(e.message ?: "位置错误 $e")
+                requestError(e.message ?: "请求错误 $e")
             }
+            _baseUiState.value = BaseUiState(showLoading = false)
         }
     }
 

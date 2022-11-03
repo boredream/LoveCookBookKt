@@ -38,11 +38,11 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
                 is LoginFail -> ToastUtils.showShort(it.reason)
                 is LoginValidateFail -> ToastUtils.showShort(it.reason)
             }
-
-            // FIXME: for test
-            viewModel.username.value = "18501683422"
-            viewModel.password.value = "123456"
         }
+
+        // FIXME: for test
+        viewModel.username.value = "18501683422"
+        viewModel.password.value = "123456"
     }
 
 }

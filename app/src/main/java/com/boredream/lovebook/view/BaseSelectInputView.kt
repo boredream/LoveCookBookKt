@@ -87,7 +87,6 @@ abstract class BaseSelectInputView : LinearLayout {
         }
     }
 
-    // TODO: 和 field 的 set 绑定
     private var onDataSelectListener: OnCall<String?>? = null
 
     fun setOnDataSelectListener(onDataSelectListener: OnCall<String?>) {

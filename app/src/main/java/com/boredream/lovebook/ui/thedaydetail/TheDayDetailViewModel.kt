@@ -4,13 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.data.ResponseEntity
+import com.blankj.utilcode.util.StringUtils
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.ui.BaseUiState
 import com.boredream.lovebook.ui.BaseViewModel
-import com.boredream.lovebook.ui.FinishSelfActivityLiveEvent
-import com.boredream.lovebook.ui.ToastLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -27,44 +25,60 @@ class TheDayDetailViewModel @Inject constructor(
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
 
+    private val _commitUiState = MutableLiveData<TheDayDetailCommitUiState>()
+    val commitUiState: LiveData<TheDayDetailCommitUiState> = _commitUiState
+
     fun load(theDay: TheDay?) {
-        theDay?.let {
-            _uiState.value = it
+        var data = theDay
+        if (data == null) {
+            // TODO: 更好的写法？
+            // 因为数据是双向绑定的，所以新建时要创建空对象，且和视图绑定的变量需要赋值
+            data = TheDay()
+            data.name = ""
+            data.theDayDate = ""
         }
+        _uiState.value = data!!
     }
 
-    fun commit(notifyTypeTitle: String) {
+    fun commit() {
         Log.i("DDD", "login")
+
+        val theDay = _uiState.value!!
+
+        if (StringUtils.isEmpty(theDay.name)) {
+            _commitUiState.value = CommitFail("名字不能为空")
+            return
+        }
+        if (StringUtils.isEmpty(theDay.theDayDate)) {
+            _commitUiState.value = CommitFail("日期不能为空")
+            return
+        }
+
         _baseUiState.value = BaseUiState(showLoading = true)
-
-        // TODO: validate
-
-        val theDay = _uiState.value ?: TheDay()
-        theDay.notifyType = if ("累计天数" == notifyTypeTitle)
-            TheDay.NOTIFY_TYPE_TOTAL_COUNT else TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN
-
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
-            val response =
-                if (theDay.id != null) repository.update(theDay)
-                else repository.add(theDay)
-            _baseUiState.value = BaseUiState(showLoading = false)
+            try {
+                val response =
+                    if (theDay.id != null) repository.update(theDay)
+                    else repository.add(theDay)
 
-            if (response.isSuccess()) {
-                // TODO: 我这里care成功后的操作细节吗？
-                _baseEvent.value = ToastLiveEvent("提交成功")
-                _baseEvent.value = FinishSelfActivityLiveEvent()
-            } else {
-                requestError(response)
+                if (response.isSuccess()) {
+                    _commitUiState.value = CommitSuccess
+                } else {
+                    requestError(response.msg)
+                }
+            } catch (e: Exception) {
+                requestError(e.message ?: "请求错误 $e")
             }
+            _baseUiState.value = BaseUiState(showLoading = false)
         }
     }
 
     /**
      * 请求失败
      */
-    private fun <T> requestError(response: ResponseEntity<T>) {
-
+    private fun requestError(reason: String) {
+        _commitUiState.value = CommitFail(reason)
     }
 
 }

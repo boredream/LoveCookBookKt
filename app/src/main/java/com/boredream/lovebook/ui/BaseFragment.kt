@@ -42,7 +42,6 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
         loadingDialog = ProgressDialog(activity)
         loadingDialog.setMessage("加载中...")
         viewModel.baseUiState.observe(viewLifecycleOwner) {
-            // TODO dialog ?
             if (it.showLoading) {
                 loadingDialog.show()
             } else {

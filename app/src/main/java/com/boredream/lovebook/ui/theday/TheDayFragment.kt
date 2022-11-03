@@ -35,11 +35,10 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         getBinding().rvTheDay.adapter = adapter
 
         viewModel.showPickDayState.observe(viewLifecycleOwner) {
-            // TODO: show dialog
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val dialog = DatePickerDialog(requireContext())
                 dialog.setOnDateSetListener { view, year, month, dayOfMonth ->
-                    viewModel.setTogetherDay(String.format("%d-%d-%d", year, month, dayOfMonth))
+                    viewModel.setTogetherDay(String.format("%d-%d-%d", year, month + 1, dayOfMonth))
                 }
                 dialog.show()
             }
