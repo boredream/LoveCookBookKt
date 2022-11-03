@@ -1,0 +1,41 @@
+package com.boredream.lovebook.vm;
+
+import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.InverseMethod;
+
+import com.boredream.lovebook.data.TheDay;
+import com.boredream.lovebook.utils.GlideUtils;
+import com.bumptech.glide.Glide;
+
+import java.util.Objects;
+
+/**
+ * 用于解决自定义组件的DataBinding问题
+ */
+public class BindingContract {
+
+    @BindingAdapter("android:src")
+    public static void setImageViewGlideUrl(ImageView iv, String newValue) {
+        System.out.println("load image " + newValue);
+        GlideUtils.INSTANCE.load(Glide.with(iv), newValue, iv);
+    }
+
+    // 用于解决需要转换的数据转换问题
+    public static class Convert {
+
+        @InverseMethod("notifyTypeStringToInt")
+        public static String notifyTypeIntToString(int value) {
+            return value == TheDay.NOTIFY_TYPE_TOTAL_COUNT ? "累计天数" : "按年倒计天数";
+        }
+
+        public static int notifyTypeStringToInt(String value) {
+            return Objects.equals(value, "累计天数")
+                    ? TheDay.NOTIFY_TYPE_TOTAL_COUNT
+                    : TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN;
+        }
+
+    }
+
+}

@@ -24,7 +24,6 @@ class DiaryListAdapter(private val dataList: ArrayList<Diary>) :
     override fun onBindViewHolder(holder: BindingHolder, position: Int) {
         val data = dataList[position]
         holder.binding.setVariable(BR.bean, data)
-        // TODO: image ?
     }
 
     override fun getItemCount() = dataList.size
