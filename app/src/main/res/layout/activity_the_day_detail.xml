@@ -8,7 +8,7 @@
             name="vm"
             type="com.boredream.lovebook.ui.thedaydetail.TheDayDetailViewModel" />
 
-        <import type="com.boredream.lovebook.vm.BindingConvert" />
+        <import type="com.boredream.lovebook.vm.BindingContract.Convert" />
 
     </data>
 
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:data="@={vm.uiState.theDayDate}"
+            app:inputSelect="@={vm.uiState.theDayDate}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_name"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             app:items="@array/the_day_type"
-            app:data="@={BindingConvert.notifyTypeIntToString(vm.uiState.notifyType)}"
+            app:inputSelect="@={Convert.notifyTypeIntToString(vm.uiState.notifyType)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/div_date"
