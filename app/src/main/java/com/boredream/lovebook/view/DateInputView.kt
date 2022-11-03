@@ -31,7 +31,7 @@ class DateInputView : BaseSelectInputView, DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        data = String.format("%d-%d-%d", year, month, dayOfMonth)
+        data = String.format("%d-%d-%d", year, month + 1, dayOfMonth)
     }
 
 }

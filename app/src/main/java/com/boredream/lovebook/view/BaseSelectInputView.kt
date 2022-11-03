@@ -2,9 +2,13 @@ package com.boredream.lovebook.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ViewBaseSelectInputBinding
@@ -50,6 +54,36 @@ abstract class BaseSelectInputView : LinearLayout {
     }
 
     protected abstract fun startSelect()
+
+    companion object {
+        @BindingAdapter("app:data")
+        @JvmStatic fun setData(view: BaseSelectInputView, newValue: String) {
+            // Important to break potential infinite loops.
+            if (view.data != newValue) {
+                Log.i("DDD", "setData: $newValue")
+                view.data = newValue
+            }
+        }
+
+        @InverseBindingAdapter(attribute = "app:data")
+        @JvmStatic fun getData(view: BaseSelectInputView) : String {
+            Log.i("DDD", "getData: $view.data")
+            return view.data
+        }
+
+        @BindingAdapter("app:dataAttrChanged")
+        @JvmStatic fun setDataListeners(
+            view: BaseSelectInputView,
+            attrChange: InverseBindingListener
+        ) {
+            // Set a listener for click, focus, touch, etc.
+            view.setOnDataSelectListener(object : OnCall<String?> {
+                override fun call(t: String?) {
+                    attrChange.onChange()
+                }
+            })
+        }
+    }
 
     // TODO: 和 field 的 set 绑定
     private var onDataSelectListener: OnCall<String?>? = null
