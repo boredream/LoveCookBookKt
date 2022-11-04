@@ -10,9 +10,9 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.ui.BaseUiState
-import com.boredream.lovebook.ui.BaseViewModel
-import com.boredream.lovebook.ui.StartActivityLiveEvent
+import com.boredream.lovebook.base.BaseUiState
+import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.base.StartActivityLiveEvent
 import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

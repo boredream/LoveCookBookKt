@@ -3,7 +3,7 @@ package com.boredream.lovebook.ui.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.ui.BaseViewModel
+import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

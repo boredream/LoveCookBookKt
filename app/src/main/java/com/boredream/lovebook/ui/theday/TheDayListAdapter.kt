@@ -1,7 +1,9 @@
 package com.boredream.lovebook.ui.theday
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemLongClickListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.constant.TimeConstants
@@ -10,11 +12,15 @@ import com.boredream.lovebook.BR
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.ItemTheDayBinding
+import com.boredream.lovebook.listener.OnCall
 import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import java.util.*
 
 class TheDayListAdapter(private val dataList: ArrayList<TheDay>)
     : RecyclerView.Adapter<TheDayListAdapter.BindingHolder>() {
+
+    var onItemClickListener: OnCall<TheDay>? = null
+    var onItemLongClickListener: OnCall<TheDay>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -52,7 +58,11 @@ class TheDayListAdapter(private val dataList: ArrayList<TheDay>)
         }
 
         holder.itemView.setOnClickListener {
-            TheDayDetailActivity.start(holder.itemView.context, data)
+            onItemClickListener?.call(data)
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClickListener?.call(data)
+            true
         }
     }
 

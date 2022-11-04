@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
 import com.boredream.lovebook.data.dto.LoginDto

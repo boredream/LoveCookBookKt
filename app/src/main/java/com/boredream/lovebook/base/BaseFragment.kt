@@ -1,4 +1,4 @@
-package com.boredream.lovebook.ui
+package com.boredream.lovebook.base
 
 import android.app.ProgressDialog
 import android.content.Intent

@@ -1,5 +1,7 @@
 package com.boredream.lovebook.data
 
+import com.boredream.lovebook.base.BaseEntity
+
 class User : BaseEntity() {
     var username: String? = null
     var nickname: String? = null

@@ -8,7 +8,7 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTheDayDetailBinding
-import com.boredream.lovebook.ui.BaseActivity
+import com.boredream.lovebook.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 

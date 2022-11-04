@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.StringUtils
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
-import com.boredream.lovebook.ui.BaseUiState
-import com.boredream.lovebook.ui.BaseViewModel
+import com.boredream.lovebook.base.BaseUiState
+import com.boredream.lovebook.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

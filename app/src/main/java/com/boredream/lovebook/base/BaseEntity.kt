@@ -1,4 +1,4 @@
-package com.boredream.lovebook.data
+package com.boredream.lovebook.base
 
 open class BaseEntity : java.io.Serializable {
 

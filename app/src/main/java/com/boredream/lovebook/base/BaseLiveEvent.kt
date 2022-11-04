@@ -1,4 +1,4 @@
-package com.boredream.lovebook.ui
+package com.boredream.lovebook.base
 
 open class BaseLiveEvent
 

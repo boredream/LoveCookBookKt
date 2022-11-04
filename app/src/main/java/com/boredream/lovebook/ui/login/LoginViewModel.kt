@@ -4,11 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.ui.BaseUiState
-import com.boredream.lovebook.ui.BaseViewModel
-import com.boredream.lovebook.utils.DataStoreUtils
+import com.boredream.lovebook.base.BaseUiState
+import com.boredream.lovebook.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

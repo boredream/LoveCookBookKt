@@ -1,9 +1,8 @@
-package com.boredream.lovebook.ui
+package com.boredream.lovebook.base
 
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding

@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.FragmentTheDayBinding
-import com.boredream.lovebook.ui.BaseFragment
+import com.boredream.lovebook.listener.OnCall
+import com.boredream.lovebook.base.BaseFragment
+import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,11 +31,30 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
+        initList()
+        initObserver()
+        viewModel.loadTogetherInfo()
+        viewModel.loadTheDayList()
+        return view
+    }
 
+    private fun initList() {
         getBinding().rvTheDay.layoutManager = LinearLayoutManager(activity)
         adapter = TheDayListAdapter(dataList)
+        adapter.onItemClickListener = object: OnCall<TheDay> {
+            override fun call(t: TheDay) {
+                TheDayDetailActivity.start(requireContext(), t)
+            }
+        }
+        adapter.onItemLongClickListener = object: OnCall<TheDay> {
+            override fun call(t: TheDay) {
+                TheDayDetailActivity.start(requireContext(), t)
+            }
+        }
         getBinding().rvTheDay.adapter = adapter
+    }
 
+    private fun initObserver() {
         viewModel.showPickDayState.observe(viewLifecycleOwner) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val dialog = DatePickerDialog(requireContext())
@@ -48,10 +69,6 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
             dataList.addAll(it)
             adapter.notifyItemRangeChanged(0, it.size)
         }
-
-        viewModel.loadTogetherInfo()
-        viewModel.loadTheDayList()
-        return view
     }
 
 }

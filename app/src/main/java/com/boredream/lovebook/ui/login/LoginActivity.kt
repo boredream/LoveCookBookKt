@@ -3,11 +3,10 @@ package com.boredream.lovebook.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ActivityLoginBinding
-import com.boredream.lovebook.ui.BaseActivity
+import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 

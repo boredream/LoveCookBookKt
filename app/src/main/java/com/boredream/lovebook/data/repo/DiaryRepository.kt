@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.net.ServiceFactory
 import javax.inject.Inject

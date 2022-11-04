@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.databinding.FragmentDiaryBinding
-import com.boredream.lovebook.ui.BaseFragment
+import com.boredream.lovebook.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -33,6 +33,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
         getBinding().rvDiary.adapter = adapter
 
         viewModel.dataList.observe(viewLifecycleOwner) {
+            // TODO: 使用Paging
             dataList.clear()
             dataList.addAll(it)
             adapter.notifyItemRangeChanged(0, it.size)

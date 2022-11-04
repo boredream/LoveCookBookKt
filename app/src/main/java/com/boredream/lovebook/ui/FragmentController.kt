@@ -3,6 +3,7 @@ package com.boredream.lovebook.ui
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.boredream.lovebook.R
+import com.boredream.lovebook.base.BaseFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
