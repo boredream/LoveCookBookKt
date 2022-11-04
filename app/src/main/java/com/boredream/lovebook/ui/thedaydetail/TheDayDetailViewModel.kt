@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.StringUtils
+import com.blankj.utilcode.util.TimeUtils
+import com.boredream.lovebook.base.*
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
-import com.boredream.lovebook.base.BaseUiState
-import com.boredream.lovebook.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 
@@ -25,8 +26,8 @@ class TheDayDetailViewModel @Inject constructor(
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
 
-    private val _commitUiState = MutableLiveData<TheDayDetailCommitUiState>()
-    val commitUiState: LiveData<TheDayDetailCommitUiState> = _commitUiState
+    private val _commitUiState = MutableLiveData<BaseRequestUiState<TheDay>>()
+    val commitUiState: LiveData<BaseRequestUiState<TheDay>> = _commitUiState
 
     fun load(theDay: TheDay?) {
         var data = theDay
@@ -35,7 +36,8 @@ class TheDayDetailViewModel @Inject constructor(
             // 因为数据是双向绑定的，所以新建时要创建空对象，且和视图绑定的变量需要赋值
             data = TheDay()
             data.name = ""
-            data.theDayDate = ""
+            // 默认今天
+            data.theDayDate = TimeUtils.date2String(Date(), "yyyy-MM-dd")
         }
         _uiState.value = data!!
     }
@@ -46,11 +48,11 @@ class TheDayDetailViewModel @Inject constructor(
         val theDay = _uiState.value!!
 
         if (StringUtils.isEmpty(theDay.name)) {
-            _commitUiState.value = CommitFail("名字不能为空")
+            _commitUiState.value = BaseRequestFail("名字不能为空")
             return
         }
         if (StringUtils.isEmpty(theDay.theDayDate)) {
-            _commitUiState.value = CommitFail("日期不能为空")
+            _commitUiState.value = BaseRequestFail("日期不能为空")
             return
         }
 
@@ -63,22 +65,15 @@ class TheDayDetailViewModel @Inject constructor(
                     else repository.add(theDay)
 
                 if (response.isSuccess()) {
-                    _commitUiState.value = CommitSuccess
+                    _commitUiState.value = BaseRequestSuccess(theDay)
                 } else {
-                    requestError(response.msg)
+                    _commitUiState.value = BaseRequestFail(response.msg)
                 }
             } catch (e: Exception) {
-                requestError(e.message ?: "请求错误 $e")
+                _commitUiState.value = BaseRequestFail(e.message ?: "请求错误 $e")
             }
             _baseUiState.value = BaseUiState(showLoading = false)
         }
-    }
-
-    /**
-     * 请求失败
-     */
-    private fun requestError(reason: String) {
-        _commitUiState.value = CommitFail(reason)
     }
 
 }

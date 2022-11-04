@@ -1,5 +1,6 @@
 package com.boredream.lovebook.ui.diary
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,9 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.databinding.FragmentDiaryBinding
 import com.boredream.lovebook.base.BaseFragment
+import com.boredream.lovebook.data.TheDay
+import com.boredream.lovebook.listener.OnCall
+import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -28,19 +32,29 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
+        initList()
+        initObserver()
+        viewModel.loadList()
+        return view
+    }
+
+    private fun initList() {
         getBinding().rvDiary.layoutManager = LinearLayoutManager(activity)
         adapter = DiaryListAdapter(dataList)
+        adapter.onItemClickListener = {
+            // TODO:  
+        }
         getBinding().rvDiary.adapter = adapter
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initObserver() {
         viewModel.dataList.observe(viewLifecycleOwner) {
             // TODO: 使用Paging
             dataList.clear()
             dataList.addAll(it)
-            adapter.notifyItemRangeChanged(0, it.size)
+            adapter.notifyDataSetChanged()
         }
-
-        viewModel.loadList()
-        return view
     }
 
 }

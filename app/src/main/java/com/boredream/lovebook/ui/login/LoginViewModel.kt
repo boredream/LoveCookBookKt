@@ -21,6 +21,7 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
     private val _uiState = MutableLiveData<LoginUiState>()
     val uiState: LiveData<LoginUiState> = _uiState
 
+    // TODO: 避免重复请求更好的写法？
     private var fetchJob: Job? = null
 
     /**

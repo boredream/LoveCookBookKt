@@ -8,7 +8,6 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.net.ServiceFactory
 import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -55,21 +54,30 @@ class TheDayViewModelTest {
         } returns user
 
         vm.loadTogetherInfo()
+
+        assertNotNull(vm.uiState.value)
         assertEquals("点我设置", vm.uiState.value?.togetherDayTitle)
         assertEquals("0", vm.uiState.value?.togetherDay)
     }
 
     @Test
     fun loadTogetherInfo_hasTogetherDay() {
+        val today = Calendar.getInstance()
+        today.add(Calendar.DAY_OF_YEAR, -2)
+        val togetherDate = TimeUtils.date2String(Date(today.timeInMillis), "yyyy-MM-dd")
+
         val user = TestDataConstants.createUser()
-        user.cpTogetherDate = "2020-02-05"
+        user.cpTogetherDate = togetherDate
+
         every {
             userRepo.getLocalUser()
         } returns user
 
         vm.loadTogetherInfo()
+
+        assertNotNull(vm.uiState.value)
         assertEquals("我们已恋爱", vm.uiState.value?.togetherDayTitle)
-        assertEquals("2020-02-05", vm.uiState.value?.togetherDay)
+        assertEquals("2", vm.uiState.value?.togetherDay)
     }
 
     @Test
@@ -81,7 +89,11 @@ class TheDayViewModelTest {
         } returns ResponseEntity.success(MockUtils.mockPageResult(TheDay::class.java))
 
         vm.loadTheDayList()
-        assertNotEquals(0, vm.dataList.value?.size)
+
+        assertNotNull(vm.requestUiState.value)
+        assertEquals(LoadTheDayListSuccess::class.java, vm.requestUiState.value?.javaClass)
+        val state = vm.requestUiState.value as LoadTheDayListSuccess
+        assertNotEquals(0, state.list.size)
     }
 
     @Test
