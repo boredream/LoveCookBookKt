@@ -26,8 +26,8 @@ class TheDayDetailViewModel @Inject constructor(
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
 
-    private val _commitUiState = MutableLiveData<BaseRequestUiState<TheDay>>()
-    val commitUiState: LiveData<BaseRequestUiState<TheDay>> = _commitUiState
+    private val _commitUiState = MutableLiveData<SimpleRequestUiState<TheDay>>()
+    val commitUiState: LiveData<SimpleRequestUiState<TheDay>> = _commitUiState
 
     fun load(theDay: TheDay?) {
         var data = theDay
@@ -48,11 +48,11 @@ class TheDayDetailViewModel @Inject constructor(
         val theDay = _uiState.value!!
 
         if (StringUtils.isEmpty(theDay.name)) {
-            _commitUiState.value = BaseRequestFail("名字不能为空")
+            _commitUiState.value = SimpleRequestFail("名字不能为空")
             return
         }
         if (StringUtils.isEmpty(theDay.theDayDate)) {
-            _commitUiState.value = BaseRequestFail("日期不能为空")
+            _commitUiState.value = SimpleRequestFail("日期不能为空")
             return
         }
 
@@ -65,12 +65,12 @@ class TheDayDetailViewModel @Inject constructor(
                     else repository.add(theDay)
 
                 if (response.isSuccess()) {
-                    _commitUiState.value = BaseRequestSuccess(theDay)
+                    _commitUiState.value = SimpleRequestSuccess(theDay)
                 } else {
-                    _commitUiState.value = BaseRequestFail(response.msg)
+                    _commitUiState.value = SimpleRequestFail(response.msg)
                 }
             } catch (e: Exception) {
-                _commitUiState.value = BaseRequestFail(e.message ?: "请求错误 $e")
+                _commitUiState.value = SimpleRequestFail(e.message ?: "请求错误 $e")
             }
             _baseUiState.value = BaseUiState(showLoading = false)
         }
