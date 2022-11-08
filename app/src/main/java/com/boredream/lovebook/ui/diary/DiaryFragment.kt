@@ -7,14 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boredream.lovebook.R
-import com.boredream.lovebook.data.Diary
-import com.boredream.lovebook.databinding.FragmentDiaryBinding
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.base.SimpleListAdapter
-import com.boredream.lovebook.data.TheDay
+import com.boredream.lovebook.data.Diary
+import com.boredream.lovebook.databinding.FragmentDiaryBinding
 import com.boredream.lovebook.databinding.ItemDiaryBinding
-import com.boredream.lovebook.listener.OnCall
-import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -2,11 +2,10 @@ package com.boredream.lovebook.ui.diary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.boredream.lovebook.MainDispatcherRule
-import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.repo.DiaryRepository
-import com.boredream.lovebook.net.ServiceFactory
+import com.boredream.lovebook.ui.mine.MineViewModel
 import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -31,12 +30,12 @@ class DiaryViewModelTest {
     @MockK
     private lateinit var repo: DiaryRepository
 
-    private lateinit var vm: DiaryViewModel
+    private lateinit var vm: MineViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        vm = DiaryViewModel(repo)
+        vm = MineViewModel(repo)
     }
 
     @Test

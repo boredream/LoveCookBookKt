@@ -2,18 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_the_day"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="纪念日" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_diary"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="日历" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_todo_list"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="清单" />
+
+    <item
+        android:id="@+id/navigation_mine"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="我的" />
 
 </menu>

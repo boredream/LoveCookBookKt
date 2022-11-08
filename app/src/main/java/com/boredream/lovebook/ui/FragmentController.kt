@@ -22,16 +22,20 @@ class FragmentController(
         ft.commitAllowingStateLoss()
         nav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> {
+                R.id.navigation_the_day -> {
                     showFragment(0)
                     return@setOnItemSelectedListener true
                 }
-                R.id.navigation_dashboard -> {
+                R.id.navigation_diary -> {
                     showFragment(1)
                     return@setOnItemSelectedListener true
                 }
-                R.id.navigation_notifications -> {
+                R.id.navigation_todo_list -> {
                     showFragment(2)
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_mine -> {
+                    showFragment(3)
                     return@setOnItemSelectedListener true
                 }
             }

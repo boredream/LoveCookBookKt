@@ -11,13 +11,13 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.boredream.lovebook"
+        applicationId 'com.boredream.lovebook'
         minSdk 22
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     buildTypes {
@@ -56,11 +56,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.11.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
 
     // kotlin
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation "androidx.activity:activity-ktx:1.6.0"
+    implementation 'androidx.activity:activity-ktx:1.6.0'
 
     // jetpack arch
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -80,10 +80,15 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // glide
-    implementation "com.github.bumptech.glide:glide:4.14.2"
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.14.2"
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.14.2'
 
     // other
     implementation 'com.blankj:utilcodex:1.30.6'
+    
+    // view
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.1'
+    implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'
 
 }
