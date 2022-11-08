@@ -23,6 +23,11 @@ class UserRepository @Inject constructor(
         return response
     }
 
+    suspend fun logout() {
+        localDataSource.saveToken(null)
+        localDataSource.saveUser(null)
+    }
+
     suspend fun getUserInfo(): ResponseEntity<User> {
         val response = service.getUserInfo()
         if (response.isSuccess()) {

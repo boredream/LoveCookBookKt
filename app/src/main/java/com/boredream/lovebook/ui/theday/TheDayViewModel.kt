@@ -116,7 +116,7 @@ class TheDayViewModel @Inject constructor(
             try {
                 val response = theDayRepository.getList()
                 if (response.isSuccess()) {
-                    _requestUiState.value = LoadTheDayListSuccess(response.data!!.records)
+                    _requestUiState.value = LoadListSuccess(response.data!!.records)
                 } else {
                     _requestUiState.value = RequestFail(response.msg)
                 }

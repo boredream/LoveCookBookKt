@@ -54,7 +54,7 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
     private fun initObserver() {
         viewModel.requestUiState.observe(viewLifecycleOwner) {
             when (it) {
-                is LoadTheDayListSuccess -> {
+                is LoadListSuccess -> {
                     dataList.clear()
                     dataList.addAll(it.list)
                     adapter.notifyDataSetChanged()

@@ -91,8 +91,8 @@ class TheDayViewModelTest {
         vm.loadTheDayList()
 
         assertNotNull(vm.requestUiState.value)
-        assertEquals(LoadTheDayListSuccess::class.java, vm.requestUiState.value?.javaClass)
-        val state = vm.requestUiState.value as LoadTheDayListSuccess
+        assertEquals(LoadListSuccess::class.java, vm.requestUiState.value?.javaClass)
+        val state = vm.requestUiState.value as LoadListSuccess
         assertNotEquals(0, state.list.size)
     }
 

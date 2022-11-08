@@ -9,7 +9,7 @@ object GlobalConstant {
     var token: String? = null
     var curUser: User? = null
 
-    suspend fun saveToken(token: String) {
+    suspend fun saveToken(token: String?) {
         DataStoreUtils.putData(DataStoreKey.TOKEN, token)
         GlobalConstant.token = token
     }
@@ -25,8 +25,8 @@ object GlobalConstant {
         return GlobalConstant.token
     }
 
-    suspend fun saveUser(user: User) {
-        DataStoreUtils.putData(DataStoreKey.USER, Gson().toJson(user))
+    suspend fun saveUser(user: User?) {
+        DataStoreUtils.putData(DataStoreKey.USER, if(user == null) null else Gson().toJson(user))
         curUser = user
     }
 

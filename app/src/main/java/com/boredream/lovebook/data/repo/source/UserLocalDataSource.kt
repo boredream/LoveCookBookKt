@@ -8,7 +8,7 @@ class UserLocalDataSource @Inject constructor() {
 
     // 包一层作用在于 unit test 时可以 mock
 
-    suspend fun saveToken(token: String) {
+    suspend fun saveToken(token: String?) {
         GlobalConstant.saveToken(token)
     }
 
@@ -16,7 +16,7 @@ class UserLocalDataSource @Inject constructor() {
         return GlobalConstant.getLocalToken()
     }
 
-    suspend fun saveUser(user: User) {
+    suspend fun saveUser(user: User?) {
         GlobalConstant.saveUser(user)
     }
 

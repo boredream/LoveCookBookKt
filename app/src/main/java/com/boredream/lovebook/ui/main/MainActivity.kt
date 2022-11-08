@@ -11,6 +11,7 @@ import com.boredream.lovebook.ui.FragmentController
 import com.boredream.lovebook.ui.diary.DiaryFragment
 import com.boredream.lovebook.ui.mine.MineFragment
 import com.boredream.lovebook.ui.theday.TheDayFragment
+import com.boredream.lovebook.ui.todogroup.TodoGroupFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,7 +39,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         val fragmentList = ArrayList<BaseFragment<*, *>>()
         fragmentList.add(TheDayFragment())
         fragmentList.add(DiaryFragment())
-        fragmentList.add(MineFragment())
+        fragmentList.add(TodoGroupFragment())
         fragmentList.add(MineFragment())
 
         val controller = FragmentController(navView, supportFragmentManager, R.id.fl_fragment, fragmentList)

@@ -1,9 +1,6 @@
 package com.boredream.lovebook.net
 
-import com.boredream.lovebook.data.Diary
-import com.boredream.lovebook.data.TheDay
-import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.*
 import com.boredream.lovebook.data.dto.LoginDto
 import com.boredream.lovebook.data.dto.PageResultDto
 import retrofit2.http.*
@@ -73,6 +70,51 @@ interface ApiService {
 
     @DELETE("diary/{id}")
     suspend fun deleteDiary(
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    // ******** todo_group ********
+
+    @GET("todo_group/only_group")
+    suspend fun getTodoGroupList(
+    ): ResponseEntity<List<TodoGroup>>
+
+    @POST("todo_group")
+    suspend fun addTodoGroup(
+        @Body dto: TodoGroup,
+    ): ResponseEntity<Boolean>
+
+    @PUT("todo_group/{id}")
+    suspend fun updateTodoGroup(
+        @Body dto: TodoGroup,
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    @DELETE("todo_group/{id}")
+    suspend fun deleteTodoGroup(
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    // ******** todo_info ********
+
+    @GET("todo/{id}")
+    suspend fun getTodoList(
+        @Path("id") groupId: String,
+    ): ResponseEntity<PageResultDto<TodoGroup>>
+
+    @POST("todo")
+    suspend fun addTodo(
+        @Body dto: Todo,
+    ): ResponseEntity<Boolean>
+
+    @PUT("todo/{id}")
+    suspend fun updateTodo(
+        @Body dto: Todo,
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    @DELETE("todo/{id}")
+    suspend fun deleteTodo(
         @Path("id") id: String,
     ): ResponseEntity<Boolean>
 

@@ -64,14 +64,22 @@
             tools:text="用户ID：0001" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_mine"
+            android:id="@+id/rv_setting"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:overScrollMode="never"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/v_bg" />
+
+        <Button
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="退出登录"
+            android:onClick="@{()->vm.logout()}"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintTop_toBottomOf="@id/rv_setting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
