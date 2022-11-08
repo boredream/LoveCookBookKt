@@ -10,6 +10,8 @@ import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.base.SimpleListAdapter
+import com.boredream.lovebook.base.SimpleRequestFail
+import com.boredream.lovebook.base.SimpleRequestSuccess
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.databinding.FragmentTodoGroupBinding
 import com.boredream.lovebook.databinding.ItemTodoGroupBinding
@@ -23,7 +25,7 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
     override fun getViewModelClass() = TodoGroupViewModel::class.java
 
     private var dataList = ArrayList<TodoGroup>()
-    private lateinit var adapter : SimpleListAdapter<TodoGroup, ItemTodoGroupBinding>
+    private lateinit var adapter: SimpleListAdapter<TodoGroup, ItemTodoGroupBinding>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,14 +51,14 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
-        viewModel.requestUiState.observe(viewLifecycleOwner) {
+        viewModel.loadListUiState.observe(viewLifecycleOwner) {
             when (it) {
-                is LoadListSuccess -> {
+                is SimpleRequestSuccess -> {
                     dataList.clear()
-                    dataList.addAll(it.list)
+                    dataList.addAll(it.data)
                     adapter.notifyDataSetChanged()
                 }
-                is RequestFail -> ToastUtils.showShort(it.reason)
+                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
             }
         }
     }

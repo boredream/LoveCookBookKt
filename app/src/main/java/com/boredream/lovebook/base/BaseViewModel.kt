@@ -11,6 +11,8 @@ import com.boredream.lovebook.vm.SingleLiveEvent
  */
 open class BaseViewModel : ViewModel() {
 
+    // TODO: UiState 应该业务为粒度？ 还是具体UI功能为粒度？
+
     // 通用的UI状态
     protected val _baseUiState = MutableLiveData<BaseUiState>()
     val baseUiState: LiveData<BaseUiState> = _baseUiState

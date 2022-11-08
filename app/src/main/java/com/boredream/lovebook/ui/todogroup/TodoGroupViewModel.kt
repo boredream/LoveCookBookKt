@@ -1,45 +1,35 @@
 package com.boredream.lovebook.ui.todogroup
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.base.BaseUiState
-import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.base.BaseRequestViewModel
+import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.repo.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class TodoGroupViewModel @Inject constructor(private val repository: TodoRepository) :
-    BaseViewModel() {
-
-    private var fetchJob: Job? = null
-
-    private val _requestUiState = MutableLiveData<TodoGroupUiState>()
-    val requestUiState: LiveData<TodoGroupUiState> = _requestUiState
+    BaseRequestViewModel<TodoGroup>() {
 
     fun loadList() {
-        Log.i("DDD", "TodoGroupViewModel loadList")
-        _baseUiState.value = BaseUiState(showLoading = true)
+        loadList {
+            repository.getGroupList()
+        }
+    }
 
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            try {
-                val response = repository.getGroupList()
-                _baseUiState.value = BaseUiState(showLoading = false)
+    fun startAddData() {
 
-                if (response.isSuccess()) {
-                    _requestUiState.value = LoadListSuccess(response.getSuccessData())
-                } else {
-                    _requestUiState.value = RequestFail(response.msg)
-                }
-            } catch (e: Exception) {
-                _requestUiState.value = RequestFail(e.message ?: "请求错误 $e")
-            }
+    }
+
+    fun addData(todoGroup: TodoGroup) {
+        commitData {
+            repository.addGroup(todoGroup)
+        }
+    }
+
+    fun deleteData(todoGroup: TodoGroup) {
+        commitData {
+            repository.addGroup(todoGroup)
         }
     }
 
