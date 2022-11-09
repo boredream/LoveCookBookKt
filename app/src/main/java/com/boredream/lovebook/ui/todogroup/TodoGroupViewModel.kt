@@ -13,7 +13,7 @@ import javax.inject.Inject
 class TodoGroupViewModel @Inject constructor(private val repository: TodoGroupRepository) :
     BaseRequestViewModel<TodoGroup>() {
 
-    fun loadList() {
+    fun start() {
         loadList { repository.getList() }
     }
 

@@ -38,8 +38,12 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
 
         initList()
         initObserver()
-        viewModel.loadList()
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.start()
     }
 
     private fun initList() {
@@ -68,7 +72,7 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
             when (it) {
                 is SimpleRequestSuccess -> {
                     ToastUtils.showShort("删除成功")
-                    viewModel.loadList()
+                    viewModel.start()
                 }
                 is SimpleRequestFail -> ToastUtils.showShort(it.reason)
             }

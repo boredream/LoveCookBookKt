@@ -1,17 +1,17 @@
 package com.boredream.lovebook.data.repo
 
-import com.boredream.lovebook.base.BaseRepository
+import com.boredream.lovebook.base.BaseLoadRepository
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.net.ServiceFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TodoGroupRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseRepository(serviceFactory) {
+class TodoGroupRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseLoadRepository<TodoGroup>(serviceFactory) {
 
-    suspend fun getList() = tryHttpError { service.getTodoGroupList() }
-    suspend fun add(data: TodoGroup) = tryHttpError { service.addTodoGroup(data) }
-    suspend fun update(data: TodoGroup) = tryHttpError { service.updateTodoGroup(data, data.id!!) }
-    suspend fun delete(id: String) = tryHttpError { service.deleteTodoGroup(id) }
+    override suspend fun getListRemote() = service.getTodoGroupList()
+    override suspend fun addRemote(data: TodoGroup) = service.addTodoGroup(data)
+    override suspend fun updateRemote(id: String, data: TodoGroup) = service.updateTodoGroup(id, data)
+    override suspend fun deleteRemote(id: String) = service.deleteTodoGroup(id)
 
 }

@@ -9,7 +9,7 @@ open class BaseRepository(serviceFactory: ServiceFactory) {
     protected val service: ApiService = serviceFactory.getApiService()
 
     /**
-     * http请求错误预处理
+     * http请求预处理
      */
     protected suspend fun <T> tryHttpError(request: suspend () -> ResponseEntity<T>) : ResponseEntity<T> {
         return try {

@@ -19,8 +19,8 @@ interface ApiService {
 
     @PUT("user/{id}")
     suspend fun updateUserInfo(
-        @Body dto: User,
         @Path("id") id: String,
+        @Body dto: User,
     ): ResponseEntity<Boolean>
 
 
@@ -39,8 +39,8 @@ interface ApiService {
 
     @PUT("the_day/{id}")
     suspend fun updateTheDay(
-        @Body dto: TheDay,
         @Path("id") id: String,
+        @Body dto: TheDay,
     ): ResponseEntity<Boolean>
 
     @DELETE("the_day/{id}")
@@ -64,8 +64,8 @@ interface ApiService {
 
     @PUT("diary/{id}")
     suspend fun updateDiary(
-        @Body dto: Diary,
         @Path("id") id: String,
+        @Body dto: Diary,
     ): ResponseEntity<Boolean>
 
     @DELETE("diary/{id}")
@@ -86,8 +86,8 @@ interface ApiService {
 
     @PUT("todo_group/{id}")
     suspend fun updateTodoGroup(
-        @Body dto: TodoGroup,
         @Path("id") id: String,
+        @Body dto: TodoGroup,
     ): ResponseEntity<Boolean>
 
     @DELETE("todo_group/{id}")
@@ -109,8 +109,8 @@ interface ApiService {
 
     @PUT("todo/{id}")
     suspend fun updateTodo(
-        @Body dto: Todo,
         @Path("id") id: String,
+        @Body dto: Todo,
     ): ResponseEntity<Boolean>
 
     @DELETE("todo/{id}")

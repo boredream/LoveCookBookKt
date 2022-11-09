@@ -11,7 +11,7 @@ class TodoRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseR
 
     suspend fun getList(groupId: String) = tryHttpError { service.getTodoList(groupId) }
     suspend fun add(data: Todo) = tryHttpError { service.addTodo(data) }
-    suspend fun update(data: Todo) = tryHttpError { service.updateTodo(data, data.id!!) }
+    suspend fun update(data: Todo) = tryHttpError { service.updateTodo(data.id!!, data) }
     suspend fun delete(id: String) = tryHttpError { service.deleteTodo(id) }
 
 }

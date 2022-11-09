@@ -11,7 +11,7 @@ class DiaryRepository @Inject constructor(serviceFactory: ServiceFactory) : Base
 
     suspend fun getList(page: Int) = service.getDiaryList(page)
     suspend fun add(data: Diary) = service.addDiary(data)
-    suspend fun update(data: Diary) = service.updateDiary(data, data.id!!)
+    suspend fun update(data: Diary) = service.updateDiary(data.id!!, data)
     suspend fun delete(id: String) = service.deleteDiary(id)
 
 }
