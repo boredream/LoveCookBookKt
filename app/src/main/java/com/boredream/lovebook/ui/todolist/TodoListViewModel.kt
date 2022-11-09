@@ -17,6 +17,10 @@ class TodoListViewModel @Inject constructor(
     private val _toDetailEvent = SingleLiveEvent<Boolean>()
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
+    fun start(groupId: String) {
+        loadList { repository.getList(groupId) }
+    }
+
     fun startAdd() {
         // TODO: 应该这种方式封装吗？
         // _baseEvent.value = StartActivityLiveEvent(TodoDetailActivity::class.java)
@@ -25,10 +29,6 @@ class TodoListViewModel @Inject constructor(
 
     fun delete(data: Todo) {
         commitData { repository.delete(data.id!!) }
-    }
-
-    fun loadList(groupId: String) {
-        loadList { repository.getList(groupId) }
     }
 
 }

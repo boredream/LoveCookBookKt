@@ -47,8 +47,11 @@ class TodoListActivity : BaseRequestActivity<Todo, TodoListViewModel, ActivityTo
         }
         initList()
         initObserver()
+    }
 
-        viewModel.loadList(data.id!!)
+    override fun onResume() {
+        super.onResume()
+        viewModel.start(data.id!!)
     }
 
     private fun initList() {

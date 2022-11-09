@@ -9,9 +9,9 @@ import javax.inject.Singleton
 @Singleton
 class TodoGroupRepository @Inject constructor(serviceFactory: ServiceFactory) : BaseLoadRepository<TodoGroup>(serviceFactory) {
 
-    override suspend fun getListRemote() = service.getTodoGroupList()
-    override suspend fun addRemote(data: TodoGroup) = service.addTodoGroup(data)
-    override suspend fun updateRemote(id: String, data: TodoGroup) = service.updateTodoGroup(id, data)
-    override suspend fun deleteRemote(id: String) = service.deleteTodoGroup(id)
+    suspend fun getList() = getList { service.getTodoGroupList() }
+    suspend fun add(data: TodoGroup) = commit { service.addTodoGroup(data) }
+    suspend fun update(data: TodoGroup) = commit { service.updateTodoGroup(data.id!!, data) }
+    suspend fun delete(id: String) = commit { service.deleteTodoGroup(id) }
 
 }

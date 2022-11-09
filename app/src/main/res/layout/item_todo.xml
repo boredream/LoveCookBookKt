@@ -17,8 +17,8 @@
 
         <CheckBox
             android:id="@+id/cb_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:clickable="false"
             android:checked="@{bean.done}"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_small"
             android:text="@{bean.doneDate}"
             android:textColor="@color/txt_black"
             android:textSize="@dimen/txt_subhead"
