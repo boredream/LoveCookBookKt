@@ -5,9 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseRequestActivity
 import com.boredream.lovebook.base.SimpleListAdapter
+import com.boredream.lovebook.base.SimpleRequestFail
+import com.boredream.lovebook.base.SimpleRequestSuccess
 import com.boredream.lovebook.data.Todo
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.constant.BundleKey
@@ -60,6 +63,17 @@ class TodoListActivity : BaseRequestActivity<Todo, TodoListViewModel, ActivityTo
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
+        viewModel.loadListUiState.observe(this) {
+            when (it) {
+                is SimpleRequestSuccess -> {
+                    dataList.clear()
+                    dataList.addAll(it.data)
+                    adapter.notifyDataSetChanged()
+                }
+                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
+            }
+        }
+
         viewModel.toDetailEvent.observe(this) {
             TodoDetailActivity.start(this, data.id!!, null)
         }
