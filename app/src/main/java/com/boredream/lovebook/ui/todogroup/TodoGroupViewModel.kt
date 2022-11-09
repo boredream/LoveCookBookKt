@@ -21,7 +21,7 @@ class TodoGroupViewModel @Inject constructor(private val repository: TodoReposit
         _baseEvent.value = StartActivityLiveEvent(TodoGroupDetailActivity::class.java)
     }
 
-    fun deleteData(data: TodoGroup) {
+    fun delete(data: TodoGroup) {
         commitData { repository.deleteGroup(data.id!!) }
     }
 

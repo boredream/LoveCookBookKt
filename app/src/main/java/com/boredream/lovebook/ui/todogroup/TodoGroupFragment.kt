@@ -15,7 +15,7 @@ import com.boredream.lovebook.base.SimpleRequestSuccess
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.databinding.FragmentTodoGroupBinding
 import com.boredream.lovebook.databinding.ItemTodoGroupBinding
-import com.boredream.lovebook.ui.todogroupdetail.TodoGroupDetailActivity
+import com.boredream.lovebook.ui.todolist.TodoListActivity
 import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,9 +45,9 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
     private fun initList() {
         getBinding().rv.layoutManager = LinearLayoutManager(activity)
         adapter = SimpleListAdapter(dataList, R.layout.item_todo_group)
-        adapter.onItemClickListener = { TodoGroupDetailActivity.start(requireContext(), it) }
+        adapter.onItemClickListener = { TodoListActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
-            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.deleteData(it) })
+            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
         getBinding().rv.adapter = adapter
     }

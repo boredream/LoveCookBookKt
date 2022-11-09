@@ -34,6 +34,8 @@
             android:exported="true" />
         <activity android:name=".ui.thedaydetail.TheDayDetailActivity" />
         <activity android:name=".ui.todogroupdetail.TodoGroupDetailActivity" />
+        <activity android:name=".ui.todolist.TodoListActivity" />
+        <activity android:name=".ui.tododetail.TodoDetailActivity" />
     </application>
 
 </manifest>

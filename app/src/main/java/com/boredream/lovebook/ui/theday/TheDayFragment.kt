@@ -45,7 +45,7 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         adapter = TheDayListAdapter(dataList)
         adapter.onItemClickListener = { TheDayDetailActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
-            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.deleteTheDay(it) })
+            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
         getBinding().rvTheDay.adapter = adapter
     }

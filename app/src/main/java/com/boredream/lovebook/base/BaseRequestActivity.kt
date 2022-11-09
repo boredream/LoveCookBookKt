@@ -3,6 +3,8 @@ package com.boredream.lovebook.base
 import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import com.blankj.utilcode.util.ToastUtils
+import com.boredream.lovebook.data.event.DataUpdateEvent
+import org.greenrobot.eventbus.EventBus
 
 
 abstract class BaseRequestActivity<DATA, VM : BaseRequestViewModel<DATA>, BD : ViewDataBinding> :

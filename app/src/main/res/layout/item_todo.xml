@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="bean"
+            type="com.boredream.lovebook.data.Todo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium">
+
+        <CheckBox
+            android:id="@+id/cb_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@{bean.name}"
+            android:textColor="@color/txt_black"
+            android:textSize="@dimen/txt_subhead"
+            app:layout_constraintStart_toStartOf="@+id/cb_done"
+            app:layout_constraintTop_toBottomOf="@+id/cb_done"
+            tools:text="一起去看硫酸雨" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:text="@{bean.doneDate}"
+            android:textColor="@color/txt_black"
+            android:textSize="@dimen/txt_subhead"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_done"
+            app:layout_constraintStart_toEndOf="@+id/cb_done"
+            app:layout_constraintTop_toTopOf="@+id/cb_done"
+            tools:text="1990-02-14" />
+
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@{bean.detail}"
+            android:textColor="@color/txt_black"
+            android:textSize="@dimen/txt_body"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            tools:text="日记内容" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,6 +1,5 @@
 package com.boredream.lovebook.ui.todogroupdetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.StringUtils

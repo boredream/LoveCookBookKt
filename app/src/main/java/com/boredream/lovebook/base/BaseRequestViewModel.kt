@@ -17,16 +17,16 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
     // 主job，保证同一时间只能一个在工作
     private var fetchJob: Job? = null
 
-    private val _loadPageUiState = MutableLiveData<SimpleRequestUiState<PageResultDto<T>>>()
+    protected val _loadPageUiState = MutableLiveData<SimpleRequestUiState<PageResultDto<T>>>()
     val loadPageUiState: LiveData<SimpleRequestUiState<PageResultDto<T>>> = _loadPageUiState
 
-    private val _loadListUiState = MutableLiveData<SimpleRequestUiState<List<T>>>()
+    protected val _loadListUiState = MutableLiveData<SimpleRequestUiState<List<T>>>()
     val loadListUiState: LiveData<SimpleRequestUiState<List<T>>> = _loadListUiState
 
-    private val _loadDataUiState = MutableLiveData<SimpleRequestUiState<T>>()
+    protected val _loadDataUiState = MutableLiveData<SimpleRequestUiState<T>>()
     val loadDataUiState: LiveData<SimpleRequestUiState<T>> = _loadDataUiState
 
-    private val _commitDataUiState = MutableLiveData<SimpleRequestUiState<Boolean>>()
+    protected val _commitDataUiState = MutableLiveData<SimpleRequestUiState<Boolean>>()
     val commitDataUiState: LiveData<SimpleRequestUiState<Boolean>> = _commitDataUiState
 
     /**

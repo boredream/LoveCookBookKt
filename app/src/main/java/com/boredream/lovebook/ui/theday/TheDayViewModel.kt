@@ -84,11 +84,11 @@ class TheDayViewModel @Inject constructor(
         }
     }
 
-    fun addTheDay() {
+    fun startAdd() {
         _baseEvent.value = StartActivityLiveEvent(TheDayDetailActivity::class.java)
     }
 
-    fun deleteTheDay(data: TheDay) {
+    fun delete(data: TheDay) {
         Log.i("DDD", "TheDayViewModel deleteTheDay ${data.name}")
         _baseUiState.value = BaseUiState(showLoading = true)
 

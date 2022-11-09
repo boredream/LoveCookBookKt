@@ -100,7 +100,7 @@ interface ApiService {
     @GET("todo/{id}")
     suspend fun getTodoList(
         @Path("id") groupId: String,
-    ): ResponseEntity<PageResultDto<TodoGroup>>
+    ): ResponseEntity<List<Todo>>
 
     @POST("todo")
     suspend fun addTodo(

@@ -69,7 +69,6 @@
     <style name="EditTextArea">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">104dp</item>
-        <item name="android:background">@color/black</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:paddingLeft">@dimen/margin_medium</item>

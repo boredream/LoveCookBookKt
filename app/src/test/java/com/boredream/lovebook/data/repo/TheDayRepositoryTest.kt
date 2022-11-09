@@ -32,19 +32,15 @@ class TheDayRepositoryTest {
 
     @Test
     fun add() = runTest {
-        val theDay = TheDay()
-        theDay.name = "test"
-        theDay.theDayDate = "1900-02-14"
+        val theDay = TheDay("test", "1900-02-14")
         val response = repo.add(theDay)
         assertTrue(response.getSuccessData())
     }
 
     @Test
     fun update() = runTest {
-        val theDay = TheDay()
+        val theDay = TheDay("test", "1990-02-14")
         theDay.id = "22"
-        theDay.name = "test"
-        theDay.theDayDate = "1990-02-14"
         val response = repo.update(theDay)
         assertTrue(response.getSuccessData())
     }
