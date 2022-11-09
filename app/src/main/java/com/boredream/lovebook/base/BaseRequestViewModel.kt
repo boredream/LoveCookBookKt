@@ -32,28 +32,28 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
     /**
      * 处理单个数据（CUD）
      */
-    fun commitData(repoRequest: suspend () -> ResponseEntity<Boolean>) {
+    protected fun commitData(repoRequest: suspend () -> ResponseEntity<Boolean>) {
         request(_commitDataUiState, repoRequest)
     }
 
     /**
      * 加载单个数据
      */
-    fun loadSingle(repoRequest: suspend () -> ResponseEntity<T>) {
+    protected fun loadSingle(repoRequest: suspend () -> ResponseEntity<T>) {
         request(_loadDataUiState, repoRequest)
     }
 
     /**
      * 加载列表数据
      */
-    fun loadList(repoRequest: suspend () -> ResponseEntity<List<T>>) {
+    protected fun loadList(repoRequest: suspend () -> ResponseEntity<List<T>>) {
         request(_loadListUiState, repoRequest)
     }
 
     /**
      * 加载分页数据
      */
-    fun loadPage(repoRequest: suspend () -> ResponseEntity<PageResultDto<T>>) {
+    protected fun loadPage(repoRequest: suspend () -> ResponseEntity<PageResultDto<T>>) {
         request(_loadPageUiState, repoRequest)
     }
 

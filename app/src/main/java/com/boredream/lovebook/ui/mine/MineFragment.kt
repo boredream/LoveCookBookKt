@@ -9,15 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.base.SimpleListAdapter
-import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.SettingItem
 import com.boredream.lovebook.databinding.FragmentMineBinding
-import com.boredream.lovebook.databinding.ItemDiaryBinding
 import com.boredream.lovebook.databinding.ItemSettingBinding
 import com.boredream.lovebook.ui.login.LoginActivity
-import com.boredream.lovebook.ui.theday.TheDayListAdapter
-import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
-import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 
