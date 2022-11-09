@@ -17,7 +17,13 @@ class TodoListViewModel @Inject constructor(
     private val _toDetailEvent = SingleLiveEvent<Boolean>()
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
+    init {
+        // vm(页面) 创建时，清空缓存标志位，重新拉取接口
+        repository.cacheIsDirty = false
+    }
+
     fun start(groupId: String) {
+        // TODO: 接口不会再次请求，但列表view会notify？
         loadList { repository.getList(groupId) }
     }
 

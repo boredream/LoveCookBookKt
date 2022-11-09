@@ -25,7 +25,7 @@ class TodoDetailViewModel @Inject constructor(
 
     fun commit() {
         val data = _uiState.value!!
-        data.done = data.doneDate != null
+        data.done = !StringUtils.isEmpty(data.doneDate)
 
         if (StringUtils.isEmpty(data.name)) {
             _commitDataUiState.value = SimpleRequestFail("名字不能为空")

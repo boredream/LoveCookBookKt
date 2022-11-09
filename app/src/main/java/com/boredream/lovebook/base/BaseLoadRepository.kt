@@ -8,7 +8,7 @@ abstract class BaseLoadRepository<T : BaseEntity>(serviceFactory: ServiceFactory
 
     // TODO: 如何把类的T封装到方法级里
     private var cacheList: ArrayList<T> = ArrayList()
-    private var cacheIsDirty = true
+    var cacheIsDirty = true
 
     protected suspend fun getList(forceRemote: Boolean = false, request: suspend () -> ResponseEntity<List<T>>): ResponseEntity<List<T>> {
         if (!forceRemote && !cacheIsDirty) {
