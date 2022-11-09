@@ -3,18 +3,18 @@ package com.boredream.lovebook.ui.todogroup
 import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.base.StartActivityLiveEvent
 import com.boredream.lovebook.data.TodoGroup
-import com.boredream.lovebook.data.repo.TodoRepository
+import com.boredream.lovebook.data.repo.TodoGroupRepository
 import com.boredream.lovebook.ui.todogroupdetail.TodoGroupDetailActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
 @HiltViewModel
-class TodoGroupViewModel @Inject constructor(private val repository: TodoRepository) :
+class TodoGroupViewModel @Inject constructor(private val repository: TodoGroupRepository) :
     BaseRequestViewModel<TodoGroup>() {
 
     fun loadList() {
-        loadList { repository.getGroupList() }
+        loadList { repository.getList() }
     }
 
     fun startAdd() {
@@ -22,7 +22,7 @@ class TodoGroupViewModel @Inject constructor(private val repository: TodoReposit
     }
 
     fun delete(data: TodoGroup) {
-        commitData { repository.deleteGroup(data.id!!) }
+        commitData { repository.delete(data.id!!) }
     }
 
 }

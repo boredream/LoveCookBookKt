@@ -6,14 +6,14 @@ import com.blankj.utilcode.util.StringUtils
 import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.base.ToastLiveEvent
 import com.boredream.lovebook.data.TodoGroup
-import com.boredream.lovebook.data.repo.TodoRepository
+import com.boredream.lovebook.data.repo.TodoGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
 @HiltViewModel
 class TodoGroupDetailViewModel @Inject constructor(
-    private val repository: TodoRepository
+    private val repository: TodoGroupRepository
 ) : BaseRequestViewModel<TodoGroup>() {
 
     private val _uiState = MutableLiveData<TodoGroup>()
@@ -32,8 +32,8 @@ class TodoGroupDetailViewModel @Inject constructor(
         }
 
         commitData {
-            if (data.id != null) repository.updateGroup(data)
-            else repository.addGroup(data)
+            if (data.id != null) repository.update(data)
+            else repository.add(data)
         }
     }
 

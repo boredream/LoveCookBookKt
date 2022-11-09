@@ -22,5 +22,9 @@ data class ResponseEntity<T>(
         fun <T> notExistError() : ResponseEntity<T> {
             return ResponseEntity(null, 404, "目标不存在")
         }
+
+        fun <T> httpError(e: Exception): ResponseEntity<T> {
+            return ResponseEntity(null, 1000, e.message ?: "服务器错误")
+        }
     }
 }
