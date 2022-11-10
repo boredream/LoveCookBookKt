@@ -19,7 +19,7 @@ class TodoListViewModel @Inject constructor(
 
     init {
         // vm(页面) 创建时，清空缓存标志位，重新拉取接口
-        repository.cacheIsDirty = false
+        repository.cacheIsDirty = true
     }
 
     fun start(groupId: String) {

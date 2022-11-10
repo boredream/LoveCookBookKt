@@ -34,7 +34,6 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
 
         // TODO: 和fragment合并
         viewModel.baseUiState.observe(this) {
-            // TODO dialog ?
             if (it.showLoading) {
                 loadingDialog.show()
             } else {
@@ -48,7 +47,5 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
                 is ToastLiveEvent -> ToastUtils.showShort(it.toast)
             }
         }
-
     }
-
 }

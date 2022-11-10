@@ -18,7 +18,6 @@ abstract class BaseRequestActivity<DATA, VM : BaseRequestViewModel<DATA>, BD : V
                 is SimpleRequestSuccess -> {
                     ToastUtils.showShort("提交成功")
                     finish()
-                    // TODO: 发送event让其他地方更新，有repo后如何处理更优雅？
                 }
                 is SimpleRequestFail -> ToastUtils.showShort(it.reason)
             }

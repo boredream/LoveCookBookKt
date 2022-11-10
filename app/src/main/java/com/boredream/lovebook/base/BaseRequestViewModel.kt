@@ -17,6 +17,8 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
     // 主job，保证同一时间只能一个在工作
     private var fetchJob: Job? = null
 
+    // TODO: 如何整合？
+
     protected val _loadPageUiState = MutableLiveData<SimpleRequestUiState<PageResultDto<T>>>()
     val loadPageUiState: LiveData<SimpleRequestUiState<PageResultDto<T>>> = _loadPageUiState
 
