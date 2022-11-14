@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ViewTitleBarBinding
@@ -44,6 +44,6 @@ class TitleBarView : ConstraintLayout {
         a.recycle()
 
         minHeight = SizeUtils.dp2px(56f)
-        setBackgroundColor(ColorUtils.getColor(R.color.colorPrimary))
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
     }
 }
