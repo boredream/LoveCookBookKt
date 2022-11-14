@@ -126,6 +126,12 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="OvalImageViewWhiteStroke" parent="OvalImageView">
+        <item name="strokeColor">@color/white</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="android:padding">1dp</item>
+    </style>
+
     <style name="OvalStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
