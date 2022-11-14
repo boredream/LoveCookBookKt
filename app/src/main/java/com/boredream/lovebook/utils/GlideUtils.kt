@@ -18,8 +18,8 @@ object GlideUtils {
     fun load(glide: RequestManager, url: String?, view: ImageView) {
         // TODO: 配置
         glide.load(url)
-            .placeholder(ColorDrawable(Color.WHITE))
-            .error(ColorDrawable(Color.RED))
+            .placeholder(ColorDrawable(Color.GRAY))
+            .error(ColorDrawable(Color.GRAY))
             .into(view)
     }
 

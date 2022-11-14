@@ -3,8 +3,8 @@
 
     <!-- basic -->
     <!-- 主色调 -->
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorPrimary">#DE746F</color>
+    <color name="colorPrimaryDark">#A65854</color>
 
     <!-- 文字颜色 -->
     <color name="txt_black">#B3000000</color>

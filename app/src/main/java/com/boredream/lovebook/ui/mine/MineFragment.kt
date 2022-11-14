@@ -55,7 +55,7 @@ class MineFragment : BaseFragment<MineViewModel, FragmentMineBinding>() {
     }
 
     private fun toggleBindCp() {
-
+        // TODO: bind cp
     }
 
     @SuppressLint("NotifyDataSetChanged")

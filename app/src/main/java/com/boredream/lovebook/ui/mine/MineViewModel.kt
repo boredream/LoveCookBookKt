@@ -29,6 +29,7 @@ class MineViewModel @Inject constructor(private val repository: UserRepository) 
 
     fun logout() {
         viewModelScope.launch {
+            // FIXME: crash？ 
             repository.logout()
             _eventUiState.value = LogoutEvent
         }

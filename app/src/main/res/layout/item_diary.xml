@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="bean"
             type="com.boredream.lovebook.data.Diary" />
@@ -42,9 +43,12 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginRight="4dp"
             android:src="@{bean.user.avatar}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+            app:layout_constraintRight_toLeftOf="@+id/tv_user_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_user_name"
+            app:layout_constraintVertical_bias="1.0"
             tools:src="@android:drawable/presence_online" />
 
         <TextView
@@ -56,9 +60,8 @@
             android:text="@{bean.user.nickname}"
             android:textColor="@color/txt_light_gray"
             android:textSize="@dimen/txt_caption"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_user_avatar"
-            app:layout_constraintLeft_toRightOf="@+id/iv_user_avatar"
-            app:layout_constraintTop_toTopOf="@+id/iv_user_avatar"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="用户" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
