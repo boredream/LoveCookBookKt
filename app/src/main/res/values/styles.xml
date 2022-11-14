@@ -120,4 +120,15 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="OvalImageView">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="shapeAppearanceOverlay">@style/OvalStyle</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="OvalStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

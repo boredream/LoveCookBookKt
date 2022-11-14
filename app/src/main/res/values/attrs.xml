@@ -10,4 +10,10 @@
         <attr name="items" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="TitleBarView">
+        <attr name="title" />
+        <attr name="hasBack" format="boolean" />
+    </declare-styleable>
+
+
 </resources>

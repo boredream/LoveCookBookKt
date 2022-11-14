@@ -26,14 +26,17 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_avatar"
+            style="@style/OvalImageView"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginTop="@dimen/margin_medium"
+            android:padding="1dp"
             android:src="@{vm.uiState.avatar}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:drawable/presence_online" />
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp" />
 
         <TextView
             android:id="@+id/tv_nickname"
@@ -76,9 +79,9 @@
             style="@style/PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="退出登录"
-            android:onClick="@{()->vm.logout()}"
             android:layout_margin="@dimen/margin_medium"
+            android:onClick="@{()->vm.logout()}"
+            android:text="退出登录"
             app:layout_constraintTop_toBottomOf="@id/rv_setting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

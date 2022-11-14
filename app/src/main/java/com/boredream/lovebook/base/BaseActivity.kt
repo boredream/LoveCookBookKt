@@ -24,6 +24,9 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.hide()
+
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         viewModel = ViewModelProvider(this)[getViewModelClass()]
         binding.lifecycleOwner = this

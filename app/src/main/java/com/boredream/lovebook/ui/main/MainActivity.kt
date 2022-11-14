@@ -33,8 +33,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.hide()
-
         val navView: BottomNavigationView = binding.navView
         val fragmentList = ArrayList<BaseFragment<*, *>>()
         fragmentList.add(TheDayFragment())
