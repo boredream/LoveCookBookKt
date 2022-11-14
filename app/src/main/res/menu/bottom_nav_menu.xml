@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_diary"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="日历" />
+        android:title="日记" />
 
     <item
         android:id="@+id/navigation_todo_list"

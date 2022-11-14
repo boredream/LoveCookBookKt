@@ -36,6 +36,7 @@
         <activity android:name=".ui.todogroupdetail.TodoGroupDetailActivity" />
         <activity android:name=".ui.todolist.TodoListActivity" />
         <activity android:name=".ui.tododetail.TodoDetailActivity" />
+        <activity android:name=".ui.diarydetail.DiaryDetailActivity" />
     </application>
 
 </manifest>

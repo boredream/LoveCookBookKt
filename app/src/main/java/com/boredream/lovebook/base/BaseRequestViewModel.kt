@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.dto.PageResultDto
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -18,9 +17,6 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
     private var fetchJob: Job? = null
 
     // TODO: 如何整合？
-
-    protected val _loadPageUiState = MutableLiveData<SimpleRequestUiState<PageResultDto<T>>>()
-    val loadPageUiState: LiveData<SimpleRequestUiState<PageResultDto<T>>> = _loadPageUiState
 
     protected val _loadListUiState = MutableLiveData<SimpleRequestUiState<List<T>>>()
     val loadListUiState: LiveData<SimpleRequestUiState<List<T>>> = _loadListUiState
@@ -50,13 +46,6 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
      */
     protected fun loadList(repoRequest: suspend () -> ResponseEntity<List<T>>) {
         request(_loadListUiState, repoRequest)
-    }
-
-    /**
-     * 加载分页数据
-     */
-    protected fun loadPage(repoRequest: suspend () -> ResponseEntity<PageResultDto<T>>) {
-        request(_loadPageUiState, repoRequest)
     }
 
     private fun <UiState> request(

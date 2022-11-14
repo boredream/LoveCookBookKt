@@ -1,14 +1,40 @@
 package com.boredream.lovebook.base
 
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.net.ServiceFactory
 
 abstract class BaseLoadRepository<T : BaseEntity>(serviceFactory: ServiceFactory) :
     BaseRepository(serviceFactory) {
 
     // TODO: 如何把类的T封装到方法级里
+    private var cacheListPage = 1
     private var cacheList: ArrayList<T> = ArrayList()
+    var cacheListCanLoadMore = false
     var cacheIsDirty = true
+
+    protected suspend fun getPageList(forceRemote: Boolean = false,
+                                      loadMore: Boolean = false,
+                                      request: suspend (page: Int) -> ResponseEntity<PageResultDto<T>>): ResponseEntity<List<T>> {
+        if (!forceRemote && !cacheIsDirty && !loadMore) {
+            // 非强制远程，且缓存数据有效，且是非加载更多模式时，直接返回
+            return ResponseEntity.success(cacheList)
+        }
+
+        val requestPage = if(loadMore) (cacheListPage + 1) else 1
+        val response: ResponseEntity<PageResultDto<T>> = tryHttpError { request.invoke(requestPage) }
+        if (response.isSuccess()) {
+            // TODO: db local data source
+            // 缓存在本地
+            val responseData = response.getSuccessData()
+            cacheListPage = requestPage
+            if(!loadMore) cacheList.clear()
+            cacheList.addAll(responseData.records)
+            cacheListCanLoadMore = responseData.current < responseData.pages
+            cacheIsDirty = false
+        }
+        return ResponseEntity.success(cacheList)
+    }
 
     protected suspend fun getList(forceRemote: Boolean = false, request: suspend () -> ResponseEntity<List<T>>): ResponseEntity<List<T>> {
         if (!forceRemote && !cacheIsDirty) {
@@ -21,7 +47,7 @@ abstract class BaseLoadRepository<T : BaseEntity>(serviceFactory: ServiceFactory
             // TODO: db local data source
             // 缓存在本地
             cacheList.clear()
-            cacheList.addAll(response.data!!)
+            cacheList.addAll(response.getSuccessData())
             cacheIsDirty = false
         }
         return response

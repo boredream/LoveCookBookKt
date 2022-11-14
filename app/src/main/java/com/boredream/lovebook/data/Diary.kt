@@ -1,9 +1,7 @@
 package com.boredream.lovebook.data
 
-class Diary : Belong2UserEntity() {
-
-    var content: String? = null
-    var diaryDate: String? = null
-    var images: String? = null
-
-}
+data class Diary(
+    var content: String,
+    var diaryDate: String,
+    var images: String? = null,
+) : Belong2UserEntity()
