@@ -1,8 +1,7 @@
-package com.boredream.lovebook.base
+package com.boredream.lovebook.common
 
 import androidx.databinding.ViewDataBinding
-import com.boredream.lovebook.data.Diary
-import com.boredream.lovebook.databinding.ItemDiaryBinding
+import com.boredream.lovebook.base.BaseListAdapter
 
 class SimpleListAdapter<T, BD : ViewDataBinding>(
     dataList: ArrayList<T>,

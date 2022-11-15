@@ -7,10 +7,11 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
-import com.boredream.lovebook.base.BaseRequestActivity
-import com.boredream.lovebook.base.SimpleListAdapter
-import com.boredream.lovebook.base.SimpleRequestFail
-import com.boredream.lovebook.base.SimpleRequestSuccess
+import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.common.SimpleListAdapter
+import com.boredream.lovebook.common.SimpleRequestFail
+import com.boredream.lovebook.common.SimpleRequestSuccess
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.Todo
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.constant.BundleKey
@@ -22,14 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class TodoListActivity : BaseRequestActivity<Todo, TodoListViewModel, ActivityTodoListBinding>() {
+class TodoListActivity : BaseActivity<TodoListViewModel, ActivityTodoListBinding>() {
 
     override fun getLayoutId() = R.layout.activity_todo_list
     override fun getViewModelClass() = TodoListViewModel::class.java
 
     private lateinit var data: TodoGroup
     private var dataList = ArrayList<Todo>()
-    private lateinit var adapter : SimpleListAdapter<Todo, ItemSettingBinding>
+    private lateinit var adapter: SimpleListAdapter<Todo, ItemSettingBinding>
 
     companion object {
         fun start(context: Context, data: TodoGroup) {
@@ -66,6 +67,8 @@ class TodoListActivity : BaseRequestActivity<Todo, TodoListViewModel, ActivityTo
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
+        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
+
         viewModel.loadListUiState.observe(this) {
             when (it) {
                 is SimpleRequestSuccess -> {

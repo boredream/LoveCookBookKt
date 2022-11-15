@@ -1,4 +1,4 @@
-package com.boredream.lovebook.base
+package com.boredream.lovebook.common
 
 sealed class SimpleRequestUiState<T>
 data class SimpleRequestSuccess<T>(val data: T) : SimpleRequestUiState<T>()

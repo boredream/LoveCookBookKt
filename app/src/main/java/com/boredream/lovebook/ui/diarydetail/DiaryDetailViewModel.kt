@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.base.BaseRequestViewModel
-import com.boredream.lovebook.base.SimpleRequestFail
+import com.boredream.lovebook.common.SimpleRequestFail
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.repo.DiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

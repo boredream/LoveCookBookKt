@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.boredream.lovebook.R
-import com.boredream.lovebook.base.BaseRequestActivity
+import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTodoGroupDetailBinding
@@ -12,7 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class TodoGroupDetailActivity : BaseRequestActivity<TodoGroup, TodoGroupDetailViewModel, ActivityTodoGroupDetailBinding>() {
+class TodoGroupDetailActivity :
+    BaseActivity<TodoGroupDetailViewModel, ActivityTodoGroupDetailBinding>() {
 
     override fun getLayoutId() = R.layout.activity_todo_group_detail
 
@@ -35,6 +37,7 @@ class TodoGroupDetailActivity : BaseRequestActivity<TodoGroup, TodoGroupDetailVi
             data = it.getSerializable(BundleKey.DATA) as TodoGroup?
         }
 
+        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
         viewModel.load(data)
     }
 

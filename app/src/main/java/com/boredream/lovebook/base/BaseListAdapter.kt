@@ -6,9 +6,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.boredream.lovebook.BR
+import com.boredream.lovebook.common.BindingViewHolder
 
 abstract class BaseListAdapter<T, BD : ViewDataBinding>(private val dataList: ArrayList<T>) :
-    RecyclerView.Adapter<BaseListAdapter.BindingHolder<BD>>() {
+    RecyclerView.Adapter<BindingViewHolder<BD>>() {
 
     var onItemClickListener: (t: T) -> Unit = { }
     var onItemLongClickListener: (t: T) -> Unit = { }
@@ -18,13 +19,13 @@ abstract class BaseListAdapter<T, BD : ViewDataBinding>(private val dataList: Ar
         // 大部分数据都MVVM了，这里负责额外处理
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingHolder<BD> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<BD> {
         val inflater = LayoutInflater.from(parent.context)
         val binding: BD = DataBindingUtil.inflate(inflater, getItemLayoutId(), parent, false)
-        return BindingHolder(binding)
+        return BindingViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: BindingHolder<BD>, position: Int) {
+    override fun onBindViewHolder(holder: BindingViewHolder<BD>, position: Int) {
         val data = dataList[position]
         holder.binding.setVariable(BR.bean, data)
         setItemData(holder.binding, data)
@@ -39,8 +40,5 @@ abstract class BaseListAdapter<T, BD : ViewDataBinding>(private val dataList: Ar
     }
 
     override fun getItemCount() = dataList.size
-
-    class BindingHolder<BD : ViewDataBinding>(var binding: BD) :
-        RecyclerView.ViewHolder(binding.root)
 
 }

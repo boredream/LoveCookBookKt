@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.boredream.lovebook.R
-import com.boredream.lovebook.base.BaseRequestActivity
+import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTheDayDetailBinding
@@ -12,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class TheDayDetailActivity : BaseRequestActivity<TheDay, TheDayDetailViewModel, ActivityTheDayDetailBinding>() {
+class TheDayDetailActivity : BaseActivity<TheDayDetailViewModel, ActivityTheDayDetailBinding>() {
 
     override fun getLayoutId() = R.layout.activity_the_day_detail
 
@@ -34,6 +35,8 @@ class TheDayDetailActivity : BaseRequestActivity<TheDay, TheDayDetailViewModel, 
         intent.extras?.let {
             theDay = it.getSerializable(BundleKey.DATA) as TheDay?
         }
+
+        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
         viewModel.load(theDay)
     }
 

@@ -44,7 +44,15 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_name"
-            app:name="日记日期" />
+            app:name="日期" />
+
+        <com.boredream.lovebook.view.ImageGridView
+            android:id="@+id/igv"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/div_date" />
 
         <Button
             android:id="@+id/btn_commit"
@@ -55,7 +63,7 @@
             android:text="提交"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/div_date" />
+            app:layout_constraintTop_toBottomOf="@+id/igv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

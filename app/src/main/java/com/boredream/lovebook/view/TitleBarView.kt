@@ -32,7 +32,8 @@ class TitleBarView : ConstraintLayout {
 
         val a = context.obtainStyledAttributes(attrs, R.styleable.TitleBarView, defStyleAttr, 0)
         val hasBack = a.getBoolean(R.styleable.TitleBarView_hasBack, false)
-        dataBinding.tvTitle.text = a.getString(R.styleable.TitleBarView_title) ?: ""
+        dataBinding.tvTitle.text = a.getString(R.styleable.TitleBarView_title)
+            ?: resources.getString(R.string.app_name)
         if (hasBack) {
             dataBinding.ivLeft.visibility = View.VISIBLE
             dataBinding.ivLeft.setOnClickListener {

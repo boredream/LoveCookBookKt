@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
-import com.boredream.lovebook.base.SimpleListAdapter
+import com.boredream.lovebook.common.SimpleListAdapter
 import com.boredream.lovebook.data.SettingItem
 import com.boredream.lovebook.databinding.FragmentMineBinding
 import com.boredream.lovebook.databinding.ItemSettingBinding

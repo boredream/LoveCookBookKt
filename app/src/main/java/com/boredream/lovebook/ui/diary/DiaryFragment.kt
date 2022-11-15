@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
-import com.boredream.lovebook.base.SimpleListAdapter
-import com.boredream.lovebook.base.SimpleRequestFail
-import com.boredream.lovebook.base.SimpleRequestSuccess
+import com.boredream.lovebook.common.SimpleListAdapter
+import com.boredream.lovebook.common.SimpleRequestFail
+import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.databinding.FragmentDiaryBinding
 import com.boredream.lovebook.databinding.ItemDiaryBinding
@@ -27,7 +28,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
     override fun getViewModelClass() = DiaryViewModel::class.java
 
     private var dataList = ArrayList<Diary>()
-    private lateinit var adapter : SimpleListAdapter<Diary, ItemDiaryBinding>
+    private lateinit var adapter: SimpleListAdapter<Diary, ItemDiaryBinding>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +49,12 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
 
     private fun initList() {
         getBinding().rvDiary.layoutManager = LinearLayoutManager(activity)
+        getBinding().rvDiary.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
         adapter = SimpleListAdapter(dataList, R.layout.item_diary)
         adapter.onItemClickListener = { DiaryDetailActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {

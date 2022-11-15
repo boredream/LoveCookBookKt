@@ -15,10 +15,11 @@ object GlideUtils {
      * 加载图片
      *
      * @param glide Glide.with()
+     * @param source A file path, or a uri or url handled by com.bumptech.glide.load.model.UriLoader.
      */
-    fun load(glide: RequestManager, url: String?, view: ImageView) {
+    fun load(glide: RequestManager, source: String?, view: ImageView) {
         val defColor = ColorUtils.getColor(R.color.bg_gray)
-        glide.load(url)
+        glide.load(source)
             .placeholder(ColorDrawable(defColor))
             .error(ColorDrawable(defColor))
             .into(view)

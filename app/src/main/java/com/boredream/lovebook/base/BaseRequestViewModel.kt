@@ -3,6 +3,9 @@ package com.boredream.lovebook.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.boredream.lovebook.common.SimpleRequestFail
+import com.boredream.lovebook.common.SimpleRequestSuccess
+import com.boredream.lovebook.common.SimpleRequestUiState
 import com.boredream.lovebook.data.ResponseEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

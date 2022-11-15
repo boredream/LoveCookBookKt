@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.StringUtils
 import com.boredream.lovebook.base.BaseRequestViewModel
-import com.boredream.lovebook.base.SimpleRequestFail
+import com.boredream.lovebook.common.SimpleRequestFail
 import com.boredream.lovebook.data.Todo
 import com.boredream.lovebook.data.repo.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
