@@ -2,14 +2,16 @@ package com.boredream.lovebook.ui.diary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.boredream.lovebook.MainDispatcherRule
+import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.repo.DiaryRepository
-import com.boredream.lovebook.ui.mine.MineViewModel
 import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -30,30 +32,30 @@ class DiaryViewModelTest {
     @MockK
     private lateinit var repo: DiaryRepository
 
-    private lateinit var vm: MineViewModel
+    private lateinit var vm: DiaryViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        vm = MineViewModel(repo)
+        vm = DiaryViewModel(repo)
     }
 
     @Test
     fun loadList() = runTest {
+        val mockList = mockk<List<Diary>>()
+        every { mockList.size } returns 10
+
         every {
             runBlocking {
-                repo.getList(any())
+                repo.getPageList(any())
             }
-        } returns ResponseEntity.success(MockUtils.mockPageResult(Diary::class.java))
+        } returns ResponseEntity.success(mockList)
 
-        vm.loadList()
-        Assert.assertEquals(10, vm.dataList.value?.size)
+        vm.start()
+        Assert.assertEquals(SimpleRequestSuccess::class.java, vm.loadListUiState.value?.javaClass)
 
-        vm.loadList(loadMore = true)
-        Assert.assertEquals(20, vm.dataList.value?.size)
-
-        vm.loadList()
-        Assert.assertEquals(10, vm.dataList.value?.size)
+        val success : SimpleRequestSuccess<List<Diary>> = vm.loadListUiState.value as SimpleRequestSuccess<List<Diary>>
+        Assert.assertEquals(10, success.data.size)
     }
 
 }

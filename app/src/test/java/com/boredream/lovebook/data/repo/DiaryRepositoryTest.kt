@@ -36,7 +36,7 @@ class DiaryRepositoryTest {
         assertTrue(updateResponse.getSuccessData())
 
         // query
-        val getResponse = repo.getList(false)
+        val getResponse = repo.getPageList(false)
         val records = getResponse.getSuccessData()
         assertNotNull(records)
         assertNotSame(0, records.size)

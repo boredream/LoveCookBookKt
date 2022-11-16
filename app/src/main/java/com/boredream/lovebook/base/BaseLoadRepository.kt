@@ -7,9 +7,8 @@ import com.boredream.lovebook.net.ServiceFactory
 abstract class BaseLoadRepository<T : BaseEntity>(serviceFactory: ServiceFactory) :
     BaseRepository(serviceFactory) {
 
-    // TODO: 如何把类的T封装到方法级里
-    private var cacheListPage = 1
-    private var cacheList: ArrayList<T> = ArrayList()
+    var cacheListPage = 1
+    var cacheList: ArrayList<T> = ArrayList()
     var cacheListCanLoadMore = false
     var cacheIsDirty = true
 

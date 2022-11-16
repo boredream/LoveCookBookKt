@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class DiaryRepository @Inject constructor(serviceFactory: ServiceFactory) :
     BaseLoadRepository<Diary>(serviceFactory) {
 
-    suspend fun getPageList(loadMore: Boolean) = getPageList(loadMore) { service.getDiaryList(it) }
+    suspend fun getPageList(loadMore: Boolean) = getPageList(loadMore = loadMore) { service.getDiaryList(it) }
     suspend fun add(data: Diary) = commit { service.addDiary(data) }
     suspend fun update(data: Diary) = commit { service.updateDiary(data.id!!, data) }
     suspend fun delete(id: String) = commit { service.deleteDiary(id) }
