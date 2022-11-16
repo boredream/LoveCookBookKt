@@ -91,7 +91,13 @@ dependencies {
 
     // image picker
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
-    
+
+    // photo view
+    implementation 'com.github.chrisbanes:PhotoView:2.2.0'
+
+    // permission
+    implementation 'com.yanzhenjie.permission:x:2.0.1'
+
     // view refresh
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
     implementation 'com.scwang.smart:refresh-header-classics:2.0.1'

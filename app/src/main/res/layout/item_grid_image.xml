@@ -5,7 +5,8 @@
         android:id="@+id/iv_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/green"
-        android:scaleType="centerCrop" />
+        android:background="@color/colorPrimary"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_baseline_add_24" />
 
 </layout>

@@ -8,6 +8,8 @@ import androidx.databinding.InverseMethod;
 import com.boredream.lovebook.data.TheDay;
 import com.boredream.lovebook.utils.GlideUtils;
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.util.Objects;
 
@@ -20,6 +22,11 @@ public class BindingContract {
     public static void setImageViewGlideUrl(ImageView iv, String newValue) {
         System.out.println("load image " + newValue);
         GlideUtils.INSTANCE.load(Glide.with(iv), newValue, iv);
+    }
+
+    @BindingAdapter("android:src")
+    public static void setPhotoViewImageSource(PhotoView photoView, String imageSource) {
+        GlideUtils.INSTANCE.load(Glide.with(photoView), imageSource, photoView);
     }
 
     // 用于解决需要转换的数据转换问题

@@ -8,7 +8,7 @@ import com.zhihu.matisse.Matisse
 
 abstract class BaseImagePickActivity<VM : BaseViewModel, BD : ViewDataBinding> : BaseActivity<VM, BD>() {
 
-    // TODO: 组合的方式替代继承？那activity result 如何抽取
+    // TODO: 组合的方式替代继承？那activity result 如何抽取。参考 AndPermission
 
     companion object {
         const val REQUEST_CODE_CHOOSE = 3009
