@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
@@ -69,14 +68,6 @@ class ImageGridView : RecyclerView, OnCall<List<Uri>> {
 
         override fun getItemViewType(position: Int): Int {
             return if (position == itemCount - 1) ITEM_VIEW_TYPE_ADD else ITEM_VIEW_TYPE_IMAGE
-        }
-
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): BindingViewHolder<ItemGridImageBinding> {
-            val holder = super.onCreateViewHolder(parent, viewType)
-            return holder
         }
 
         override fun onBindViewHolder(
