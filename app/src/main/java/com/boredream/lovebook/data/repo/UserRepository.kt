@@ -5,15 +5,15 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
 import com.boredream.lovebook.data.dto.LoginDto
 import com.boredream.lovebook.data.repo.source.UserLocalDataSource
-import com.boredream.lovebook.net.ServiceFactory
+import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(
-    serviceFactory: ServiceFactory,
+    private val service: ApiService,
     private val localDataSource: UserLocalDataSource
-) : BaseRepository(serviceFactory) {
+) : BaseRepository(service) {
 
     suspend fun login(username: String, password: String): ResponseEntity<String> {
         val response = service.login(LoginDto(username, password))
@@ -23,7 +23,7 @@ class UserRepository @Inject constructor(
         return response
     }
 
-    suspend fun logout() {
+    fun logout() {
         localDataSource.saveToken(null)
         localDataSource.saveUser(null)
     }

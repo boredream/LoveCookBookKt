@@ -2,13 +2,11 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.TheDay
-import com.boredream.lovebook.net.ServiceFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
-
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -18,9 +16,7 @@ class TheDayRepositoryTest {
 
     @Before
     fun setUp() {
-        val factory = ServiceFactory()
-        factory.testToken = TestDataConstants.token
-        repo = TheDayRepository(factory)
+        repo = TheDayRepository(TestDataConstants.getApiService())
     }
 
     @Test

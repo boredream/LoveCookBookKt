@@ -2,8 +2,6 @@ package com.boredream.lovebook
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
-import com.boredream.lovebook.net.ApiService
-import com.boredream.lovebook.net.ServiceCreator
 
 object TestDataConstants {
 
@@ -34,11 +32,6 @@ object TestDataConstants {
         user.cpUser?.avatar = "https://file.papikoala.cn/image1657166004355.jpg"
         user.cpUser?.cpTogetherDate = "2020-02-05"
         return user
-    }
-
-    fun getApiService(): ApiService {
-        ServiceCreator.tokenFactory = { token }
-        return ServiceCreator.create(ApiService::class.java)
     }
 
 }

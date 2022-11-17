@@ -2,11 +2,11 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.repo.source.UserLocalDataSource
-import com.boredream.lovebook.net.ServiceFactory
+import com.boredream.lovebook.net.ApiService
+import com.boredream.lovebook.net.ServiceCreator
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -20,24 +20,17 @@ class UserRepositoryTest {
 
     @Before
     fun setUp() {
-        val factory = ServiceFactory()
-        factory.testToken = TestDataConstants.token
-
         localDataSource = mockk()
         every {
-            runBlocking {
-                localDataSource.saveUser(any())
-            }
+            localDataSource.saveUser(any())
         } returns Unit
         every {
-            runBlocking {
-                localDataSource.saveToken(any())
-            }
+            localDataSource.saveToken(any())
         } returns Unit
         every { localDataSource.getToken() } returns TestDataConstants.token
         every { localDataSource.getUser() } returns TestDataConstants.user
 
-        repo = UserRepository(factory, localDataSource)
+        repo = UserRepository(TestDataConstants.getApiService(), localDataSource)
     }
 
     @Test

@@ -1,12 +1,10 @@
 package com.boredream.lovebook.base
 
-import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.data.repo.DiaryRepository
 import com.boredream.lovebook.net.ApiService
-import com.boredream.lovebook.net.ServiceFactory
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -24,16 +22,12 @@ class BaseLoadRepositoryTest {
     @MockK
     lateinit var apiService: ApiService
 
-    @MockK
-    lateinit var factory: ServiceFactory
-
     lateinit var repo: DiaryRepository
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        every { factory.getApiService() } returns apiService
-        repo = DiaryRepository(factory)
+        repo = DiaryRepository(apiService)
     }
 
     @Test

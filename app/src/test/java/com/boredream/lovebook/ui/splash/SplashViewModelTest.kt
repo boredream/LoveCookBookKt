@@ -5,8 +5,6 @@ import com.boredream.lovebook.MainDispatcherRule
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.net.ServiceFactory
-import com.boredream.lovebook.ui.login.LoginViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

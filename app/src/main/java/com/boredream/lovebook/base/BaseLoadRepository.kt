@@ -2,10 +2,9 @@ package com.boredream.lovebook.base
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.dto.PageResultDto
-import com.boredream.lovebook.net.ServiceFactory
+import com.boredream.lovebook.net.ApiService
 
-abstract class BaseLoadRepository<T : BaseEntity>(serviceFactory: ServiceFactory) :
-    BaseRepository(serviceFactory) {
+abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRepository(service) {
 
     var cacheListPage = 1
     var cacheList: ArrayList<T> = ArrayList()

@@ -2,9 +2,9 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.TestDataConstants
 import com.boredream.lovebook.data.Diary
-import com.boredream.lovebook.net.ServiceFactory
+import com.boredream.lovebook.net.ApiService
+import com.boredream.lovebook.net.ServiceCreator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -17,9 +17,7 @@ class DiaryRepositoryTest {
 
     @Before
     fun setUp() {
-        val factory = ServiceFactory()
-        factory.testToken = TestDataConstants.token
-        repo = DiaryRepository(factory)
+        repo = DiaryRepository(TestDataConstants.getApiService())
     }
 
     @Test

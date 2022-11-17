@@ -60,7 +60,7 @@ class LocationRepository @Inject constructor(private val dataSource: GdLocationD
             LatLng(location.latitude, location.longitude)
         )
 
-        if(distance > TRACE_DISTANCE_THRESHOLD) {
+        if (distance > TRACE_DISTANCE_THRESHOLD) {
             trancePointList.add(location)
             onTranceChangeListener?.call(trancePointList)
         }
@@ -74,7 +74,7 @@ class LocationRepository @Inject constructor(private val dataSource: GdLocationD
         myLocation = t
         onLocationSuccessListener?.call(t)
 
-        if(isTracing) {
+        if (isTracing) {
             appendTracePoint(t)
         }
     }
