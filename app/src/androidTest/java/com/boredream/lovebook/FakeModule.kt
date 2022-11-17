@@ -1,11 +1,10 @@
 package com.boredream.lovebook
 
-import com.boredream.lovebook.data.repo.DefaultLocationRepository
+import com.boredream.lovebook.data.repo.FakeLocationRepository
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.di.RetrofitModule
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.net.ServiceCreator
-import com.boredream.lovebook.ui.trace.FakeLocationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -15,8 +15,8 @@ class TraceMapViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     fun startLocation() {
-        repository.onLocationListener = :: onLocationSuccess
-        repository.onTraceListener = :: onTraceSuccess
+//        repository.onLocationListener = :: onLocationSuccess
+//        repository.onTraceListener = :: onTraceSuccess
         repository.startLocation()
 
 //        binding.btnLocationMe.setOnClickListener {

@@ -2,6 +2,7 @@ package com.boredream.lovebook.di
 
 import com.boredream.lovebook.data.constant.DataStoreKey
 import com.boredream.lovebook.data.repo.DefaultLocationRepository
+import com.boredream.lovebook.data.repo.FakeLocationRepository
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.net.ServiceCreator
@@ -29,6 +30,6 @@ abstract class RetrofitModule {
 
     @Singleton
     @Binds
-    abstract fun provideLocationRepository(repo: DefaultLocationRepository): LocationRepository
+    abstract fun provideLocationRepository(repo: FakeLocationRepository): LocationRepository
 
 }

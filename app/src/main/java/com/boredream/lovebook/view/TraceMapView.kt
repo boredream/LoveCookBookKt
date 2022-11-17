@@ -1,21 +1,22 @@
 package com.boredream.lovebook.view
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.AttributeSet
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
-import com.amap.api.maps.model.*
-import com.boredream.lovebook.R
+import com.amap.api.maps.model.CameraPosition
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MarkerOptions
 
 
 class TraceMapView : MapView {
 
     private var aMap: AMap = map
     private var zoomLevel = 17f
-    private lateinit var myLocationMarker: Marker
+    private var myLocationMarker: Marker
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
