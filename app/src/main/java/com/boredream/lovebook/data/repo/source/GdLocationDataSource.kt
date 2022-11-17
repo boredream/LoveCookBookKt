@@ -5,7 +5,6 @@ import android.util.Log
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.boredream.lovebook.listener.OnCall
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -15,7 +14,7 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         const val TAG = "GdLocationDataSource"
     }
 
-    var onLocationSuccessListener: OnCall<AMapLocation>? = null
+    var onLocationListener: (location: AMapLocation) -> Unit = { }
 
     fun startLocation() {
         try {
@@ -53,7 +52,7 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         location.getLongitude()//获取经度
         location.getAccuracy()//获取精度信息
         Log.i(TAG, "locationSuccess: $location")
-        onLocationSuccessListener?.call(location)
+        onLocationListener.invoke(location)
     }
 
 }

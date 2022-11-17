@@ -5,20 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.amap.api.location.AMapLocation
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
-import com.boredream.lovebook.listener.OnCall
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding>(),
-    OnCall<AMapLocation> {
+class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding>() {
 
     override fun getLayoutId() = R.layout.activity_trace_map
 
@@ -56,18 +52,18 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 //        intent.extras?.let {
 //            theDay = it.getSerializable(BundleKey.DATA) as TheDay?
 //        }
-
-        // FIXME: 逻辑放在vm里
         binding.mapView.onCreate(savedInstanceState)
+
         binding.btnLocationMe.setOnClickListener {
             viewModel.repository.myLocation?.let { binding.mapView.moveCamera(it) }
         }
-        viewModel.repository.onLocationSuccessListener = this
+        viewModel.repository.onLocationListener = {
+            binding.mapView.drawMyLocation(it)
+        }
+        viewModel.repository.onTraceListener = {
+            // TODO:
+        }
         viewModel.startLocation()
-    }
-
-    override fun call(t: AMapLocation) {
-        binding.mapView.drawMyLocation(t)
     }
 
     override fun onDestroy() {

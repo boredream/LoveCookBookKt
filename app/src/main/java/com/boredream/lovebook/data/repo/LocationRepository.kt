@@ -1,10 +1,9 @@
 package com.boredream.lovebook.data.repo
 
 import com.amap.api.location.AMapLocation
-import com.boredream.lovebook.listener.OnCall
 import java.util.*
 
-abstract class LocationRepository : OnCall<AMapLocation> {
+abstract class LocationRepository {
 
     companion object {
 
@@ -14,22 +13,15 @@ abstract class LocationRepository : OnCall<AMapLocation> {
         const val TRACE_DISTANCE_THRESHOLD = 1
 
     }
-
+    var myLocation: AMapLocation? = null
+    var onLocationListener: (location: AMapLocation) -> Unit = { }
     var isTracing = false
     val trancePointList = LinkedList<AMapLocation>()
-    var onTranceChangeListener: OnCall<LinkedList<AMapLocation>>? = null
-
-    var myLocation: AMapLocation? = null
-    var onLocationSuccessListener: OnCall<AMapLocation>? = null
+    var onTraceListener: (trancePointList: LinkedList<AMapLocation>) -> Unit = { }
 
     /**
      * 开始定位
      */
     abstract fun startLocation()
-
-    /**
-     * 添加路径点
-     */
-    abstract fun appendTracePoint(location: AMapLocation)
 
 }

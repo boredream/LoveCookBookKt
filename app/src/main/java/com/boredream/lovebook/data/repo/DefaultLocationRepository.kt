@@ -12,20 +12,20 @@ import javax.inject.Singleton
 class DefaultLocationRepository @Inject constructor(private val dataSource: GdLocationDataSource) :
     LocationRepository() {
 
-    // TODO: 抽象location
-
-    /**
-     * 开始定位
-     */
     override fun startLocation() {
-        dataSource.onLocationSuccessListener = this
+        dataSource.onLocationListener = ::onLocationSuccess
         dataSource.startLocation()
     }
 
-    /**
-     * 添加路径点
-     */
-    override fun appendTracePoint(location: AMapLocation) {
+    private fun onLocationSuccess(location: AMapLocation) {
+        myLocation = location
+        if (isTracing) {
+            appendTracePoint(location)
+        }
+        onLocationListener.invoke(location)
+    }
+
+    private fun appendTracePoint(location: AMapLocation) {
         // 计算新的point和上一个定位point距离
         val lastPointLat = if (trancePointList.size == 0) 0.0 else trancePointList[0].latitude
         val lastPointLng = if (trancePointList.size == 0) 0.0 else trancePointList[0].longitude
@@ -37,21 +37,9 @@ class DefaultLocationRepository @Inject constructor(private val dataSource: GdLo
 
         if (distance > TRACE_DISTANCE_THRESHOLD) {
             trancePointList.add(location)
-            onTranceChangeListener?.call(trancePointList)
         }
 
-    }
-
-    /**
-     * 定位成功回调
-     */
-    override fun call(t: AMapLocation) {
-        myLocation = t
-        onLocationSuccessListener?.call(t)
-
-        if (isTracing) {
-            appendTracePoint(t)
-        }
+        onTraceListener.invoke(trancePointList)
     }
 
 }
