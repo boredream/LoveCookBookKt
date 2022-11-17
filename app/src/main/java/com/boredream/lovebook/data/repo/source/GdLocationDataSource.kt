@@ -15,6 +15,8 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         const val TAG = "GdLocationDataSource"
     }
 
+    var onLocationSuccessListener: OnCall<AMapLocation>? = null
+
     fun startLocation() {
         try {
             val mlocationClient = AMapLocationClient(context)
@@ -53,7 +55,5 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         Log.i(TAG, "locationSuccess: $location")
         onLocationSuccessListener?.call(location)
     }
-
-    var onLocationSuccessListener : OnCall<AMapLocation>? = null
 
 }

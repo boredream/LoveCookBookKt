@@ -1,14 +1,14 @@
 package com.boredream.lovebook.utils
 
+import android.content.Context
 import androidx.appcompat.app.AlertDialog
-import com.boredream.lovebook.base.BaseImagePickActivity
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
 
 
 object PermissionSettingUtil {
 
-    fun showSetting(context: BaseImagePickActivity<*, *>, permissions: List<String>) {
+    fun showSetting(context: Context, permissions: List<String>) {
         val permissionNames: List<String> = Permission.transformText(context, permissions)
         val sbMsg = StringBuilder()
         sbMsg.append("需要以下权限，请在设置中开启：")

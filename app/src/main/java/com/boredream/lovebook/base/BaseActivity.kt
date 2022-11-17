@@ -14,10 +14,10 @@ import com.boredream.lovebook.BR
 abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompatActivity() {
 
     // base
-    protected lateinit var viewModel: VM
-    protected lateinit var binding: BD
-    protected abstract fun getLayoutId(): Int
-    protected abstract fun getViewModelClass(): Class<VM>
+    lateinit var viewModel: VM
+    lateinit var binding: BD
+    abstract fun getLayoutId(): Int
+    abstract fun getViewModelClass(): Class<VM>
 
     // view
     private lateinit var loadingDialog: ProgressDialog

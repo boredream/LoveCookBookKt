@@ -14,6 +14,7 @@ import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.FragmentTheDayBinding
 import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
+import com.boredream.lovebook.ui.trace.TraceMapActivity
 import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,6 +38,8 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         initObserver()
         viewModel.loadTogetherInfo()
         viewModel.loadTheDayList()
+        // FIXME: 4 test
+        getBinding().ivLeft.setOnClickListener { TraceMapActivity.start(requireContext()) }
         return view
     }
 
