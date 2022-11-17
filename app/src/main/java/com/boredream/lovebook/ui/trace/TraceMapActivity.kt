@@ -57,11 +57,12 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         binding.btnLocationMe.setOnClickListener {
             viewModel.repository.myLocation?.let { binding.mapView.moveCamera(it) }
         }
+        viewModel.repository.isTracing = true
         viewModel.repository.onLocationListener = {
             binding.mapView.drawMyLocation(it)
         }
         viewModel.repository.onTraceListener = {
-            // TODO:
+            if(it.size > 1) binding.mapView.drawTraceStep(it[it.size-2], it[it.size-1])
         }
         viewModel.startLocation()
     }

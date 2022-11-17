@@ -1,12 +1,7 @@
 package com.boredream.lovebook.data.repo
 
 import android.os.CountDownTimer
-import android.text.format.DateUtils
-import android.widget.Toast
 import com.amap.api.location.AMapLocation
-import com.amap.api.maps.AMapUtils
-import com.amap.api.maps.model.LatLng
-import com.boredream.lovebook.data.repo.LocationRepository
 import javax.inject.Inject
 
 
@@ -31,6 +26,7 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
         val total = (10 * 60 * 1000 + 100).toLong()
         countDownTimer = object : CountDownTimer(total, 2000) {
             override fun onTick(millisUntilFinished: Long) {
+                // TODO: 轨迹纠正 https://lbs.amap.com/api/android-sdk/guide/draw-on-map/track-sdk#t2
                 val location = AMapLocation("mockLocation$millisUntilFinished")
                 moveLocation.latitude = moveLocation.latitude + 0.0001
                 location.latitude = moveLocation.latitude
@@ -67,6 +63,7 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
 //        if (distance > TRACE_DISTANCE_THRESHOLD) {
             trancePointList.add(location)
 //        }
+
         onTraceListener.invoke(trancePointList)
     }
 

@@ -2,6 +2,7 @@ package com.boredream.lovebook.data.repo
 
 import com.amap.api.location.AMapLocation
 import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class LocationRepository {
 
@@ -16,8 +17,8 @@ abstract class LocationRepository {
     var myLocation: AMapLocation? = null
     var onLocationListener: (location: AMapLocation) -> Unit = { }
     var isTracing = false
-    val trancePointList = LinkedList<AMapLocation>()
-    var onTraceListener: (trancePointList: LinkedList<AMapLocation>) -> Unit = { }
+    val trancePointList = ArrayList<AMapLocation>()
+    var onTraceListener: (trancePointList: ArrayList<AMapLocation>) -> Unit = { }
 
     /**
      * 开始定位

@@ -2,14 +2,14 @@ package com.boredream.lovebook.view
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
-import com.amap.api.maps.model.CameraPosition
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.Marker
-import com.amap.api.maps.model.MarkerOptions
+import com.amap.api.maps.model.*
+import com.blankj.utilcode.util.ColorUtils
+import com.boredream.lovebook.R
 
 
 class TraceMapView : MapView {
@@ -51,6 +51,14 @@ class TraceMapView : MapView {
     fun drawMyLocation(location: AMapLocation) {
         val latLng = LatLng(location.latitude, location.longitude)
         myLocationMarker.position = latLng
+    }
+
+    fun drawTraceStep(lastLocation: AMapLocation, newLocation:AMapLocation) {
+        val lastLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+        val newLatLng = LatLng(newLocation.latitude, newLocation.longitude)
+        aMap.addPolyline(PolylineOptions()
+                .add(lastLatLng).add(newLatLng)
+                .width(20f).color(ContextCompat.getColor(context, R.color.colorPrimary)))
     }
 
 }
