@@ -17,19 +17,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RetrofitModule {
-
-    companion object {
-        @Singleton
-        @Provides
-        fun provideApiService(): ApiService {
-            ServiceCreator.tokenFactory = { DataStoreUtils.readStringData(DataStoreKey.TOKEN, "") }
-            return ServiceCreator.create(ApiService::class.java)
-        }
-    }
+object RetrofitModule {
 
     @Singleton
-    @Binds
-    abstract fun provideLocationRepository(repo: FakeLocationRepository): LocationRepository
+    @Provides
+    fun provideApiService(): ApiService {
+        ServiceCreator.tokenFactory = { DataStoreUtils.readStringData(DataStoreKey.TOKEN, "") }
+        return ServiceCreator.create(ApiService::class.java)
+    }
 
 }

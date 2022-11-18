@@ -62,7 +62,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
             binding.mapView.drawMyLocation(it)
         }
         viewModel.repository.onTraceListener = {
-            if(it.size > 1) binding.mapView.drawTraceStep(it[it.size-2], it[it.size-1])
+            if (it.size > 1) binding.mapView.drawTraceStep(it[it.size - 2], it[it.size - 1])
         }
         viewModel.startLocation()
     }
