@@ -23,8 +23,8 @@ class TraceMapViewModel @Inject constructor(
     val mapEvent: LiveData<MapUiEvent> = _mapEvent
 
     fun startLocation() {
-        repository.onLocationListener = :: onLocationSuccess
-        repository.onTraceListener = :: onTraceSuccess
+        repository.onLocationListener = ::onLocationSuccess
+        repository.onTraceListener = ::onTraceSuccess
 
         // TODO: 先绘制我已有的location
 
@@ -44,7 +44,7 @@ class TraceMapViewModel @Inject constructor(
     }
 
     private fun onLocationSuccess(location: AMapLocation) {
-        if(firstLocation) {
+        if (firstLocation) {
             locationMe()
         }
         firstLocation = false
@@ -53,10 +53,11 @@ class TraceMapViewModel @Inject constructor(
     }
 
     private fun onTraceSuccess(list: ArrayList<AMapLocation>) {
-        if(CollectionUtils.isEmpty(list) || list.size < 2) {
+        if (CollectionUtils.isEmpty(list) || list.size < 2) {
             return
         }
-        _mapEvent.value = DrawTraceLine(list)
+        val stepList = arrayListOf(list[list.lastIndex - 1], list[list.lastIndex])
+        _mapEvent.value = DrawTraceLine(stepList)
     }
 
 }

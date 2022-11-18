@@ -1,6 +1,7 @@
 package com.boredream.lovebook.view
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.amap.api.location.AMapLocation
@@ -20,6 +21,8 @@ class TraceMapView : MapView {
     private var traceLineWidth = 15f
     private var traceLineColor = ContextCompat.getColor(context, R.color.colorPrimary)
     private var myLocationMarker: Marker
+    private lateinit var mapOverlay: Polygon
+    private val holeOptionsList : MutableList<BaseHoleOptions> = ArrayList()
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -28,19 +31,13 @@ class TraceMapView : MapView {
         attrs,
         defStyleAttr
     ) {
+        // TODO: map 和 location 绑定？
 
         // 样式
         aMap.uiSettings.isScaleControlsEnabled = false
-        aMap.uiSettings.isZoomControlsEnabled = false
+        aMap.uiSettings.isZoomControlsEnabled = true
         myLocationMarker = aMap.addMarker(MarkerOptions())
-
-//        val location: ShLocationInfo = LocationKeeper.getSingleton().getLocation()
-//        if (location != null) {
-//            // 如果外层定位过一次，这里直接默认地图跳转到当前位置
-//            moveCamera(location.getLatitude(), location.getLongitude())
-//        }
-
-        // TODO: map 和 location 绑定？
+        drawTraceOverlay()
     }
 
     fun moveCamera(location: AMapLocation) {
@@ -56,19 +53,47 @@ class TraceMapView : MapView {
         myLocationMarker.position = latLng
     }
 
-    fun drawTraceStep(lastLocation: AMapLocation, newLocation: AMapLocation) {
-        val locationList = ArrayList<AMapLocation>()
-        locationList.add(lastLocation)
-        locationList.add(newLocation)
-        drawTraceList(locationList)
-    }
-
     fun drawTraceList(locationList: ArrayList<AMapLocation>) {
         val pointList = ArrayList<LatLng>()
         locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
         aMap.addPolyline(
             PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
         )
+
+        drawTraceOverlayHollow(locationList)
+    }
+
+    // 绘制遮罩 https://lbs.amap.com/demo/javascript-api/example/overlayers/cover
+    private fun drawTraceOverlay() {
+        // 遮罩
+        val polygonOptions = PolygonOptions()
+        val outer = arrayListOf(
+            LatLng(-90.0, -180.0, true),
+            LatLng(-90.0, 179.9999, true),
+            LatLng(90.0, 179.9999, true),
+            LatLng(90.0, -180.0, true),
+        )
+        polygonOptions
+            .addAll(outer)
+            .fillColor(Color.argb(90, 0, 0, 0))
+            .strokeWidth(0f)
+        
+        mapOverlay = aMap.addPolygon(polygonOptions)
+    }
+
+    private fun drawTraceOverlayHollow(locationList: ArrayList<AMapLocation>) {
+        // 遮罩挖孔
+        val lastLocation = locationList.last()
+        val hollow = arrayListOf(
+            LatLng(lastLocation.latitude, lastLocation.longitude),
+            LatLng(lastLocation.latitude + 0.001, lastLocation.longitude),
+            LatLng(lastLocation.latitude + 0.001, lastLocation.longitude + 0.001),
+            LatLng(lastLocation.latitude, lastLocation.longitude + 0.001),
+        )
+        val holeOptions = PolygonHoleOptions()
+        holeOptions.addAll(hollow)
+        holeOptionsList.add(holeOptions)
+        mapOverlay.holeOptions = holeOptionsList
     }
 
 }
