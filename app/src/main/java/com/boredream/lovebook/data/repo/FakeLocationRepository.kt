@@ -3,7 +3,11 @@ package com.boredream.lovebook.data.repo
 import android.os.CountDownTimer
 import android.util.Log
 import com.amap.api.location.AMapLocation
+import com.amap.api.maps.AMapUtils
+import com.amap.api.maps.model.LatLng
+import com.boredream.lovebook.utils.TraceFilter
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 class FakeLocationRepository @Inject constructor() : LocationRepository() {
@@ -12,8 +16,8 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
         const val TAG = "FakeLocationRepository"
     }
 
+    private lateinit var traceFilter: TraceFilter
     private lateinit var countDownTimer: CountDownTimer
-
     private lateinit var moveLocation: AMapLocation
 
     override fun startLocation() {
@@ -27,6 +31,8 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
         moveLocation.latitude = startLocation.latitude
         moveLocation.longitude = startLocation.longitude
 
+        traceFilter = TraceFilter()
+
         // 开启定时任务，然后挨个返回虚拟经纬度
         val total = (10 * 60 * 1000 + 100).toLong()
         countDownTimer = object : CountDownTimer(total, 2000) {
@@ -39,13 +45,15 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
 
             }
         }
-        // countDownTimer.start()
+        countDownTimer.start()
     }
 
     fun testStepLocation() {
         val location = AMapLocation("step")
-        moveLocation.latitude = moveLocation.latitude + 0.0001
-        moveLocation.longitude = moveLocation.longitude
+        val yStep = 0.00001 * (Random.nextInt(100) - 30)
+        val xStep = 0.00001 * (Random.nextInt(50) - 20)
+        moveLocation.latitude = moveLocation.latitude + yStep
+        moveLocation.longitude = moveLocation.longitude + xStep
 
         location.latitude = moveLocation.latitude
         location.longitude = moveLocation.longitude
@@ -64,17 +72,17 @@ class FakeLocationRepository @Inject constructor() : LocationRepository() {
 
     private fun appendTracePoint(location: AMapLocation) {
         // 计算新的point和上一个定位point距离
-        val lastPointLat = if (trancePointList.size == 0) 0.0 else trancePointList[0].latitude
-        val lastPointLng = if (trancePointList.size == 0) 0.0 else trancePointList[0].longitude
-
+//        val lastPointLat = if (trancePointList.size == 0) 0.0 else trancePointList[0].latitude
+//        val lastPointLng = if (trancePointList.size == 0) 0.0 else trancePointList[0].longitude
 //        val distance = AMapUtils.calculateLineDistance(
 //            LatLng(lastPointLat, lastPointLng),
 //            LatLng(location.latitude, location.longitude)
 //        )
-//
 //        if (distance > TRACE_DISTANCE_THRESHOLD) {
-            trancePointList.add(location)
+//            trancePointList.add(location)
 //        }
+
+        traceFilter.filterPos(location)
 
         onTraceListener.invoke(trancePointList)
     }

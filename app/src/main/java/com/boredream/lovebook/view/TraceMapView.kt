@@ -37,7 +37,8 @@ class TraceMapView : MapView {
         aMap.uiSettings.isScaleControlsEnabled = false
         aMap.uiSettings.isZoomControlsEnabled = true
         myLocationMarker = aMap.addMarker(MarkerOptions())
-        drawTraceOverlay()
+
+        // drawTraceOverlay()
     }
 
     fun moveCamera(location: AMapLocation) {
@@ -60,7 +61,7 @@ class TraceMapView : MapView {
             PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
         )
 
-        drawTraceOverlayHollow(locationList)
+        // drawTraceOverlayHollow(locationList)
     }
 
     // 绘制遮罩 https://lbs.amap.com/demo/javascript-api/example/overlayers/cover
@@ -93,6 +94,9 @@ class TraceMapView : MapView {
         val holeOptions = PolygonHoleOptions()
         holeOptions.addAll(hollow)
         holeOptionsList.add(holeOptions)
+
+        // 高德地图的规则是，新增的Holy如果和原有的有形状重叠，则跳过不再重复添加
+        // TODO: 如何根据线路更好的绘制蒙版+擦除效果？
         mapOverlay.holeOptions = holeOptionsList
     }
 
