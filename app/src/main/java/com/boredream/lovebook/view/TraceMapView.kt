@@ -8,14 +8,17 @@ import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
-import com.blankj.utilcode.util.ColorUtils
 import com.boredream.lovebook.R
 
-
+/**
+ * 追踪路线的地图
+ */
 class TraceMapView : MapView {
 
     private var aMap: AMap = map
     private var zoomLevel = 17f
+    private var traceLineWidth = 15f
+    private var traceLineColor = ContextCompat.getColor(context, R.color.colorPrimary)
     private var myLocationMarker: Marker
 
     constructor(context: Context) : this(context, null)
@@ -53,12 +56,19 @@ class TraceMapView : MapView {
         myLocationMarker.position = latLng
     }
 
-    fun drawTraceStep(lastLocation: AMapLocation, newLocation:AMapLocation) {
-        val lastLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-        val newLatLng = LatLng(newLocation.latitude, newLocation.longitude)
-        aMap.addPolyline(PolylineOptions()
-                .add(lastLatLng).add(newLatLng)
-                .width(20f).color(ContextCompat.getColor(context, R.color.colorPrimary)))
+    fun drawTraceStep(lastLocation: AMapLocation, newLocation: AMapLocation) {
+        val locationList = ArrayList<AMapLocation>()
+        locationList.add(lastLocation)
+        locationList.add(newLocation)
+        drawTraceList(locationList)
+    }
+
+    fun drawTraceList(locationList: ArrayList<AMapLocation>) {
+        val pointList = ArrayList<LatLng>()
+        locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
+        aMap.addPolyline(
+            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
+        )
     }
 
 }

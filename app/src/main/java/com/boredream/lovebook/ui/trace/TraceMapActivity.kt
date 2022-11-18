@@ -54,15 +54,12 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 //        }
         binding.mapView.onCreate(savedInstanceState)
 
-        binding.btnLocationMe.setOnClickListener {
-            viewModel.repository.myLocation?.let { binding.mapView.moveCamera(it) }
-        }
-        viewModel.repository.isTracing = true
-        viewModel.repository.onLocationListener = {
-            binding.mapView.drawMyLocation(it)
-        }
-        viewModel.repository.onTraceListener = {
-            if (it.size > 1) binding.mapView.drawTraceStep(it[it.size - 2], it[it.size - 1])
+        viewModel.mapEvent.observe(this) {
+            when(it) {
+                is DrawMyLocation -> binding.mapView.drawMyLocation(it.location)
+                is MoveToLocation -> binding.mapView.moveCamera(it.location)
+                is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
+            }
         }
         viewModel.startLocation()
     }
