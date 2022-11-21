@@ -31,6 +31,10 @@ class TraceMapViewModel @Inject constructor(
         repository.startLocation()
     }
 
+    fun stopLocation() {
+        repository.stopLocation()
+    }
+
     fun locationMe() {
         repository.myLocation?.let { _mapEvent.value = MoveToLocation(it) }
     }

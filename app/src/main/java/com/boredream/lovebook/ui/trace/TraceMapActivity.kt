@@ -71,25 +71,22 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
     override fun onDestroy() {
         super.onDestroy()
-        //在activity执行onDestroy时执行binding.mapView.onDestroy()，销毁地图
+        viewModel.stopLocation()
         binding.mapView.onDestroy()
     }
 
     override fun onResume() {
         super.onResume()
-        //在activity执行onResume时执行binding.mapView.onResume ()，重新绘制加载地图
         binding.mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        //在activity执行onPause时执行binding.mapView.onPause ()，暂停地图的绘制
         binding.mapView.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //在activity执行onSaveInstanceState时执行binding.mapView.onSaveInstanceState (outState)，保存地图当前的状态
         binding.mapView.onSaveInstanceState(outState)
     }
 
