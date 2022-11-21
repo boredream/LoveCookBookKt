@@ -4,8 +4,7 @@ import android.util.Log;
 
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.trace.LBSTraceClient;
-import com.amap.api.trace.TraceLocation;
+import com.boredream.lovebook.data.TraceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class TraceFilter {
                         weight1.setLatitude(weight1.getLatitude() * 0.2 + aMapLocation.getLatitude() * 0.8);
                         weight1.setLongitude(weight1.getLongitude() * 0.2 + aMapLocation.getLongitude() * 0.8);
                         weight1.setTime(aMapLocation.getTime());
-                        weight1.setSpeed(aMapLocation.getSpeed());
+//                        weight1.setSpeed(aMapLocation.getSpeed());
 
 //						if (w1TempList.size() > 3) {
 //							filterString += "d1TempList.size() > 3" + " : 更新";
@@ -166,7 +165,7 @@ public class TraceFilter {
                         weight2.setLatitude(weight2.getLatitude() * 0.2 + aMapLocation.getLatitude() * 0.8);
                         weight2.setLongitude(weight2.getLongitude() * 0.2 + aMapLocation.getLongitude() * 0.8);
                         weight2.setTime(aMapLocation.getTime());
-                        weight2.setSpeed(aMapLocation.getSpeed());
+//                        weight2.setSpeed(aMapLocation.getSpeed());
 
                         if (w2TempList.size() > 4) {
                             // 判断w1所代表的定位点数是否>4,小于说明w1之前的点为从一开始就有偏移的点

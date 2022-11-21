@@ -2,32 +2,34 @@ package com.boredream.lovebook.data.repo.source
 
 import android.content.Context
 import android.util.Log
-import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.boredream.lovebook.data.TraceLocation
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class GdLocationDataSource @Inject constructor(@ApplicationContext val context: Context) {
+class GdLocationDataSource @Inject constructor(@ApplicationContext val context: Context) :
+    LocationDataSource {
 
     companion object {
         const val TAG = "GdLocationDataSource"
     }
 
-    var onLocationListener: (location: TraceLocation) -> Unit = { }
-
-    fun startLocation() {
+    override fun startLocation(onSuccess: (location: TraceLocation) -> Unit) {
+        // TODO: on error
         try {
             val locationClient = AMapLocationClient(context)
             // 初始化定位参数
             val locationOption = AMapLocationClientOption()
             // 设置定位监听
             locationClient.setLocationListener {
-                it?.let {
-                    if (it.errorCode == 0) locationSuccess(it)
-                    else Log.e(TAG, "Error, ErrCode:" + it.errorCode + ", errInfo:" + it.errorInfo)
-                }
+                if (it.errorCode == 0) {
+                    onSuccess.invoke(
+                        TraceLocation(latitude = it.latitude, longitude = it.longitude)
+                    )
+                } else Log.e(
+                    TAG, "Error, ErrCode:" + it.errorCode + ", errInfo:" + it.errorInfo
+                )
             }
             // 设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
             locationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
@@ -46,21 +48,8 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         }
     }
 
-    private fun locationSuccess(location: AMapLocation) {
-        // 定位成功回调信息，设置相关消息
-        location.getLocationType()//获取当前定位结果来源，如网络定位结果，详见定位类型表
-        location.getLatitude()//获取纬度
-        location.getLongitude()//获取经度
-        location.getAccuracy()//获取精度信息
-        location.speed
-        location.
-        Log.i(TAG, "locationSuccess: $location")
-        onLocationListener.invoke(
-            TraceLocation(
-                latitude = location.latitude,
-                longitude = location.longitude
-            )
-        )
+    override fun stopLocation() {
+
     }
 
 }

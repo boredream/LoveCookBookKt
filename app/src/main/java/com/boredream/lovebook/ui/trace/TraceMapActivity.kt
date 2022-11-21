@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
-import com.boredream.lovebook.data.repo.FakeLocationRepository
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
@@ -56,9 +55,9 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         binding.mapView.onCreate(savedInstanceState)
 
         // FIXME: 4 test
-        binding.btnTestStep.setOnClickListener {
-            (viewModel.repository as FakeLocationRepository).testStepLocation()
-        }
+//        binding.btnTestStep.setOnClickListener {
+//            (viewModel.repository as FakeLocationRepository).testStepLocation()
+//        }
 
         viewModel.mapEvent.observe(this) {
             when(it) {

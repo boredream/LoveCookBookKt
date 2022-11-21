@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import com.amap.api.location.AMapLocation
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
 import com.boredream.lovebook.R
+import com.boredream.lovebook.data.TraceLocation
 
 /**
  * 追踪路线的地图
@@ -41,7 +41,7 @@ class TraceMapView : MapView {
         // drawTraceOverlay()
     }
 
-    fun moveCamera(location: AMapLocation) {
+    fun moveCamera(location: TraceLocation) {
         val position = CameraPosition.Builder()
             .target(LatLng(location.latitude, location.longitude))
             .zoom(zoomLevel)
@@ -49,12 +49,12 @@ class TraceMapView : MapView {
         aMap.moveCamera(CameraUpdateFactory.newCameraPosition(position))
     }
 
-    fun drawMyLocation(location: AMapLocation) {
+    fun drawMyLocation(location: TraceLocation) {
         val latLng = LatLng(location.latitude, location.longitude)
         myLocationMarker.position = latLng
     }
 
-    fun drawTraceList(locationList: ArrayList<AMapLocation>) {
+    fun drawTraceList(locationList: ArrayList<TraceLocation>) {
         val pointList = ArrayList<LatLng>()
         locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
         aMap.addPolyline(
@@ -82,7 +82,7 @@ class TraceMapView : MapView {
         mapOverlay = aMap.addPolygon(polygonOptions)
     }
 
-    private fun drawTraceOverlayHollow(locationList: ArrayList<AMapLocation>) {
+    private fun drawTraceOverlayHollow(locationList: ArrayList<TraceLocation>) {
         // 遮罩挖孔
         val lastLocation = locationList.last()
         val hollow = arrayListOf(
