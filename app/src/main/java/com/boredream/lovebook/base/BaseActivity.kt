@@ -1,7 +1,9 @@
 package com.boredream.lovebook.base
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -23,10 +25,12 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
     // view
     private lateinit var loadingDialog: ProgressDialog
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         supportActionBar?.hide()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         viewModel = ViewModelProvider(this)[getViewModelClass()]

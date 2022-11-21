@@ -24,13 +24,15 @@ class LocationRepository @Inject constructor(
 
     var myLocation: TraceLocation? = null
     var onLocationSuccess: (location: TraceLocation) -> Unit = { }
-    val trancePointList = ArrayList<TraceLocation>()
-    var onTraceSuccess: (trancePointList: ArrayList<TraceLocation>) -> Unit = { }
+
+    lateinit var traceList: ArrayList<TraceLocation>
+    var onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit = { }
 
     /**
      * 开始定位
      */
     fun startLocation() {
+        traceList = ArrayList()
         dataSource.startLocation(::onLocationSuccess)
     }
 
@@ -39,9 +41,19 @@ class LocationRepository @Inject constructor(
      */
     fun stopLocation() {
         dataSource.stopLocation()
+        saveTraceList()
+    }
 
-        // TODO: 记录文件信息，方便测试用
+    /**
+     * 记录轨迹信息
+     */
+    fun saveTraceList() {
+        // TODO: 记录追踪地址，因为repo不能用context，所以数据本地保存要交给Data source
+        dataSource.saveTraceList(traceList)
+    }
 
+    fun loadTraceList(traceList: ArrayList<TraceLocation>) {
+        this.traceList = traceList
     }
 
     /**
@@ -59,20 +71,20 @@ class LocationRepository @Inject constructor(
      */
     private fun appendTracePoint(location: TraceLocation) {
         // 计算新的point和上一个定位point距离
-        val lastPointLat = if (trancePointList.size == 0) 0.0 else trancePointList[0].latitude
-        val lastPointLng = if (trancePointList.size == 0) 0.0 else trancePointList[0].longitude
+        val lastPointLat = if (traceList.size == 0) 0.0 else traceList[0].latitude
+        val lastPointLng = if (traceList.size == 0) 0.0 else traceList[0].longitude
         val distance = AMapUtils.calculateLineDistance(
             LatLng(lastPointLat, lastPointLng),
             LatLng(location.latitude, location.longitude)
         )
         if (distance > TRACE_DISTANCE_THRESHOLD) {
             // 移动距离统计阈值
-            trancePointList.add(location)
-            onTraceSuccess.invoke(trancePointList)
+            traceList.add(location)
+            onTraceSuccess.invoke(traceList)
         } else {
             // TODO: 更好的处理
             // 距离达不到阈值时，视为原地不动，只更新最新一次时间？
-            trancePointList[trancePointList.lastIndex].time = location.time
+            traceList[traceList.lastIndex].time = location.time
         }
     }
 

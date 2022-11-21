@@ -1,6 +1,7 @@
 package com.boredream.lovebook.data.repo.source
 
 import com.boredream.lovebook.data.TraceLocation
+import java.util.ArrayList
 
 interface LocationDataSource {
 
@@ -13,5 +14,10 @@ interface LocationDataSource {
      * 停止定位
      */
     fun stopLocation()
+
+    /**
+     * 保存轨迹列表
+     */
+    fun saveTraceList(traceList: ArrayList<TraceLocation>)
 
 }
