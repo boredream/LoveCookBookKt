@@ -34,7 +34,7 @@ class TraceUseCase @Inject constructor(
         locationRepository.stopTrace()
 
         // 记录数据
-        traceRecordRepository.saveTraceList(locationRepository.traceList)
+        // traceRecordRepository.saveTraceList(locationRepository.traceList)
     }
 
     fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {

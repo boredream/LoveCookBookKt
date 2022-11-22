@@ -8,6 +8,7 @@ import android.os.Bundle
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
+import com.boredream.lovebook.service.TraceLocationService
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding>() {
+
+    private lateinit var serviceIntent: Intent
 
     override fun getLayoutId() = R.layout.activity_trace_map
 
@@ -25,10 +28,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
             val locationPermissions: ArrayList<String> = ArrayList()
             locationPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
             locationPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                locationPermissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            }
-
             AndPermission.with(context)
                 .runtime()
                 .permission(locationPermissions.toTypedArray())
@@ -72,11 +71,20 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
                 is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
             }
         }
+
+        serviceIntent = Intent(this, TraceLocationService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+
         viewModel.startLocation()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        stopService(serviceIntent)
         viewModel.stopLocation()
         binding.mapView.onDestroy()
     }
