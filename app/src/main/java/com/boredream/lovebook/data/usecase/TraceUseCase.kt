@@ -2,7 +2,7 @@ package com.boredream.lovebook.data.usecase
 
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.repo.LocationRepository
-import com.boredream.lovebook.data.repo.TraceRepository
+import com.boredream.lovebook.data.repo.TraceRecordRepository
 import javax.inject.Inject
 
 /**
@@ -12,14 +12,13 @@ import javax.inject.Inject
  * 不需要单例？
  */
 class TraceUseCase @Inject constructor(
-    val locationRepository: LocationRepository,
-    val traceRepository: TraceRepository,
+    private val locationRepository: LocationRepository,
+    private val traceRecordRepository: TraceRecordRepository,
 ) {
 
-    var isTracing = false
+    fun getMyLocation() = locationRepository.myLocation
 
     fun startLocation() {
-        locationRepository.onLocationSuccess = ::onLocationSuccess
         locationRepository.startLocation()
     }
 
@@ -28,18 +27,22 @@ class TraceUseCase @Inject constructor(
     }
 
     fun startTrace() {
-        isTracing = true
+        locationRepository.startTrace()
     }
 
     fun stopTrace() {
-        isTracing = false
-        traceRepository.traceList
+        locationRepository.stopTrace()
+
+        // 记录数据
+        traceRecordRepository.saveTraceList(locationRepository.traceList)
     }
 
-    private fun onLocationSuccess(location: TraceLocation) {
-        if (isTracing) {
-            traceRepository.appendTracePoint(location)
-        }
+    fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {
+        locationRepository.onLocationSuccess = onLocationSuccess
+    }
+
+    fun setOnTraceSuccess(onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit) {
+        locationRepository.onTraceSuccess = onTraceSuccess
     }
 
 }

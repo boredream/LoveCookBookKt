@@ -1,11 +1,13 @@
 package com.boredream.lovebook.data
 
+import com.blankj.utilcode.util.TimeUtils
+
 data class TraceLocation(
     var time: Long = System.currentTimeMillis(),
     var latitude: Double,
     var longitude: Double,
 ) {
     override fun toString(): String {
-        return "time=$time, latitude=$latitude, longitude=$longitude"
+        return "${TimeUtils.millis2String(time)}  $latitude,$longitude"
     }
 }

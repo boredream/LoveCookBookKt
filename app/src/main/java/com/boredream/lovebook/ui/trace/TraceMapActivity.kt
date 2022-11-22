@@ -58,10 +58,16 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
             viewModel.startTrace()
         }
 
+        val log = StringBuilder()
+
         // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
         viewModel.mapEvent.observe(this) {
             when(it) {
-                is DrawMyLocation -> binding.mapView.drawMyLocation(it.location)
+                is SuccessLocation -> {
+                    log.insert(0, "\n").insert(0, it)
+                    binding.tvLog.text = log.toString()
+                    binding.mapView.drawMyLocation(it.location)
+                }
                 is MoveToLocation -> binding.mapView.moveCamera(it.location)
                 is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
             }

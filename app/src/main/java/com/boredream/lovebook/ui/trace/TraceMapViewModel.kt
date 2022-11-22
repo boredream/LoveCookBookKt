@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.blankj.utilcode.util.CollectionUtils
 import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.data.TraceLocation
-import com.boredream.lovebook.data.repo.LocationRepository
+import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TraceMapViewModel @Inject constructor(
-    val repository: LocationRepository
+    private val traceUseCase: TraceUseCase
 ) : BaseViewModel() {
 
     // TODO: 如何更好的设计地图这种 命令式传统view 和 vm 的关系？
@@ -23,16 +23,12 @@ class TraceMapViewModel @Inject constructor(
     val mapEvent: LiveData<MapUiEvent> = _mapEvent
 
     fun startLocation() {
-        repository.onLocationSuccess = ::onLocationSuccess
-        repository.onTraceSuccess = ::onTraceSuccess
-
-        // TODO: 先绘制我已有的location
-
-        repository.startLocation()
+        traceUseCase.setOnLocationSuccess { onLocationSuccess(it) }
+        traceUseCase.startLocation()
     }
 
     fun stopLocation() {
-        repository.stopLocation()
+        traceUseCase.stopLocation()
     }
 
     fun toggleTrace() {
@@ -40,11 +36,24 @@ class TraceMapViewModel @Inject constructor(
     }
 
     fun startTrace() {
+        traceUseCase.setOnTraceSuccess { onTraceSuccess(it) }
+        traceUseCase.startTrace()
+    }
+
+    fun stopTrace() {
         TODO("Not yet implemented")
     }
 
     fun locationMe() {
-        repository.myLocation?.let { _mapEvent.value = MoveToLocation(it) }
+        traceUseCase.getMyLocation()?.let { _mapEvent.value = MoveToLocation(it) }
+    }
+
+    fun onPause() {
+        // 页面暂停时，定位会继续
+    }
+
+    fun onResume() {
+
     }
 
     private fun onLocationSuccess(location: TraceLocation) {
@@ -53,7 +62,7 @@ class TraceMapViewModel @Inject constructor(
         }
         firstLocation = false
 
-        _mapEvent.value = DrawMyLocation(location)
+        _mapEvent.value = SuccessLocation(location)
     }
 
     private fun onTraceSuccess(list: ArrayList<TraceLocation>) {

@@ -3,7 +3,7 @@ package com.boredream.lovebook.data.repo.source
 import com.boredream.lovebook.data.TraceLocation
 
 /**
- * 定位数据源-定位SDK
+ * 定位数据源 - 定位SDK
  */
 interface LocationDataSource {
 

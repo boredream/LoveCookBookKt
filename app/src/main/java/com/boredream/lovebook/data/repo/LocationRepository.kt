@@ -28,7 +28,7 @@ class LocationRepository @Inject constructor(
     var onLocationSuccess: (location: TraceLocation) -> Unit = { }
 
     var isTracing = false
-    lateinit var traceList: ArrayList<TraceLocation>
+    var traceList: ArrayList<TraceLocation> = ArrayList()
     var onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit = { }
 
     /**
@@ -49,7 +49,7 @@ class LocationRepository @Inject constructor(
      * 开始追踪
      */
     fun startTrace() {
-        traceList = ArrayList()
+        traceList.clear()
         isTracing = true
     }
 
@@ -64,7 +64,7 @@ class LocationRepository @Inject constructor(
      * 定位成功
      */
     private fun onLocationSuccess(location: TraceLocation) {
-        println("onLocationSuccess dataSource = ${dataSource.javaClass}, location = $location")
+        println("onLocationSuccess dataSource = ${dataSource.javaClass.simpleName}, location = $location")
         myLocation = location
         onLocationSuccess.invoke(location)
         if(isTracing) {
