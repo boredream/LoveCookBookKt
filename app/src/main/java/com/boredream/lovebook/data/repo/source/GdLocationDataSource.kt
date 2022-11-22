@@ -4,16 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.blankj.utilcode.util.FileIOUtils
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.PathUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.data.TraceLocation
-import com.boredream.lovebook.utils.DataStoreUtils
-import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
-import java.util.ArrayList
 import javax.inject.Inject
 
 class GdLocationDataSource @Inject constructor(@ApplicationContext val context: Context) :
@@ -67,17 +59,6 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
 
     override fun stopLocation() {
         locationClient?.stopLocation()
-    }
-
-    override fun saveTraceList(traceList: ArrayList<TraceLocation>) {
-        // TODO: 本地数据库？
-        val sb = StringBuilder()
-        val title = TimeUtils.getNowString()
-        sb.append(" ======== trace list $title ======== ")
-        traceList.forEach { sb.append("\n").append(it) }
-        val file = File(PathUtils.getInternalAppFilesPath(), "traceList$title.txt")
-        FileIOUtils.writeFileFromString(file, sb.toString())
-        Log.i(TAG, "saveTraceList $title")
     }
 
 }

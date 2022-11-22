@@ -1,6 +1,7 @@
 package com.boredream.lovebook
 
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.User
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.net.ServiceCreator
@@ -39,6 +40,13 @@ object TestDataConstants {
     fun getApiService(): ApiService {
         ServiceCreator.tokenFactory = { token }
         return ServiceCreator.create(ApiService::class.java)
+    }
+
+    fun getTraceLocation(latExtra: Double = 0.0, lngExtra: Double = 0.0): TraceLocation {
+        return TraceLocation(
+            latitude = 31.227792 + latExtra,
+            longitude = 121.355379 + lngExtra,
+        )
     }
 
 }

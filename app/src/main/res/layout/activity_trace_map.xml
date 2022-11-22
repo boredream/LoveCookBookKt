@@ -33,11 +33,11 @@
             app:layout_constraintTop_toBottomOf="@id/title_bar" />
 
         <Button
-            android:id="@+id/btn_test_step"
+            android:id="@+id/btn_start_trace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="前进"
+            android:text="开始记录轨迹"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 

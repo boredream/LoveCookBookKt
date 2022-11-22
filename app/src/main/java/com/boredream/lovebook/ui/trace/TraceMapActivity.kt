@@ -54,11 +54,11 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 //        }
         binding.mapView.onCreate(savedInstanceState)
 
-        // FIXME: 4 test
-//        binding.btnTestStep.setOnClickListener {
-//            (viewModel.repository as FakeLocationRepository).testStepLocation()
-//        }
+        binding.btnStartTrace.setOnClickListener {
+            viewModel.startTrace()
+        }
 
+        // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
         viewModel.mapEvent.observe(this) {
             when(it) {
                 is DrawMyLocation -> binding.mapView.drawMyLocation(it.location)

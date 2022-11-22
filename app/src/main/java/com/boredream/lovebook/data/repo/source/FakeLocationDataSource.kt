@@ -4,7 +4,6 @@ import android.os.CountDownTimer
 import com.amap.api.location.AMapLocation
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.utils.TraceFilter
-import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -44,10 +43,6 @@ class FakeLocationDataSource @Inject constructor() : LocationDataSource {
         moveLocation.latitude = moveLocation.latitude + yStep
         moveLocation.longitude = moveLocation.longitude + xStep
         return TraceLocation(latitude = moveLocation.latitude, longitude = moveLocation.longitude)
-    }
-
-    override fun saveTraceList(traceList: ArrayList<TraceLocation>) {
-        print("saveTraceList $traceList")
     }
 
 }
