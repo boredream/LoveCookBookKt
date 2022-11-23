@@ -18,23 +18,42 @@ class TraceUseCase @Inject constructor(
 
     fun getMyLocation() = locationRepository.myLocation
 
+    /**
+     * 开始定位
+     */
     fun startLocation() {
         locationRepository.startLocation()
     }
 
+    /**
+     * 结束定位
+     */
     fun stopLocation() {
         locationRepository.stopLocation()
+        // 追踪依赖定位
+        stopTrace()
     }
 
+    /**
+     * 开始追踪轨迹，必须要先开始定位
+     */
     fun startTrace() {
         locationRepository.startTrace()
     }
 
+    /**
+     * 结束追踪轨迹
+     */
     fun stopTrace() {
         locationRepository.stopTrace()
+    }
 
+    /**
+     * 保存追踪轨迹
+     */
+    fun saveTraceRecord() {
         // 记录数据
-        // traceRecordRepository.saveTraceList(locationRepository.traceList)
+        traceRecordRepository.saveTraceList(locationRepository.traceList)
     }
 
     fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {

@@ -57,6 +57,17 @@ class TraceMapView : MapView {
     fun drawTraceList(locationList: ArrayList<TraceLocation>) {
         val pointList = ArrayList<LatLng>()
         locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
+        val line = aMap.addPolyline(
+            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
+        )
+        println(line)
+
+        // drawTraceOverlayHollow(locationList)
+    }
+
+    fun drawAllTraceList(locationList: ArrayList<TraceLocation>) {
+        val pointList = ArrayList<LatLng>()
+        locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
         aMap.addPolyline(
             PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
         )

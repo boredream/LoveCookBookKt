@@ -61,11 +61,11 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
         // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
         viewModel.mapEvent.observe(this) {
+            println("map event $it")
             when(it) {
                 is SuccessLocation -> {
                     log.insert(0, "\n").insert(0, it)
                     binding.tvLog.text = log.toString()
-                    binding.mapView.drawMyLocation(it.location)
                 }
                 is MoveToLocation -> binding.mapView.moveCamera(it.location)
                 is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
@@ -80,6 +80,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         }
 
         viewModel.startLocation()
+        viewModel.startTrace()
     }
 
     override fun onDestroy() {
@@ -91,11 +92,13 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
     override fun onResume() {
         super.onResume()
+        viewModel.onResume()
         binding.mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
+        viewModel.onPause()
         binding.mapView.onPause()
     }
 

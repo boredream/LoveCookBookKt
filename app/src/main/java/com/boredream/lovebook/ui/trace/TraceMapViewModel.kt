@@ -1,6 +1,7 @@
 package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.CollectionUtils
 import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.data.TraceLocation
@@ -17,10 +18,15 @@ class TraceMapViewModel @Inject constructor(
 
     // TODO: 如何更好的设计地图这种 命令式传统view 和 vm 的关系？
 
-    var firstLocation = true
+    private var firstLocation = true
+    private var isPause = false
+    private var pauseCacheDrawTraceList = ArrayList<ArrayList<TraceLocation>>()
 
     private val _mapEvent = SingleLiveEvent<MapUiEvent>()
     val mapEvent: LiveData<MapUiEvent> = _mapEvent
+
+    private val _uiState = MutableLiveData<TraceMapUiState>()
+    val uiState : LiveData<TraceMapUiState> = _uiState
 
     fun startLocation() {
         traceUseCase.setOnLocationSuccess { onLocationSuccess(it) }
@@ -36,7 +42,7 @@ class TraceMapViewModel @Inject constructor(
     }
 
     fun startTrace() {
-        traceUseCase.setOnTraceSuccess { onTraceSuccess(it) }
+        traceUseCase.setOnTraceSuccess { drawTraceList(it) }
         traceUseCase.startTrace()
     }
 
@@ -49,11 +55,15 @@ class TraceMapViewModel @Inject constructor(
     }
 
     fun onPause() {
-        // 页面暂停时，定位会继续
+        // 页面暂停时，定位会继续。但绘制会停止，所以缓存这段记录
+        isPause = true
+        pauseCacheDrawTraceList.clear()
     }
 
     fun onResume() {
-
+        isPause = false
+        pauseCacheDrawTraceList.forEach { drawTraceList(it) }
+        pauseCacheDrawTraceList.clear()
     }
 
     private fun onLocationSuccess(location: TraceLocation) {
@@ -63,14 +73,19 @@ class TraceMapViewModel @Inject constructor(
         firstLocation = false
 
         _mapEvent.value = SuccessLocation(location)
+        _uiState.value = TraceMapUiState(myLocation = traceUseCase.getMyLocation())
     }
 
-    private fun onTraceSuccess(list: ArrayList<TraceLocation>) {
+    private fun drawTraceList(list: ArrayList<TraceLocation>) {
         if (CollectionUtils.isEmpty(list) || list.size < 2) {
             return
         }
         val stepList = arrayListOf(list[list.lastIndex - 1], list[list.lastIndex])
-        _mapEvent.value = DrawTraceLine(stepList)
+        if(isPause) {
+            pauseCacheDrawTraceList.add(stepList)
+        } else {
+            _mapEvent.value = DrawTraceLine(stepList)
+        }
     }
 
 }

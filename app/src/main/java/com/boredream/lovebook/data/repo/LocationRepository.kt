@@ -49,7 +49,6 @@ class LocationRepository @Inject constructor(
      * 开始追踪
      */
     fun startTrace() {
-        traceList.clear()
         isTracing = true
     }
 
@@ -58,6 +57,13 @@ class LocationRepository @Inject constructor(
      */
     fun stopTrace() {
         isTracing = false
+    }
+
+    /**
+     * 清除追踪数据
+     */
+    fun clearTraceList() {
+        traceList.clear()
     }
 
     /**

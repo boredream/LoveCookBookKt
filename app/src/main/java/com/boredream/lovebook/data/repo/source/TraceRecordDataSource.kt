@@ -1,15 +1,13 @@
 package com.boredream.lovebook.data.repo.source
 
-import android.content.Context
 import android.util.Log
 import com.blankj.utilcode.util.CollectionUtils
 import com.blankj.utilcode.util.FileIOUtils
 import com.blankj.utilcode.util.PathUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.utils.TraceUtils
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
 
@@ -17,7 +15,6 @@ import javax.inject.Inject
  * 轨迹记录数据源 - 业务数据
  */
 class TraceRecordDataSource @Inject constructor(
-    @ApplicationContext val context: Context,
     val apiService: ApiService
 ) {
 
@@ -32,6 +29,9 @@ class TraceRecordDataSource @Inject constructor(
         saveTraceListToLocal(traceList)
 
         // TODO: 同步到云端？suspend
+        val traceRecord = TraceRecord(traceList)
+
+
         // apiService.xx
     }
 
@@ -46,7 +46,7 @@ class TraceRecordDataSource @Inject constructor(
         Log.i(TAG, "saveTraceListToLocal $title")
     }
 
-    fun loadTraceList(traceListTitle: String): ArrayList<TraceLocation> {
+    fun loadTraceList(id: String): ArrayList<TraceLocation> {
         // TODO:
         return ArrayList()
     }
