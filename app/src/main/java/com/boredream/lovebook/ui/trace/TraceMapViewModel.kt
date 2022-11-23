@@ -2,6 +2,7 @@ package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.CollectionUtils
 import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.data.TraceLocation
@@ -20,7 +21,7 @@ class TraceMapViewModel @Inject constructor(
 
     private var firstLocation = true
     private var isPause = false
-    private var pauseCacheDrawTraceList = ArrayList<ArrayList<TraceLocation>>()
+    private var pauseCacheDrawTraceList = ArrayList<TraceLocation>()
 
     private val _mapEvent = SingleLiveEvent<MapUiEvent>()
     val mapEvent: LiveData<MapUiEvent> = _mapEvent
@@ -62,7 +63,9 @@ class TraceMapViewModel @Inject constructor(
 
     fun onResume() {
         isPause = false
-        pauseCacheDrawTraceList.forEach { drawTraceList(it) }
+        if (pauseCacheDrawTraceList.size >= 2) {
+            _mapEvent.value = DrawTraceLine(pauseCacheDrawTraceList)
+        }
         pauseCacheDrawTraceList.clear()
     }
 
@@ -80,10 +83,16 @@ class TraceMapViewModel @Inject constructor(
         if (CollectionUtils.isEmpty(list) || list.size < 2) {
             return
         }
-        val stepList = arrayListOf(list[list.lastIndex - 1], list[list.lastIndex])
         if(isPause) {
-            pauseCacheDrawTraceList.add(stepList)
+            // 如果是暂停状态，则每次只记录最新一个轨迹点
+            if(pauseCacheDrawTraceList.size == 0) {
+                // 首次记录，还要加上暂停前最后一个轨迹点，用于连线绘制
+                pauseCacheDrawTraceList.add(list[list.lastIndex - 1])
+            }
+            pauseCacheDrawTraceList.add(list[list.lastIndex])
         } else {
+            // 如果需要立刻绘制，则绘制最新两个点之间连线
+            val stepList = arrayListOf(list[list.lastIndex - 1], list[list.lastIndex])
             _mapEvent.value = DrawTraceLine(stepList)
         }
     }

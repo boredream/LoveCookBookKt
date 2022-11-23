@@ -65,16 +65,6 @@ class TraceMapView : MapView {
         // drawTraceOverlayHollow(locationList)
     }
 
-    fun drawAllTraceList(locationList: ArrayList<TraceLocation>) {
-        val pointList = ArrayList<LatLng>()
-        locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
-        aMap.addPolyline(
-            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
-        )
-
-        // drawTraceOverlayHollow(locationList)
-    }
-
     // 绘制遮罩 https://lbs.amap.com/demo/javascript-api/example/overlayers/cover
     private fun drawTraceOverlay() {
         // 遮罩
