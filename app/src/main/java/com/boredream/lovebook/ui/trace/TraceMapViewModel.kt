@@ -11,6 +11,16 @@ import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+sealed class UIEvent
+object ShowSaveConfirmDialog : UIEvent()
+
+sealed class MapUIEvent
+data class SuccessLocation(val location: TraceLocation) : MapUIEvent()
+data class DrawTraceLine(val locationList: ArrayList<TraceLocation>) : MapUIEvent()
+
+data class UiState(
+    val myLocation: TraceLocation? = null,
+)
 
 @HiltViewModel
 class TraceMapViewModel @Inject constructor(
@@ -23,14 +33,18 @@ class TraceMapViewModel @Inject constructor(
     private var pauseCacheDrawTraceList = ArrayList<TraceLocation>()
 
     // 地图事件
-    private val _mapEvent = SingleLiveEvent<MapUiEvent>()
-    val mapEvent: LiveData<MapUiEvent> = _mapEvent
+    private val _mapEvent = SingleLiveEvent<MapUIEvent>()
+    val mapEvent: LiveData<MapUIEvent> = _mapEvent
+
+    // 主UI事件
+    private val _uiEvent = SingleLiveEvent<UIEvent>()
+    val uiEvent: LiveData<UIEvent> = _uiEvent
 
     // 单独更新的需要各自LiveData
 
     // 主UI元素
-    private val _uiState = MutableLiveData(TraceMapUiState())
-    val uiState: LiveData<TraceMapUiState> = _uiState
+    private val _uiState = MutableLiveData(UiState())
+    val uiState: LiveData<UiState> = _uiState
 
     // 是否为跟踪模式
     private val _isFollowing = MutableLiveData(true)
@@ -61,10 +75,13 @@ class TraceMapViewModel @Inject constructor(
     fun toggleTrace() {
         if (traceUseCase.isTracing()) {
             traceUseCase.stopTrace()
+            // 停止轨迹跟踪后，提示保存路径
+            _uiEvent.value = ShowSaveConfirmDialog
+
+            // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
         } else {
             traceUseCase.setOnTraceSuccess { drawTraceList(it) }
             traceUseCase.startTrace()
-            // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
         }
         _isTracing.value = traceUseCase.isTracing()
     }
@@ -77,8 +94,19 @@ class TraceMapViewModel @Inject constructor(
         _isFollowing.value = !oldFollowing
     }
 
+    /**
+     * 保存当前轨迹
+     */
     fun saveTrace() {
         commitData { traceUseCase.saveTraceRecord() }
+    }
+
+    /**
+     * 放弃当前轨迹
+     */
+    fun abandonTrace() {
+        traceUseCase.clearTrace()
+        // TODO: 刷新地图上轨迹线
     }
 
     fun onPause() {
@@ -97,7 +125,7 @@ class TraceMapViewModel @Inject constructor(
 
     private fun onLocationSuccess(location: TraceLocation) {
         _mapEvent.value = SuccessLocation(location)
-        _uiState.value = TraceMapUiState(traceUseCase.getMyLocation(), _isFollowing.value!!)
+        _uiState.value = UiState(traceUseCase.getMyLocation())
     }
 
     private fun drawTraceList(list: ArrayList<TraceLocation>) {

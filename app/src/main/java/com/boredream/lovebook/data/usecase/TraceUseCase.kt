@@ -60,16 +60,19 @@ class TraceUseCase @Inject constructor(
         return traceRecordRepository.add(traceRecord)
     }
 
+    /**
+     * 清除当前轨迹
+     */
+    fun clearTrace() {
+        locationRepository.clearTraceList()
+    }
+
     fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {
         locationRepository.onLocationSuccess = onLocationSuccess
     }
 
     fun setOnTraceSuccess(onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit) {
         locationRepository.onTraceSuccess = onTraceSuccess
-    }
-
-    fun isFollowing(): Boolean {
-        TODO("Not yet implemented")
     }
 
 }

@@ -21,7 +21,7 @@ class TraceRecordRepository @Inject constructor(
 //    suspend fun delete(id: String) = commit { service.deleteTraceRecord(id) }
 
     suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {
-        // TODO: service
+        // TODO: save to remote
         return commit { dataSource.save(data) }
     }
 

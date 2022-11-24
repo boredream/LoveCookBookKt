@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:onClick="@{() -> vm.toggleTrace()}"
-            android:text='@{vm.isTracing ? "停止轨迹追踪" : "开始轨迹追踪"}'
+            android:text='@{vm.isTracing ? "停止记录轨迹" : "开始记录轨迹"}'
             android:visibility="@{vm.uiState.myLocation != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
@@ -50,12 +50,11 @@
             android:id="@+id/btn_follow_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
             android:onClick="@{() -> vm.toggleFollowingMode()}"
             android:text='@{vm.isFollowing ? "关闭跟踪模式" : "打开跟踪模式"}'
             android:visibility="@{vm.uiState.myLocation != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/btn_start_trace"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="@+id/btn_start_trace" />
 
         <ScrollView
             android:layout_width="match_parent"

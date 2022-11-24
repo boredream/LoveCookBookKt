@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.service.TraceLocationService
+import com.boredream.lovebook.utils.DialogUtils
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,21 +55,35 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 //        }
         binding.mapView.onCreate(savedInstanceState)
 
-        val log = StringBuilder()
+        initObserver()
+        startLocation()
+    }
 
+    private fun initObserver() {
         // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
         viewModel.mapEvent.observe(this) {
-            println("map event $it")
-            when(it) {
-                is SuccessLocation -> {
-                    log.insert(0, "\n").insert(0, it)
-                    binding.tvLog.text = log.toString()
-                }
-                is MoveToLocation -> binding.mapView.moveCamera(it.location)
+            when (it) {
+                is SuccessLocation -> Unit
                 is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
             }
         }
 
+        viewModel.uiEvent.observe(this) {
+            println("map event $it")
+            when (it) {
+                is ShowSaveConfirmDialog -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("提醒")
+                        .setMessage("是否保存当前轨迹？")
+                        .setPositiveButton("保存") { _, _ -> viewModel.saveTrace() }
+                        .setNegativeButton("删除") { _, _ -> viewModel.abandonTrace() }
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun startLocation() {
         serviceIntent = Intent(this, TraceLocationService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
