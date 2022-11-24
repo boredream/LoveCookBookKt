@@ -53,10 +53,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 //        }
         binding.mapView.onCreate(savedInstanceState)
 
-        binding.btnStartTrace.setOnClickListener {
-            viewModel.startTrace()
-        }
-
         val log = StringBuilder()
 
         // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
@@ -79,14 +75,13 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
             startService(serviceIntent)
         }
 
-        viewModel.startLocation()
-        viewModel.startTrace()
+        viewModel.start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopService(serviceIntent)
-        viewModel.stopLocation()
+        viewModel.stop()
         binding.mapView.onDestroy()
     }
 

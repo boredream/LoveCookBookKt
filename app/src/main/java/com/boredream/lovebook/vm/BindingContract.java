@@ -11,11 +11,8 @@ import com.boredream.lovebook.utils.GlideUtils;
 import com.boredream.lovebook.view.TraceMapView;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.util.Objects;
-
-import javax.annotation.Nullable;
 
 /**
  * 用于解决自定义组件的DataBinding问题
@@ -36,8 +33,13 @@ public class BindingContract {
     @BindingAdapter("myLocation")
     public static void setTraceMapViewMyLocation(TraceMapView traceMapView, TraceLocation location) {
         if (location != null) {
-            traceMapView.drawMyLocation(location);
+            traceMapView.setMyLocation(location);
         }
+    }
+
+    @BindingAdapter("isFollowing")
+    public static void setTraceMapViewFollowingMode(TraceMapView traceMapView, boolean isFollowing) {
+        traceMapView.setFollowingMode(isFollowing);
     }
 
     // 用于解决需要转换的数据转换问题

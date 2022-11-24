@@ -1,6 +1,8 @@
 package com.boredream.lovebook.data.usecase
 
+import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import javax.inject.Inject
@@ -17,6 +19,8 @@ class TraceUseCase @Inject constructor(
 ) {
 
     fun getMyLocation() = locationRepository.myLocation
+
+    fun isTracing() = locationRepository.isTracing
 
     /**
      * 开始定位
@@ -51,9 +55,9 @@ class TraceUseCase @Inject constructor(
     /**
      * 保存追踪轨迹
      */
-    fun saveTraceRecord() {
-        // 记录数据
-        traceRecordRepository.saveTraceList(locationRepository.traceList)
+    suspend fun saveTraceRecord(): ResponseEntity<Boolean> {
+        val traceRecord = TraceRecord(locationRepository.traceList)
+        return traceRecordRepository.add(traceRecord)
     }
 
     fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {
@@ -62,6 +66,10 @@ class TraceUseCase @Inject constructor(
 
     fun setOnTraceSuccess(onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit) {
         locationRepository.onTraceSuccess = onTraceSuccess
+    }
+
+    fun isFollowing(): Boolean {
+        TODO("Not yet implemented")
     }
 
 }

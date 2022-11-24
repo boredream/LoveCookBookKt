@@ -8,6 +8,7 @@
             name="vm"
             type="com.boredream.lovebook.ui.trace.TraceMapViewModel" />
 
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,36 +29,40 @@
             android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:myLocation="@{vm.uiState.myLocation}"
+            app:isFollowing="@{vm.isFollowing()}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title_bar" />
+            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            app:myLocation="@{vm.uiState.myLocation}" />
 
         <Button
             android:id="@+id/btn_start_trace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="开始记录轨迹"
+            android:onClick="@{() -> vm.toggleTrace()}"
+            android:text='@{vm.isTracing ? "停止轨迹追踪" : "开始轨迹追踪"}'
+            android:visibility="@{vm.uiState.myLocation != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
         <Button
-            android:id="@+id/btn_location_me"
+            android:id="@+id/btn_follow_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="定位到我"
-            android:onClick="@{() -> vm.locationMe()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:onClick="@{() -> vm.toggleFollowingMode()}"
+            android:text='@{vm.isFollowing ? "关闭跟踪模式" : "打开跟踪模式"}'
+            android:visibility="@{vm.uiState.myLocation != null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/btn_start_trace"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <ScrollView
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:background="#afff"
-            android:layout_height="200dp" >
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tv_log"

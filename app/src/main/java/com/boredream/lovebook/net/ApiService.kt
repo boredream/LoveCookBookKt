@@ -118,5 +118,28 @@ interface ApiService {
         @Path("id") id: String,
     ): ResponseEntity<Boolean>
 
+    // ******** trace record ********
+
+    @GET("trace_record/{id}")
+    suspend fun getTraceRecordList(
+        @Path("id") groupId: String,
+    ): ResponseEntity<List<TraceRecord>>
+
+    @POST("trace_record")
+    suspend fun addTraceRecord(
+        @Body dto: TraceRecord,
+    ): ResponseEntity<Boolean>
+
+    @PUT("trace_record/{id}")
+    suspend fun updateTraceRecord(
+        @Path("id") id: String,
+        @Body dto: TraceRecord,
+    ): ResponseEntity<Boolean>
+
+    @DELETE("trace_record/{id}")
+    suspend fun deleteTraceRecord(
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
 
 }

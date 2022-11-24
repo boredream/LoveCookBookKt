@@ -2,7 +2,7 @@ package com.boredream.lovebook.ui.trace
 
 import com.boredream.lovebook.data.TraceLocation
 
-data class TraceMapUiState(
+data class TraceMapLocationState(
     val myLocation: TraceLocation? = null,
-    val isFollowingMode: Boolean = false,
+    val isFollowing: Boolean = true,
 )

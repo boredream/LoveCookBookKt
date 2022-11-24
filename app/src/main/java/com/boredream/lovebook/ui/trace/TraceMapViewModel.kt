@@ -2,10 +2,10 @@ package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.CollectionUtils
-import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,44 +15,70 @@ import javax.inject.Inject
 @HiltViewModel
 class TraceMapViewModel @Inject constructor(
     private val traceUseCase: TraceUseCase
-) : BaseViewModel() {
+) : BaseRequestViewModel<TraceRecord>() {
 
     // TODO: 如何更好的设计地图这种 命令式传统view 和 vm 的关系？
 
-    private var firstLocation = true
     private var isPause = false
     private var pauseCacheDrawTraceList = ArrayList<TraceLocation>()
 
+    // 地图事件
     private val _mapEvent = SingleLiveEvent<MapUiEvent>()
     val mapEvent: LiveData<MapUiEvent> = _mapEvent
 
-    private val _uiState = MutableLiveData<TraceMapUiState>()
-    val uiState : LiveData<TraceMapUiState> = _uiState
+    // 单独更新的需要各自LiveData
 
-    fun startLocation() {
+    // 主UI元素
+    private val _uiState = MutableLiveData(TraceMapUiState())
+    val uiState: LiveData<TraceMapUiState> = _uiState
+
+    // 是否为跟踪模式
+    private val _isFollowing = MutableLiveData(true)
+    val isFollowing: LiveData<Boolean> = _isFollowing
+
+    // 是否正在记录轨迹中
+    private val _isTracing = MutableLiveData(false)
+    val isTracing: LiveData<Boolean> = _isTracing
+
+    /**
+     * 页面开始时，打开定位
+     */
+    fun start() {
         traceUseCase.setOnLocationSuccess { onLocationSuccess(it) }
         traceUseCase.startLocation()
     }
 
-    fun stopLocation() {
+    /**
+     * 页面结束时，关闭定位
+     */
+    fun stop() {
         traceUseCase.stopLocation()
     }
 
+    /**
+     * 切换轨迹跟踪开关
+     */
     fun toggleTrace() {
-        TODO("Not yet implemented")
+        if (traceUseCase.isTracing()) {
+            traceUseCase.stopTrace()
+        } else {
+            traceUseCase.setOnTraceSuccess { drawTraceList(it) }
+            traceUseCase.startTrace()
+            // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
+        }
+        _isTracing.value = traceUseCase.isTracing()
     }
 
-    fun startTrace() {
-        traceUseCase.setOnTraceSuccess { drawTraceList(it) }
-        traceUseCase.startTrace()
+    /**
+     * 切换跟踪模式
+     */
+    fun toggleFollowingMode() {
+        val oldFollowing = _isFollowing.value ?: true
+        _isFollowing.value = !oldFollowing
     }
 
-    fun stopTrace() {
-        TODO("Not yet implemented")
-    }
-
-    fun locationMe() {
-        traceUseCase.getMyLocation()?.let { _mapEvent.value = MoveToLocation(it) }
+    fun saveTrace() {
+        commitData { traceUseCase.saveTraceRecord() }
     }
 
     fun onPause() {
@@ -70,22 +96,17 @@ class TraceMapViewModel @Inject constructor(
     }
 
     private fun onLocationSuccess(location: TraceLocation) {
-        if (firstLocation) {
-            locationMe()
-        }
-        firstLocation = false
-
         _mapEvent.value = SuccessLocation(location)
-        _uiState.value = TraceMapUiState(myLocation = traceUseCase.getMyLocation())
+        _uiState.value = TraceMapUiState(traceUseCase.getMyLocation(), _isFollowing.value!!)
     }
 
     private fun drawTraceList(list: ArrayList<TraceLocation>) {
         if (CollectionUtils.isEmpty(list) || list.size < 2) {
             return
         }
-        if(isPause) {
+        if (isPause) {
             // 如果是暂停状态，则每次只记录最新一个轨迹点
-            if(pauseCacheDrawTraceList.size == 0) {
+            if (pauseCacheDrawTraceList.size == 0) {
                 // 首次记录，还要加上暂停前最后一个轨迹点，用于连线绘制
                 pauseCacheDrawTraceList.add(list[list.lastIndex - 1])
             }
