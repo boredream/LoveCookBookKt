@@ -1,6 +1,5 @@
 package com.boredream.lovebook.ui.trace
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -10,8 +9,6 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.service.TraceLocationService
-import com.boredream.lovebook.utils.PermissionSettingUtil
-import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -25,24 +22,10 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
     override fun getViewModelClass() = TraceMapViewModel::class.java
 
     companion object {
+
         fun start(context: Context) {
-            val locationPermissions: ArrayList<String> = ArrayList()
-            locationPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            locationPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            AndPermission.with(context)
-                .runtime()
-                .permission(locationPermissions.toTypedArray())
-                .onGranted {
-                    val intent = Intent(context, TraceMapActivity::class.java)
-                    // intent.putExtra(BundleKey.DATA, theDay)
-                    context.startActivity(intent)
-                }
-                .onDenied { permissions ->
-                    if (AndPermission.hasAlwaysDeniedPermission(context, locationPermissions)) {
-                        PermissionSettingUtil.showSetting(context, permissions)
-                    }
-                }
-                .start()
+            val intent = Intent(context, TraceMapActivity::class.java)
+            context.startActivity(intent)
         }
     }
 
@@ -53,6 +36,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
         initObserver()
         startLocation()
+        viewModel.start()
     }
 
     private fun initObserver() {
@@ -78,8 +62,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         } else {
             startService(serviceIntent)
         }
-
-        viewModel.start()
     }
 
     override fun onDestroy() {

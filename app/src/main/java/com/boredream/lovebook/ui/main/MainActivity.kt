@@ -12,6 +12,7 @@ import com.boredream.lovebook.ui.diary.DiaryFragment
 import com.boredream.lovebook.ui.mine.MineFragment
 import com.boredream.lovebook.ui.theday.TheDayFragment
 import com.boredream.lovebook.ui.todogroup.TodoGroupFragment
+import com.boredream.lovebook.ui.trace.recordlist.TraceRecordListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,6 +38,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         val fragmentList = ArrayList<BaseFragment<*, *>>()
         fragmentList.add(TheDayFragment())
         fragmentList.add(DiaryFragment())
+        fragmentList.add(TraceRecordListFragment())
         fragmentList.add(TodoGroupFragment())
         fragmentList.add(MineFragment())
 

@@ -30,12 +30,16 @@ class FragmentController(
                     showFragment(1)
                     return@setOnItemSelectedListener true
                 }
-                R.id.navigation_todo_list -> {
+                R.id.navigation_trace -> {
                     showFragment(2)
                     return@setOnItemSelectedListener true
                 }
-                R.id.navigation_mine -> {
+                R.id.navigation_todo_list -> {
                     showFragment(3)
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_mine -> {
+                    showFragment(4)
                     return@setOnItemSelectedListener true
                 }
             }

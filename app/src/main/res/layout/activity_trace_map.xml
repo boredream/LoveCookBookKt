@@ -23,7 +23,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="我的踪迹" />
+            app:title="我的轨迹" />
 
         <com.boredream.lovebook.view.TraceMapView
             android:id="@+id/map_view"

@@ -70,6 +70,7 @@ class TraceMapView : MapView {
         myLocation = location
         myLocationMarker.position = LatLng(location.latitude, location.longitude)
 
+        // TODO: draw my location 和 move camera 分开
         if (isFollowingMode) {
             moveCamera(location)
         }

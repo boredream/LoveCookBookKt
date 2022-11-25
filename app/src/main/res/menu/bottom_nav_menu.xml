@@ -12,6 +12,11 @@
         android:title="日记" />
 
     <item
+        android:id="@+id/navigation_trace"
+        android:icon="@drawable/ic_baseline_route_24"
+        android:title="轨迹" />
+
+    <item
         android:id="@+id/navigation_todo_list"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="清单" />
