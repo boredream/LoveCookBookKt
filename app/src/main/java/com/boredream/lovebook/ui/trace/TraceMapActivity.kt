@@ -10,7 +10,6 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.service.TraceLocationService
-import com.boredream.lovebook.utils.DialogUtils
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,7 +63,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         viewModel.mapEvent.observe(this) {
             when (it) {
                 is SuccessLocation -> Unit
-                is DrawTraceLine -> binding.mapView.drawTraceList(it.locationList)
             }
         }
 

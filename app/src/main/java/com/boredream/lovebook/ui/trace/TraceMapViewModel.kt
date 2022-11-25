@@ -2,7 +2,6 @@ package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.CollectionUtils
 import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
@@ -16,7 +15,6 @@ object ShowSaveConfirmDialog : UIEvent()
 
 sealed class MapUIEvent
 data class SuccessLocation(val location: TraceLocation) : MapUIEvent()
-data class DrawTraceLine(val locationList: ArrayList<TraceLocation>) : MapUIEvent()
 
 data class UiState(
     val myLocation: TraceLocation? = null,
@@ -27,10 +25,7 @@ class TraceMapViewModel @Inject constructor(
     private val traceUseCase: TraceUseCase
 ) : BaseRequestViewModel<TraceRecord>() {
 
-    // TODO: 如何更好的设计地图这种 命令式传统view 和 vm 的关系？
-
-    private var isPause = false
-    private var pauseCacheDrawTraceList = ArrayList<TraceLocation>()
+    // 自定义 DataBinding 连接地图这种 命令式传统view 和 vm 的关系
 
     // 地图事件
     private val _mapEvent = SingleLiveEvent<MapUIEvent>()
@@ -45,6 +40,9 @@ class TraceMapViewModel @Inject constructor(
     // 主UI元素
     private val _uiState = MutableLiveData(UiState())
     val uiState: LiveData<UiState> = _uiState
+
+    private val _tracePointListUiState = MutableLiveData(ArrayList<TraceLocation>())
+    val tracePointListUiState: LiveData<ArrayList<TraceLocation>> = _tracePointListUiState
 
     // 是否为跟踪模式
     private val _isFollowing = MutableLiveData(true)
@@ -80,7 +78,7 @@ class TraceMapViewModel @Inject constructor(
 
             // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
         } else {
-            traceUseCase.setOnTraceSuccess { drawTraceList(it) }
+            traceUseCase.setOnTraceSuccess { onTraceSuccess(it) }
             traceUseCase.startTrace()
         }
         _isTracing.value = traceUseCase.isTracing()
@@ -110,17 +108,11 @@ class TraceMapViewModel @Inject constructor(
     }
 
     fun onPause() {
-        // 页面暂停时，定位会继续。但绘制会停止，所以缓存这段记录
-        isPause = true
-        pauseCacheDrawTraceList.clear()
+
     }
 
     fun onResume() {
-        isPause = false
-        if (pauseCacheDrawTraceList.size >= 2) {
-            _mapEvent.value = DrawTraceLine(pauseCacheDrawTraceList)
-        }
-        pauseCacheDrawTraceList.clear()
+
     }
 
     private fun onLocationSuccess(location: TraceLocation) {
@@ -128,22 +120,9 @@ class TraceMapViewModel @Inject constructor(
         _uiState.value = UiState(traceUseCase.getMyLocation())
     }
 
-    private fun drawTraceList(list: ArrayList<TraceLocation>) {
-        if (CollectionUtils.isEmpty(list) || list.size < 2) {
-            return
-        }
-        if (isPause) {
-            // 如果是暂停状态，则每次只记录最新一个轨迹点
-            if (pauseCacheDrawTraceList.size == 0) {
-                // 首次记录，还要加上暂停前最后一个轨迹点，用于连线绘制
-                pauseCacheDrawTraceList.add(list[list.lastIndex - 1])
-            }
-            pauseCacheDrawTraceList.add(list[list.lastIndex])
-        } else {
-            // 如果需要立刻绘制，则绘制最新两个点之间连线
-            val stepList = arrayListOf(list[list.lastIndex - 1], list[list.lastIndex])
-            _mapEvent.value = DrawTraceLine(stepList)
-        }
+    private fun onTraceSuccess(allTracePointList: ArrayList<TraceLocation>) {
+        // 轨迹成功回调，回调的是整个轨迹列表
+        _tracePointListUiState.value = allTracePointList
     }
 
 }

@@ -29,7 +29,7 @@ class LocationRepository @Inject constructor(
 
     var isTracing = false
     var traceList: ArrayList<TraceLocation> = ArrayList()
-    var onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit = { }
+    var onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = { }
 
     /**
      * 开始定位

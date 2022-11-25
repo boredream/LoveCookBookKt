@@ -71,7 +71,7 @@ class TraceUseCase @Inject constructor(
         locationRepository.onLocationSuccess = onLocationSuccess
     }
 
-    fun setOnTraceSuccess(onTraceSuccess: (tracePointList: ArrayList<TraceLocation>) -> Unit) {
+    fun setOnTraceSuccess(onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
         locationRepository.onTraceSuccess = onTraceSuccess
     }
 

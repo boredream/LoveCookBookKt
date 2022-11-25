@@ -12,6 +12,7 @@ import com.boredream.lovebook.view.TraceMapView;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -32,9 +33,14 @@ public class BindingContract {
 
     @BindingAdapter("myLocation")
     public static void setTraceMapViewMyLocation(TraceMapView traceMapView, TraceLocation location) {
-        if (location != null) {
-            traceMapView.setMyLocation(location);
-        }
+        if (location == null) return;
+        traceMapView.setMyLocation(location);
+    }
+
+    @BindingAdapter("traceList")
+    public static void setTraceMapViewTraceList(TraceMapView traceMapView, ArrayList<TraceLocation> allTracePointList) {
+        if (allTracePointList == null) return;
+        traceMapView.drawTraceList(allTracePointList);
     }
 
     @BindingAdapter("isFollowing")

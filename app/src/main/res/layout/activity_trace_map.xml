@@ -33,7 +33,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_bar"
-            app:myLocation="@{vm.uiState.myLocation}" />
+            app:myLocation="@{vm.uiState.myLocation}"
+            app:traceList="@{vm.tracePointListUiState}" />
 
         <Button
             android:id="@+id/btn_start_trace"
