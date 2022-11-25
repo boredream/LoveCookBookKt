@@ -49,4 +49,12 @@ object TestDataConstants {
         )
     }
 
+    fun getTraceList(): ArrayList<TraceLocation> {
+        val traceList = ArrayList<TraceLocation>()
+        for (i in 0..10) {
+            traceList.add(getTraceLocation(latExtra = 0.000001 * i))
+        }
+        return traceList
+    }
+
 }

@@ -5,6 +5,7 @@
     <!-- 主色调 -->
     <color name="colorPrimary">#DE746F</color>
     <color name="colorPrimaryDark">#A65854</color>
+    <color name="colorPrimaryLight">#E89F9C</color>
 
     <!-- 文字颜色 -->
     <color name="txt_black">#B3000000</color>

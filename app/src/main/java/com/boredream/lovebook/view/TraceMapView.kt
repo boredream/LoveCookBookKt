@@ -4,11 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.amap.api.mapcore.util.it
+import com.amap.api.maps.AMap.OnCameraChangeListener
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TraceLocation
+
 
 /**
  * 追踪路线的地图
@@ -16,11 +18,8 @@ import com.boredream.lovebook.data.TraceLocation
 class TraceMapView : MapView {
 
     private var zoomLevel = 15f
-    private var traceLineWidth = 15f
-    private var traceLineColor = ContextCompat.getColor(context, R.color.colorPrimary)
     private var myLocation: TraceLocation? = null
-    private lateinit var myLocationMarker: Marker
-    private var allTracePointList: ArrayList<TraceLocation> = ArrayList()
+    private var myLocationMarker: Marker
     private var startDrawIndex = 0
 
     var isFollowingMode = true
@@ -38,14 +37,28 @@ class TraceMapView : MapView {
         defStyleAttr
     ) {
         // 样式
-        map?.let {
-            it.uiSettings.isScaleControlsEnabled = false
-            it.uiSettings.isZoomControlsEnabled = true
-            myLocationMarker = it.addMarker(MarkerOptions())
-        }
+        map.uiSettings.isScaleControlsEnabled = false
+        map.uiSettings.isZoomControlsEnabled = false
+        map.addOnCameraChangeListener(object : OnCameraChangeListener {
+            override fun onCameraChange(position: CameraPosition?) {
+
+            }
+
+            override fun onCameraChangeFinish(position: CameraPosition?) {
+                position?.let { zoomLevel = it.zoom }
+            }
+
+        })
+        myLocationMarker = map.addMarker(MarkerOptions())
     }
 
-    fun moveCamera(location: TraceLocation) {
+    private var firstMoveCamera = true
+    private fun moveCamera(location: TraceLocation) {
+//        if(firstMoveCamera) {
+//            map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel))
+//            firstMoveCamera = false
+//        }
+
         val position = CameraPosition.Builder()
             .target(LatLng(location.latitude, location.longitude))
             .zoom(zoomLevel)
@@ -62,23 +75,22 @@ class TraceMapView : MapView {
         }
     }
 
+    /**
+     * 绘制正在跟踪的轨迹线路
+     */
     fun drawTraceList(allTracePointList: ArrayList<TraceLocation>) {
-        if(startDrawIndex >= allTracePointList.size) {
+        if (startDrawIndex >= allTracePointList.size) {
             // 如果开始绘制的位置，超过了轨迹列表大小，代表错误数据or轨迹列表更换了，此次为无效绘制
             return
         }
 
-        this.allTracePointList = allTracePointList
         val pointList = ArrayList<LatLng>()
         // 从 startDrawIndex 开始绘制
-        for(i in startDrawIndex until allTracePointList.size) {
-            val point = allTracePointList[i]
-            pointList.add(LatLng(point.latitude, point.longitude))
+        for (i in startDrawIndex until allTracePointList.size) {
+            pointList.add(allTracePointList[i].toLatLng())
         }
-        val line = map.addPolyline(
-            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
-        )
-        if(line != null) {
+        val line = drawLine(pointList)
+        if (line != null) {
             // 绘制完成后，更新 startDrawIndex
             val newIndex = allTracePointList.lastIndex
             println("drawTraceList $startDrawIndex to $newIndex")
@@ -86,13 +98,28 @@ class TraceMapView : MapView {
         }
     }
 
-//    fun drawTraceList(locationList: ArrayList<TraceLocation>) {
-//        val pointList = ArrayList<LatLng>()
-//        locationList.forEach { pointList.add(LatLng(it.latitude, it.longitude)) }
-//        val line = map.addPolyline(
-//            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
-//        )
-//        println(line)
-//    }
+    /**
+     * 绘制多条不会变化的线路
+     */
+    fun drawMultiFixTraceList(multiTracePointList: ArrayList<ArrayList<TraceLocation>>) {
+        multiTracePointList.forEach { it ->
+            val pointList = ArrayList<LatLng>()
+            it.forEach { pointList.add(it.toLatLng()) }
+            drawLine(pointList, traceLineColor = ContextCompat.getColor(context, R.color.colorPrimaryLight))
+        }
+    }
 
+    private fun drawLine(
+        pointList: ArrayList<LatLng>,
+        traceLineWidth: Float = 15f,
+        traceLineColor: Int = ContextCompat.getColor(context, R.color.colorPrimary)
+    ): Polyline? {
+        return map.addPolyline(
+            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
+        )
+    }
+
+    private fun TraceLocation.toLatLng(): LatLng {
+        return LatLng(this.latitude, this.longitude)
+    }
 }

@@ -1,8 +1,11 @@
 package com.boredream.lovebook.data.repo.source
 
 import android.util.Log
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.CollectionUtils
 import com.blankj.utilcode.util.FileIOUtils
+import com.blankj.utilcode.util.FileIOUtils.readFile2List
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PathUtils
 import com.boredream.lovebook.base.BaseEntity
 import com.boredream.lovebook.data.ResponseEntity
@@ -32,12 +35,12 @@ class LocalTraceRecordDataSource @Inject constructor(
         val fileName = "${title}.txt"
         val file = File(getDir(), fileName)
         val success = FileIOUtils.writeFileFromString(file, Gson().toJson(data))
-        Log.i(TAG, "saveTraceListToLocal $title")
+        Log.i(TAG, "saveTraceListToLocal $title , success = $success")
         return ResponseEntity.success(success)
     }
 
     fun loadTraceList(): ResponseEntity<List<TraceRecord>> {
-        val fileList = FileIOUtils.readFile2List(getDir())
+        val fileList = FileUtils.listFilesInDir(getDir())
         val recordList = ArrayList<TraceRecord>()
         if (!CollectionUtils.isEmpty(fileList)) {
             fileList.forEach {
@@ -45,6 +48,7 @@ class LocalTraceRecordDataSource @Inject constructor(
                     val json = FileIOUtils.readFile2String(it)
                     val record = Gson().fromJson(json, TraceRecord::class.java)
                     recordList.add(record)
+                    Log.i(TAG, "loadTraceList $it")
                 } catch (e: Exception) {
                     //
                 }

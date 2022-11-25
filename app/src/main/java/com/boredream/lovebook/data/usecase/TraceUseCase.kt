@@ -67,6 +67,13 @@ class TraceUseCase @Inject constructor(
         locationRepository.clearTraceList()
     }
 
+    /**
+     * 获取所有历史轨迹
+     */
+    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<List<TraceRecord>> {
+        return traceRecordRepository.getList()
+    }
+
     fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {
         locationRepository.onLocationSuccess = onLocationSuccess
     }
@@ -74,5 +81,6 @@ class TraceUseCase @Inject constructor(
     fun setOnTraceSuccess(onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
         locationRepository.onTraceSuccess = onTraceSuccess
     }
+
 
 }

@@ -49,9 +49,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        intent.extras?.let {
-//            theDay = it.getSerializable(BundleKey.DATA) as TheDay?
-//        }
         binding.mapView.onCreate(savedInstanceState)
 
         initObserver()
@@ -59,13 +56,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
     }
 
     private fun initObserver() {
-        // TODO: on pause 的时候是否影响电量？ aMap会自动缓存draw内容，resume时刷新？
-        viewModel.mapEvent.observe(this) {
-            when (it) {
-                is SuccessLocation -> Unit
-            }
-        }
-
         viewModel.uiEvent.observe(this) {
             println("map event $it")
             when (it) {

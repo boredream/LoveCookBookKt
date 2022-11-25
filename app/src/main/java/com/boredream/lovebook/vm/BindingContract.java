@@ -43,6 +43,12 @@ public class BindingContract {
         traceMapView.drawTraceList(allTracePointList);
     }
 
+    @BindingAdapter("historyTraceList")
+    public static void setTraceMapViewHistoryTraceList(TraceMapView traceMapView, ArrayList<ArrayList<TraceLocation>> historyTracePointList) {
+        if (historyTracePointList == null) return;
+        traceMapView.drawMultiFixTraceList(historyTracePointList);
+    }
+
     @BindingAdapter("isFollowing")
     public static void setTraceMapViewFollowingMode(TraceMapView traceMapView, boolean isFollowing) {
         traceMapView.setFollowingMode(isFollowing);

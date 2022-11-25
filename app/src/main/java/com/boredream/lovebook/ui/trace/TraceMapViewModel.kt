@@ -2,12 +2,15 @@ package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.amap.api.mapcore.util.it
 import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class UIEvent
@@ -44,6 +47,15 @@ class TraceMapViewModel @Inject constructor(
     private val _tracePointListUiState = MutableLiveData(ArrayList<TraceLocation>())
     val tracePointListUiState: LiveData<ArrayList<TraceLocation>> = _tracePointListUiState
 
+    // 是否显示历史轨迹
+    private val _isShowHistoryTrace = MutableLiveData(false)
+    val isShowHistoryTrace: LiveData<Boolean> = _isShowHistoryTrace
+
+    private val _historyTracePointListUiState =
+        MutableLiveData(ArrayList<ArrayList<TraceLocation>>())
+    val historyTracePointListUiState: LiveData<ArrayList<ArrayList<TraceLocation>>> =
+        _historyTracePointListUiState
+
     // 是否为跟踪模式
     private val _isFollowing = MutableLiveData(true)
     val isFollowing: LiveData<Boolean> = _isFollowing
@@ -68,6 +80,24 @@ class TraceMapViewModel @Inject constructor(
     }
 
     /**
+     * 切换显示历史轨迹
+     */
+    fun toggleShowHistoryTrace() {
+        val old = _isShowHistoryTrace.value!!
+        _isShowHistoryTrace.value = !old
+
+        if (!old) {
+            // TODO: 可能是远程获取，需要loading
+            viewModelScope.launch {
+                val recordList = traceUseCase.getAllHistoryTraceListRecord()
+                val historyList = ArrayList<ArrayList<TraceLocation>>()
+                recordList.data?.let { it -> it.forEach { historyList.add(it.traceList) } }
+                _historyTracePointListUiState.value = historyList
+            }
+        }
+    }
+
+    /**
      * 切换轨迹跟踪开关
      */
     fun toggleTrace() {
@@ -88,8 +118,8 @@ class TraceMapViewModel @Inject constructor(
      * 切换跟踪模式
      */
     fun toggleFollowingMode() {
-        val oldFollowing = _isFollowing.value ?: true
-        _isFollowing.value = !oldFollowing
+        val old = _isFollowing.value!!
+        _isFollowing.value = !old
     }
 
     /**

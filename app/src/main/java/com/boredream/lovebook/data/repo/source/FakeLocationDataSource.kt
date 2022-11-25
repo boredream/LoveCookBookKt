@@ -26,7 +26,7 @@ class FakeLocationDataSource @Inject constructor() : LocationDataSource {
 
         // 开启定时任务，然后挨个返回虚拟经纬度
         val total = (10 * 60 * 1000 + 100).toLong()
-        countDownTimer = object : CountDownTimer(total, 2000) {
+        countDownTimer = object : CountDownTimer(total, 5000) {
             override fun onTick(millisUntilFinished: Long) = onSuccess.invoke(testStepLocation())
             override fun onFinish() = Unit
         }
@@ -40,8 +40,9 @@ class FakeLocationDataSource @Inject constructor() : LocationDataSource {
     fun testStepLocation(): TraceLocation {
         val yStep = 0.00001 * (Random.nextInt(100) - 30)
         val xStep = 0.00001 * (Random.nextInt(50) - 20)
-        moveLocation.latitude = moveLocation.latitude + yStep
-        moveLocation.longitude = moveLocation.longitude + xStep
+        val ratio = 0.5
+        moveLocation.latitude = moveLocation.latitude + yStep * ratio
+        moveLocation.longitude = moveLocation.longitude + xStep * ratio
         return TraceLocation(latitude = moveLocation.latitude, longitude = moveLocation.longitude)
     }
 
