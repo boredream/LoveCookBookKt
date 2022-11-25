@@ -17,7 +17,7 @@ import com.boredream.lovebook.data.TraceLocation
  */
 class TraceMapView : MapView {
 
-    private var zoomLevel = 15f
+    private var zoomLevel = 17f
     private var myLocation: TraceLocation? = null
     private var myLocationMarker: Marker
     private var startDrawIndex = 0

@@ -27,7 +27,7 @@ class TraceRecordDetailViewModel @Inject constructor(
         _traceListUiState.value = arrayListOf(data.traceList)
 
         // TODO:  根据路线，选择合适的 camera zoom 和 position
-        _startLocationUiState.value = data.traceList[0]
+        _startLocationUiState.value = data.traceList[data.traceList.lastIndex]
     }
 
 }

@@ -28,7 +28,7 @@
         <com.boredream.lovebook.view.TraceMapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:historyTraceList="@{vm.traceListUiState}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

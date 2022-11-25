@@ -30,7 +30,7 @@ class TraceRecordListViewModel @Inject constructor(
     }
 
     fun delete(data: TraceRecord) {
-        // commitData { repository.delete(data.id!!) }
+         commitData { repository.delete(data) }
     }
 
 }

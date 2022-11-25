@@ -39,6 +39,15 @@ class LocalTraceRecordDataSource @Inject constructor(
         return ResponseEntity.success(success)
     }
 
+    fun delete(data: TraceRecord): ResponseEntity<Boolean> {
+        val title = data.title
+        val fileName = "${title}.txt"
+        val file = File(getDir(), fileName)
+        file.delete()
+        Log.i(TAG, "deleteTraceListToLocal $title")
+        return ResponseEntity.success(true)
+    }
+
     fun loadTraceList(): ResponseEntity<List<TraceRecord>> {
         val fileList = FileUtils.listFilesInDir(getDir())
         val recordList = ArrayList<TraceRecord>()

@@ -5,6 +5,7 @@ import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
+import com.boredream.lovebook.utils.TraceUtils
 import javax.inject.Inject
 
 /**
@@ -58,7 +59,12 @@ class TraceUseCase @Inject constructor(
      * 保存追踪轨迹
      */
     suspend fun saveTraceRecord(): ResponseEntity<Boolean> {
-        val traceRecord = TraceRecord(locationRepository.traceList)
+        val traceList = locationRepository.traceList
+        val title = TraceUtils.getTraceListName(traceList)
+        val startTime = traceList[0].time
+        val endTime = traceList[traceList.lastIndex].time
+        val distance = TraceUtils.calculateDistance(traceList)
+        val traceRecord = TraceRecord(traceList, title, startTime, endTime, distance)
         return traceRecordRepository.add(traceRecord)
     }
 

@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.amap.api.mapcore.util.id
 import com.boredream.lovebook.base.BaseLoadRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
@@ -20,13 +21,9 @@ class TraceRecordRepository @Inject constructor(
 //    suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
 //    suspend fun delete(id: String) = commit { service.deleteTraceRecord(id) }
 
-    suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {
-        // TODO: save to remote
-        return commit { dataSource.save(data) }
-    }
-
-    suspend fun getList(): ResponseEntity<List<TraceRecord>> {
-        return getList { dataSource.loadTraceList() }
-    }
+    // TODO: to remote
+    suspend fun add(data: TraceRecord) = commit { dataSource.save(data) }
+    suspend fun getList() = getList { dataSource.loadTraceList() }
+    suspend fun delete(data: TraceRecord) = commit { dataSource.delete(data) }
 
 }
