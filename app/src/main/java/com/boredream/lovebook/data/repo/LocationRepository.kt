@@ -69,7 +69,7 @@ class LocationRepository @Inject constructor(
     /**
      * 定位成功
      */
-    private fun onLocationSuccess(location: TraceLocation) {
+    fun onLocationSuccess(location: TraceLocation) {
         println("onLocationSuccess dataSource = ${dataSource.javaClass.simpleName}, location = $location")
         myLocation = location
         onLocationSuccess.invoke(location)

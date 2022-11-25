@@ -39,9 +39,11 @@ class TraceUseCase @Inject constructor(
     }
 
     /**
-     * 开始追踪轨迹，必须要先开始定位
+     * 开始追踪轨迹
      */
     fun startTrace() {
+        // 必须要先开始定位，且会清楚已有轨迹
+        locationRepository.clearTraceList()
         locationRepository.startTrace()
     }
 

@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.boredream.lovebook.TestDataConstants.getStepTraceLocation
 import com.boredream.lovebook.TestDataConstants.getTraceLocation
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.repo.source.LocationDataSource
@@ -59,9 +60,9 @@ class LocationRepositoryTest {
             dataSource.startLocation(any())
         } answers {
             firstArg<(location: TraceLocation) -> Unit>()
-                .invoke(getTraceLocation())
+                .invoke(getStepTraceLocation())
             firstArg<(location: TraceLocation) -> Unit>()
-                .invoke(getTraceLocation(latExtra = 0.1))
+                .invoke(getStepTraceLocation())
         }
         repo.startTrace()
         repo.startLocation()
@@ -107,8 +108,35 @@ class LocationRepositoryTest {
         val lastIndex = repo.traceList.lastIndex
         val timeDiff = repo.traceList[lastIndex].time - repo.traceList[lastIndex - 1].time
         assertEquals(6000, timeDiff)
-
     }
 
+
+    @Test
+    fun testTrace_clear() = runTest {
+        // 因为 dataSource 定位是定时持续返回的，而非每次调用 startLocation 返回
+        // 所以多段多次回调，不用 answers arg 方式，直接手动 onSuccess 触发回调
+        repo.startTrace()
+        repo.onLocationSuccess(getStepTraceLocation())
+        repo.onLocationSuccess(getStepTraceLocation())
+
+        assertEquals(2, repo.traceList.size)
+
+        // 停止记录轨迹
+        repo.stopTrace()
+        repo.onLocationSuccess(getStepTraceLocation())
+        assertEquals(2, repo.traceList.size)
+
+        // 清理轨迹
+        repo.clearTraceList()
+        assertEquals(0, repo.traceList.size)
+
+        // 再次开启轨迹记录
+        repo.startTrace()
+        repo.onLocationSuccess(getStepTraceLocation())
+        repo.onLocationSuccess(getStepTraceLocation())
+        repo.onLocationSuccess(getStepTraceLocation())
+        assertEquals(3, repo.traceList.size)
+
+    }
 
 }

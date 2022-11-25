@@ -57,4 +57,9 @@ object TestDataConstants {
         return traceList
     }
 
+    private var extra = 0.001
+    fun getStepTraceLocation(): TraceLocation {
+        extra += 1
+        return getTraceLocation(latExtra = extra)
+    }
 }
