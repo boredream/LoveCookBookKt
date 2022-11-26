@@ -11,7 +11,7 @@ object GlobalConstant {
     var curUser: User? = null
 
     fun saveToken(token: String?) {
-        DataStoreUtils.putSyncData(DataStoreKey.TOKEN, token)
+        DataStoreUtils.putSyncData(DataStoreKey.TOKEN, token ?: "")
         GlobalConstant.token = token
     }
 
@@ -27,7 +27,7 @@ object GlobalConstant {
     }
 
     fun saveUser(user: User?) {
-        DataStoreUtils.putSyncData(DataStoreKey.USER, if(user == null) null else Gson().toJson(user))
+        DataStoreUtils.putSyncData(DataStoreKey.USER, if(user == null) "" else Gson().toJson(user))
         curUser = user
     }
 
