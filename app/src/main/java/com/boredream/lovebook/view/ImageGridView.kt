@@ -1,6 +1,5 @@
 package com.boredream.lovebook.view
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
@@ -8,28 +7,28 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
+import com.blankj.utilcode.util.PathUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.UriUtils
 import com.boredream.lovebook.R
-import com.boredream.lovebook.base.BaseImagePickActivity
-import com.boredream.lovebook.base.BaseImagePickActivity.Companion.REQUEST_CODE_CHOOSE
 import com.boredream.lovebook.base.BaseListAdapter
 import com.boredream.lovebook.common.BindingViewHolder
 import com.boredream.lovebook.data.ImageInfo
 import com.boredream.lovebook.databinding.ItemGridImageBinding
 import com.boredream.lovebook.listener.OnCall
 import com.boredream.lovebook.ui.imagebrowser.ImageBrowserActivity
+import com.boredream.lovebook.utils.GlideEngine
 import com.boredream.lovebook.utils.GlideUtils
-import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.boredream.lovebook.view.itemdecoration.GridItemDecoration
 import com.bumptech.glide.Glide
-import com.yanzhenjie.permission.AndPermission
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.engine.impl.GlideEngine
+import com.luck.picture.lib.basic.PictureSelector
+import com.luck.picture.lib.config.SelectMimeType
+import com.luck.picture.lib.entity.LocalMedia
+import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import java.io.File
 
 
-class ImageGridView : RecyclerView, OnCall<List<Uri>> {
+class ImageGridView : RecyclerView {
 
     private val dataList: ArrayList<ImageInfo> = ArrayList()
 
@@ -49,14 +48,6 @@ class ImageGridView : RecyclerView, OnCall<List<Uri>> {
         layoutManager = GridLayoutManager(context, spanCount)
         addItemDecoration(GridItemDecoration(spanCount, SizeUtils.dp2px(8f), true))
         adapter = Adapter(dataList)
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        if (context is BaseImagePickActivity<*, *>) {
-            (context as BaseImagePickActivity<*, *>).onImageResultCall = this
-        }
     }
 
     class Adapter(val dataList: ArrayList<ImageInfo>) :
@@ -91,43 +82,26 @@ class ImageGridView : RecyclerView, OnCall<List<Uri>> {
         }
 
         private fun pickImage(context: Context) {
-            if (context !is BaseImagePickActivity<*, *>) {
-                return
-            }
-
-            AndPermission.with(context)
-                .runtime()
-                .permission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .onGranted {
-                    Matisse.from(context)
-                        .choose(MimeType.ofImage())
-                        .countable(true)
-                        .maxSelectable(9)
-                        .imageEngine(GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE)
-                }
-                .onDenied { permissions ->
-                    if (AndPermission.hasAlwaysDeniedPermission(
-                            context,
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        )
-                    ) {
-                        PermissionSettingUtil.showSetting(context, permissions)
+            // TODO 使用外部存储空间，防止app卸载后，拍照图片丢失
+            val cameraDir = PathUtils.getInternalAppFilesPath() + File.pathSeparator + "camera"
+            PictureSelector.create(context)
+                .openGallery(SelectMimeType.ofImage())
+                .setOutputCameraDir(cameraDir)
+                .setImageEngine(GlideEngine)
+                .forResult(object : OnResultCallbackListener<LocalMedia> {
+                    override fun onResult(result: ArrayList<LocalMedia>) {
+                        addImages(result)
                     }
-                }
-                .start()
+                    override fun onCancel() {}
+                })
         }
-    }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun call(t: List<Uri>) {
-        if (CollectionUtils.isEmpty(t)) return
-        for (uri in t) {
-            val path = UriUtils.uri2File(uri)?.absolutePath
-            dataList.add(ImageInfo(path = path))
+        @SuppressLint("NotifyDataSetChanged")
+        private fun addImages(images: ArrayList<LocalMedia>) {
+            if (CollectionUtils.isEmpty(images)) return
+            images.forEach { dataList.add(ImageInfo(path = it.path)) }
+            notifyDataSetChanged()
         }
-        adapter?.notifyDataSetChanged()
     }
 
 }

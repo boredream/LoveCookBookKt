@@ -87,6 +87,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation project(path: ':imagepicker')
 
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
@@ -140,9 +141,6 @@ dependencies {
 
     // utils
     implementation 'com.blankj:utilcodex:1.30.6'
-
-    // image picker
-    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
 
     // photo view
     implementation 'com.github.chrisbanes:PhotoView:2.2.0'

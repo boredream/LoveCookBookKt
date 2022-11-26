@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.boredream.lovebook.R
-import com.boredream.lovebook.base.BaseImagePickActivity
+import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.constant.BundleKey
@@ -13,8 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class DiaryDetailActivity :
-    BaseImagePickActivity<DiaryDetailViewModel, ActivityDiaryDetailBinding>() {
+class DiaryDetailActivity : BaseActivity<DiaryDetailViewModel, ActivityDiaryDetailBinding>() {
 
     override fun getLayoutId() = R.layout.activity_diary_detail
 
