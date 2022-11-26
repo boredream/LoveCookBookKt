@@ -33,9 +33,7 @@ class DiaryDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        intent.extras?.let {
-            data = it.getSerializable(BundleKey.DATA) as Diary?
-        }
+        intent.extras?.let { data = it.getSerializable(BundleKey.DATA) as Diary? }
 
         SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
         viewModel.load(data)

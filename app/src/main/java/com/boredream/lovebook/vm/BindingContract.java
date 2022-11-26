@@ -22,7 +22,6 @@ public class BindingContract {
 
     @BindingAdapter("android:src")
     public static void setImageViewGlideUrl(ImageView iv, String newValue) {
-        System.out.println("load image " + newValue);
         GlideUtils.INSTANCE.load(Glide.with(iv), newValue, iv);
     }
 
