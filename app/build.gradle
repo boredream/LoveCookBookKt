@@ -150,6 +150,9 @@ dependencies {
     // permission
     implementation 'com.yanzhenjie.permission:x:2.0.1'
 
+    // rebirth
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
+
     // map version + 0.1需要隐私协议
     implementation 'com.amap.api:3dmap:8.0.0'
     implementation 'com.amap.api:location:5.5.0'

@@ -1,8 +1,11 @@
 package com.boredream.lovebook
 
 import android.app.Application
+import com.blankj.utilcode.util.Utils
+import com.boredream.lovebook.utils.CrashHandler
 import com.boredream.lovebook.utils.DataStoreUtils
 import dagger.hilt.android.HiltAndroidApp
+
 
 @HiltAndroidApp
 class BaseApplication: Application() {
@@ -10,6 +13,8 @@ class BaseApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler(this))
+        Utils.init(this)
         DataStoreUtils.init(this)
         initRefresh()
     }
