@@ -24,7 +24,7 @@ class TraceRecordDetailActivity : BaseActivity<TraceRecordDetailViewModel, Activ
 
         fun start(context: Context, data: TraceRecord) {
             val intent = Intent(context, TraceRecordDetailActivity::class.java)
-            data.let { intent.putExtra(BundleKey.DATA, it) }
+            intent.putExtra(BundleKey.DATA, data)
             context.startActivity(intent)
         }
     }

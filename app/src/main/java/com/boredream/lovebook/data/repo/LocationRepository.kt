@@ -1,9 +1,8 @@
 package com.boredream.lovebook.data.repo
 
-import com.amap.api.maps.AMapUtils
-import com.amap.api.maps.model.LatLng
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.repo.source.LocationDataSource
+import com.boredream.lovebook.utils.TraceFilter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,6 +29,7 @@ class LocationRepository @Inject constructor(
     var isTracing = false
     var traceList: ArrayList<TraceLocation> = ArrayList()
     var onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = { }
+    private lateinit var traceFilter: TraceFilter
 
     /**
      * 开始定位
@@ -49,6 +49,7 @@ class LocationRepository @Inject constructor(
      * 开始追踪
      */
     fun startTrace() {
+        traceFilter = TraceFilter()
         isTracing = true
     }
 
@@ -82,22 +83,29 @@ class LocationRepository @Inject constructor(
      * 添加定位轨迹追踪点
      */
     private fun appendTracePoint(location: TraceLocation) {
-        // 计算新的point和上一个定位point距离
-        val lastPointLat = if (traceList.size == 0) 0.0 else traceList[0].latitude
-        val lastPointLng = if (traceList.size == 0) 0.0 else traceList[0].longitude
-        val distance = AMapUtils.calculateLineDistance(
-            LatLng(lastPointLat, lastPointLng),
-            LatLng(location.latitude, location.longitude)
-        )
-        if (distance > TRACE_DISTANCE_THRESHOLD) {
-            // 移动距离统计阈值
-            traceList.add(location)
-            onTraceSuccess.invoke(traceList)
-        } else {
-            // TODO: 更好的处理
-            // 距离达不到阈值时，视为原地不动，只更新最新一次时间？
-            traceList[traceList.lastIndex].time = location.time
-        }
+        // FIXME: 暂时记录原始数据，用于调试
+//        if(!traceFilter.filterPos(location)) {
+//            return
+//        }
+
+        traceList.add(location)
+        onTraceSuccess.invoke(traceList)
+
+//        // 计算新的point和上一个定位point距离
+//        val lastPointLat = if (traceList.size == 0) 0.0 else traceList[0].latitude
+//        val lastPointLng = if (traceList.size == 0) 0.0 else traceList[0].longitude
+//        val distance = AMapUtils.calculateLineDistance(
+//            LatLng(lastPointLat, lastPointLng),
+//            LatLng(location.latitude, location.longitude)
+//        )
+//        if (distance > TRACE_DISTANCE_THRESHOLD) {
+//            // 移动距离统计阈值
+//            traceList.add(location)
+//            onTraceSuccess.invoke(traceList)
+//        } else {
+//            // 距离达不到阈值时，视为原地不动，只更新最新一次时间？
+//            traceList[traceList.lastIndex].time = location.time
+//        }
     }
 
 }

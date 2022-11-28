@@ -115,6 +115,7 @@ class TraceMapView : MapView {
         traceLineWidth: Float = 15f,
         traceLineColor: Int = ContextCompat.getColor(context, R.color.colorPrimary)
     ): Polyline? {
+        // TODO: 中途有多个点定位失败，然后走出很远距离后，再次定位成功（如坐地铁），应该分多条线绘制
         return map.addPolyline(
             PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
         )

@@ -25,7 +25,7 @@ public class TraceFilterTest extends TestCase {
             float distance = AMapUtils.calculateLineDistance(
                     new LatLng(traceList.get(i - 1).getLatitude(), traceList.get(i - 1).getLongitude()),
                     new LatLng(traceList.get(i).getLatitude(), traceList.get(i).getLongitude()));
-            if(distance > 10) {
+            if (distance > 10) {
                 System.out.println(i + " -> distance=" + distance + ", " + traceList.get(i) + ", time=" + traceList.get(i).getTime());
             }
         }
@@ -47,23 +47,42 @@ public class TraceFilterTest extends TestCase {
         String json = FileIOUtils.readFile2String(file);
         TraceRecord record = new Gson().fromJson(json, TraceRecord.class);
         ArrayList<TraceLocation> traceList = record.getTraceList();
+
         TraceFilter filter = new TraceFilter();
         ArrayList<TraceLocation> newTraceList = new ArrayList<>();
         for (int i = 1800; i < 1900; i++) {
             boolean isValidate = filter.filterPos(traceList.get(i));
-            if(!isValidate) {
-//                System.out.println(i + " -> " + traceList.get(i) + ", time=" + traceList.get(i).getTime());
-            } else {
+            if (isValidate) {
                 newTraceList.add(traceList.get(i));
             }
+
+            printTrace(traceList, i);
         }
 
+        System.out.println("------------------------------------");
         for (int i = 1; i < newTraceList.size(); i++) {
-            float distance = AMapUtils.calculateLineDistance(
-                    new LatLng(newTraceList.get(i - 1).getLatitude(), newTraceList.get(i - 1).getLongitude()),
-                    new LatLng(newTraceList.get(i).getLatitude(), newTraceList.get(i).getLongitude()));
-            System.out.println(i + " -> distance=" + distance + ", " + newTraceList.get(i) + ", time=" + newTraceList.get(i).getTime());
+            printTrace(newTraceList, i);
         }
+
+        System.out.println("------------------------------------");
+        ArrayList<TraceLocation> testTraceList = new ArrayList<>();
+        testTraceList.add(traceList.get(1815));
+        testTraceList.add(traceList.get(1816));
+        // 1817~1857 偏移500
+        testTraceList.add(traceList.get(1884));
+        testTraceList.add(traceList.get(1885));
+        testTraceList.add(traceList.get(1886));
+        for (int i = 1; i < testTraceList.size(); i++) {
+            printTrace(testTraceList, i);
+        }
+
+    }
+
+    private void printTrace(ArrayList<TraceLocation> newTraceList, int i) {
+        float distance = AMapUtils.calculateLineDistance(
+                new LatLng(newTraceList.get(i - 1).getLatitude(), newTraceList.get(i - 1).getLongitude()),
+                new LatLng(newTraceList.get(i).getLatitude(), newTraceList.get(i).getLongitude()));
+        System.out.println(i + " -> distance=" + distance + ", " + newTraceList.get(i) + ", time=" + newTraceList.get(i).getTime());
     }
 
 }

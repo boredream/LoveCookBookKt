@@ -6,6 +6,7 @@ open class TraceLocation(
     var time: Long = System.currentTimeMillis(),
     var latitude: Double,
     var longitude: Double,
+    var extraData: String? = null,
 ) : java.io.Serializable {
     override fun toString(): String {
         return "${TimeUtils.millis2String(time)}  $latitude,$longitude"

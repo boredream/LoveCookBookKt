@@ -1,7 +1,5 @@
 package com.boredream.lovebook.utils;
 
-import android.util.Log;
-
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.boredream.lovebook.data.TraceLocation;
@@ -9,13 +7,14 @@ import com.boredream.lovebook.data.TraceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: need check
 public class TraceFilter {
 
     private List<TraceLocation> mListPoint = new ArrayList<>();
 
-    final int MAX_SPEED = 2; // 最大速度 米/秒
+    final int MAX_SPEED = 5; // 最大速度 米/秒。走路1.5。跑步3。骑车5。
     private Boolean isFirst = true; // 是否是第一次定位点
-    private TraceLocation weight1 = new TraceLocation(0, 0.0, 0.0); // 权重点1
+    private TraceLocation weight1 = new TraceLocation(0, 0.0, 0.0, null); // 权重点1
     private TraceLocation weight2; // 权重点2
     private List<TraceLocation> w1TempList = new ArrayList<>(); // w1的临时定位点集合
     private List<TraceLocation> w2TempList = new ArrayList<>(); // w2的临时定位点集合
@@ -27,10 +26,6 @@ public class TraceFilter {
      */
     public Boolean filterPos(TraceLocation aMapLocation) {
         String filterString = "";
-//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-//		Date date = new Date(aMapLocation.getTime());
-//		String time = df.format(date);//定位时间
-//		filterString = time + "开始虑点" + "\r\n";
 
         try {
             // 获取的第一个定位点不进行过滤
@@ -47,7 +42,7 @@ public class TraceFilter {
                 /**********************************/
 
                 // 将得到的第一个点存储入w1的缓存集合
-                final TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0);
+                final TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0, null);
                 traceLocation.setLatitude(aMapLocation.getLatitude());
                 traceLocation.setLongitude(aMapLocation.getLongitude());
                 traceLocation.setTime(aMapLocation.getTime());
@@ -85,7 +80,7 @@ public class TraceFilter {
                     if (distance > MaxDistance) {
                         filterString += "distance > MaxDistance" + "当前点 距离大: 设置w2位新的点，并添加到w2TempList";
                         // 将设置w2位新的点，并存储入w2临时缓存
-                        weight2 = new TraceLocation(0, 0.0, 0.0);
+                        weight2 = new TraceLocation(0, 0.0, 0.0, null);
                         weight2.setLatitude(aMapLocation.getLatitude());
                         weight2.setLongitude(aMapLocation.getLongitude());
                         weight2.setTime(aMapLocation.getTime());
@@ -94,7 +89,7 @@ public class TraceFilter {
                     } else {
                         filterString += "distance < MaxDistance" + "当前点 距离小 : 添加到w1TempList";
                         // 将p1加入到做坐标集合w1TempList
-                        TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0);
+                        TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0, null);
                         traceLocation.setLatitude(aMapLocation.getLatitude());
                         traceLocation.setLongitude(aMapLocation.getLongitude());
                         traceLocation.setTime(aMapLocation.getTime());
@@ -143,7 +138,7 @@ public class TraceFilter {
                         filterString += "当前点 距离大: weight2 更新";
                         w2TempList.clear();
                         // 将设置w2位新的点，并存储入w2临时缓存
-                        weight2 = new TraceLocation(0, 0.0, 0.0);
+                        weight2 = new TraceLocation(0, 0.0, 0.0, null);
                         weight2.setLatitude(aMapLocation.getLatitude());
                         weight2.setLongitude(aMapLocation.getLongitude());
                         weight2.setTime(aMapLocation.getTime());
@@ -155,7 +150,7 @@ public class TraceFilter {
                         filterString += "当前点 距离小: 添加到w2TempList";
 
                         // 将p1加入到做坐标集合w2TempList
-                        TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0);
+                        TraceLocation traceLocation = new TraceLocation(0, 0.0, 0.0, null);
                         traceLocation.setLatitude(aMapLocation.getLatitude());
                         traceLocation.setLongitude(aMapLocation.getLongitude());
                         traceLocation.setTime(aMapLocation.getTime());
@@ -195,8 +190,7 @@ public class TraceFilter {
                 }
             }
         } finally {
-//            FileWriteUtil.getInstance().save("tutu_driver_filter.txt", filterString);
-            Log.d("TraceFilter", filterString);
+            // System.out.println("TraceFilter" + filterString);
         }
     }
 
