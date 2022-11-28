@@ -42,24 +42,32 @@ object TestDataConstants {
         return ServiceCreator.create(ApiService::class.java)
     }
 
-    fun getTraceLocation(latExtra: Double = 0.0, lngExtra: Double = 0.0): TraceLocation {
-        return TraceLocation(
-            latitude = 31.227792 + latExtra,
-            longitude = 121.355379 + lngExtra,
-        )
-    }
-
     fun getTraceList(): ArrayList<TraceLocation> {
         val traceList = ArrayList<TraceLocation>()
         for (i in 0..10) {
-            traceList.add(getTraceLocation(latExtra = 0.000001 * i))
+            traceList.add(getStepTraceLocation())
         }
         return traceList
     }
 
-    private var extra = 0.001
+    private var step = 0
     fun getStepTraceLocation(): TraceLocation {
-        extra += 1
-        return getTraceLocation(latExtra = extra)
+        val extra = step * 0.000001
+        val time = System.currentTimeMillis() + step * 2000
+        step += 1
+        return getTraceLocation(latExtra = extra, time = time)
     }
+
+    fun getTraceLocation(
+        latExtra: Double = 0.0,
+        lngExtra: Double = 0.0,
+        time: Long = System.currentTimeMillis()
+    ): TraceLocation {
+        return TraceLocation(
+            latitude = 31.227792 + latExtra,
+            longitude = 121.355379 + lngExtra,
+            time = time
+        )
+    }
+
 }
