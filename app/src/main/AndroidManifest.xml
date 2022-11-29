@@ -66,6 +66,7 @@
         <activity android:name=".ui.diarydetail.DiaryDetailActivity" />
         <activity android:name=".ui.trace.TraceMapActivity" />
         <activity android:name=".ui.trace.recorddetail.TraceRecordDetailActivity" />
+        <activity android:name=".ui.trace.editmap.TraceEditMapActivity" />
     </application>
 
 </manifest>
