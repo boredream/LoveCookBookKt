@@ -5,9 +5,11 @@ import android.widget.ImageView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseMethod;
 
+import com.boredream.lovebook.base.list.RefreshUiState;
 import com.boredream.lovebook.data.TheDay;
 import com.boredream.lovebook.data.TraceLocation;
 import com.boredream.lovebook.utils.GlideUtils;
+import com.boredream.lovebook.view.RefreshListView;
 import com.boredream.lovebook.view.TraceMapView;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -51,6 +53,11 @@ public class BindingContract {
     @BindingAdapter("isFollowing")
     public static void setTraceMapViewFollowingMode(TraceMapView traceMapView, boolean isFollowing) {
         traceMapView.setFollowingMode(isFollowing);
+    }
+
+    @BindingAdapter("uiState")
+    public static void setRefreshListViewData(RefreshListView refreshListView, RefreshUiState uiState) {
+        if (uiState != null) refreshListView.updateData(uiState);
     }
 
     // 用于解决需要转换的数据转换问题

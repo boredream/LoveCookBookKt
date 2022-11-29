@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boredream.lovebook.BR
 import com.boredream.lovebook.common.BindingViewHolder
 
-abstract class BaseListAdapter<T, BD : ViewDataBinding>(private val dataList: ArrayList<T>) :
+abstract class BaseListAdapter<T, BD : ViewDataBinding>(val dataList: ArrayList<T>) :
     RecyclerView.Adapter<BindingViewHolder<BD>>() {
 
     var onItemClickListener: (t: T) -> Unit = { }

@@ -35,7 +35,7 @@ class DiaryRepositoryTest {
 
         // query
         val getResponse = repo.getPageList(false)
-        val records = getResponse.getSuccessData()
+        val records = getResponse.getSuccessData().dataList
         assertNotNull(records)
         assertNotSame(0, records.size)
         var matchData: Diary? = null

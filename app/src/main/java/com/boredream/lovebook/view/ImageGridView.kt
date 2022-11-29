@@ -50,7 +50,7 @@ class ImageGridView : RecyclerView {
         adapter = Adapter(dataList)
     }
 
-    class Adapter(val dataList: ArrayList<ImageInfo>) :
+    class Adapter(dataList: ArrayList<ImageInfo>) :
         BaseListAdapter<ImageInfo, ItemGridImageBinding>(dataList) {
 
         override fun getItemLayoutId() = R.layout.item_grid_image

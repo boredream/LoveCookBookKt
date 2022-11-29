@@ -24,11 +24,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:title="日记" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_diary"
+        <com.boredream.lovebook.view.RefreshListView
+            android:id="@+id/refresh_diary"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:overScrollMode="never"
+            app:uiState="@{vm.refreshUiState}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

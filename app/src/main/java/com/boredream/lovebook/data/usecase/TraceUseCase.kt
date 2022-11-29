@@ -3,6 +3,7 @@ package com.boredream.lovebook.data.usecase
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
+import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.TraceUtils
@@ -78,7 +79,7 @@ class TraceUseCase @Inject constructor(
     /**
      * 获取所有历史轨迹
      */
-    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<List<TraceRecord>> {
+    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ListResult<TraceRecord>> {
         return traceRecordRepository.getList()
     }
 

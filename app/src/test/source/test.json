@@ -1,0 +1,38 @@
+{
+  "distance": 0.0,
+  "endTime": 1669625862309,
+  "startTime": 1669625854488,
+  "title": "轨迹 2022-11-28 16:57:42",
+  "traceList": [
+    {
+      "extraData": "locationType=5, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669625854488
+    },
+    {
+      "extraData": "locationType=2, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669625856207
+    },
+    {
+      "extraData": "locationType=2, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669625858231
+    },
+    {
+      "extraData": "locationType=2, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669625860247
+    },
+    {
+      "extraData": "locationType=2, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669625862309
+    }
+  ]
+}

@@ -73,7 +73,7 @@ class TodoListActivity : BaseActivity<TodoListViewModel, ActivityTodoListBinding
             when (it) {
                 is SimpleRequestSuccess -> {
                     dataList.clear()
-                    dataList.addAll(it.data)
+                    dataList.addAll(it.data.dataList)
                     adapter.notifyDataSetChanged()
                 }
                 is SimpleRequestFail -> ToastUtils.showShort(it.reason)

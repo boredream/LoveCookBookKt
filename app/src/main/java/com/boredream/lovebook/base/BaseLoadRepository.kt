@@ -2,6 +2,7 @@ package com.boredream.lovebook.base
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.dto.PageResultDto
+import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.net.ApiService
 
 abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRepository(service) {
@@ -13,10 +14,10 @@ abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRep
 
     protected suspend fun getPageList(forceRemote: Boolean = false,
                                       loadMore: Boolean = false,
-                                      request: suspend (page: Int) -> ResponseEntity<PageResultDto<T>>): ResponseEntity<List<T>> {
+                                      request: suspend (page: Int) -> ResponseEntity<PageResultDto<T>>): ResponseEntity<ListResult<T>> {
         if (!forceRemote && !cacheIsDirty && !loadMore) {
             // 非强制远程，且缓存数据有效，且是非加载更多模式时，直接返回
-            return ResponseEntity.success(cacheList)
+            return ResponseEntity.success(ListResult(cacheListCanLoadMore, cacheList))
         }
 
         val requestPage = if(loadMore) (cacheListPage + 1) else 1
@@ -31,13 +32,15 @@ abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRep
             cacheListCanLoadMore = responseData.current < responseData.pages
             cacheIsDirty = false
         }
-        return ResponseEntity.success(cacheList)
+
+        // 数据转换一层，PageResult -> ListResult
+        return ResponseEntity(ListResult(cacheListCanLoadMore, cacheList), response.code, response.msg)
     }
 
-    protected suspend fun getList(forceRemote: Boolean = false, request: suspend () -> ResponseEntity<List<T>>): ResponseEntity<List<T>> {
+    protected suspend fun getList(forceRemote: Boolean = false, request: suspend () -> ResponseEntity<List<T>>): ResponseEntity<ListResult<T>> {
         if (!forceRemote && !cacheIsDirty) {
             // 非强制远程，且缓存数据有效时，直接返回
-            return ResponseEntity.success(cacheList)
+            return ResponseEntity.success(ListResult(false, cacheList))
         }
 
         val response: ResponseEntity<List<T>> = tryHttpError { request.invoke() }
@@ -48,7 +51,9 @@ abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRep
             cacheList.addAll(response.getSuccessData())
             cacheIsDirty = false
         }
-        return response
+
+        // 数据转换一层，List -> ListResult
+        return ResponseEntity(ListResult(cacheListCanLoadMore, cacheList), response.code, response.msg)
     }
 
     protected suspend fun commit(request: suspend () -> ResponseEntity<Boolean>): ResponseEntity<Boolean> {

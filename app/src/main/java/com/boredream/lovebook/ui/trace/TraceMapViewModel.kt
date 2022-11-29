@@ -91,7 +91,7 @@ class TraceMapViewModel @Inject constructor(
             viewModelScope.launch {
                 val recordList = traceUseCase.getAllHistoryTraceListRecord()
                 val historyList = ArrayList<ArrayList<TraceLocation>>()
-                recordList.data?.let { it -> it.forEach { historyList.add(it.traceList) } }
+                recordList.data?.dataList?.let { it -> it.forEach { historyList.add(it.traceList) } }
                 _historyTracePointListUiState.value = historyList
             }
         }

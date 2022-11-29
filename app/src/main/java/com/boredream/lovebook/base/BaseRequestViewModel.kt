@@ -7,6 +7,7 @@ import com.boredream.lovebook.common.SimpleRequestFail
 import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.common.SimpleRequestUiState
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.dto.ListResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -21,8 +22,8 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
 
     // TODO: 如何整合？
 
-    protected val _loadListUiState = MutableLiveData<SimpleRequestUiState<List<T>>>()
-    val loadListUiState: LiveData<SimpleRequestUiState<List<T>>> = _loadListUiState
+    protected val _loadListUiState = MutableLiveData<SimpleRequestUiState<ListResult<T>>>()
+    val loadListUiState: LiveData<SimpleRequestUiState<ListResult<T>>> = _loadListUiState
 
     protected val _loadDataUiState = MutableLiveData<SimpleRequestUiState<T>>()
     val loadDataUiState: LiveData<SimpleRequestUiState<T>> = _loadDataUiState
@@ -47,7 +48,7 @@ open class BaseRequestViewModel<T> : BaseViewModel() {
     /**
      * 加载列表数据
      */
-    protected fun loadList(repoRequest: suspend () -> ResponseEntity<List<T>>) {
+    protected fun loadList(repoRequest: suspend () -> ResponseEntity<ListResult<T>>) {
         request(_loadListUiState, repoRequest)
     }
 

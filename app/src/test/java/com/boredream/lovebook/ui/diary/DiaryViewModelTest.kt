@@ -5,6 +5,7 @@ import com.boredream.lovebook.MainDispatcherRule
 import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.DiaryRepository
 import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
@@ -42,20 +43,17 @@ class DiaryViewModelTest {
 
     @Test
     fun loadList() = runTest {
-        val mockList = mockk<List<Diary>>()
+        val mockList = mockk<ArrayList<Diary>>()
         every { mockList.size } returns 10
 
         every {
             runBlocking {
                 repo.getPageList(any())
             }
-        } returns ResponseEntity.success(mockList)
+        } returns ResponseEntity.success(ListResult(false, mockList))
 
         vm.start()
-        Assert.assertEquals(SimpleRequestSuccess::class.java, vm.loadListUiState.value?.javaClass)
-
-        val success : SimpleRequestSuccess<List<Diary>> = vm.loadListUiState.value as SimpleRequestSuccess<List<Diary>>
-        Assert.assertEquals(10, success.data.size)
+        Assert.assertEquals(10, vm.refreshUiState.value?.list?.size)
     }
 
 }

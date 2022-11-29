@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ToastUtils
+import androidx.databinding.ViewDataBinding
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
+import com.boredream.lovebook.base.BaseListAdapter
 import com.boredream.lovebook.common.SimpleListAdapter
-import com.boredream.lovebook.common.SimpleRequestFail
 import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.databinding.FragmentDiaryBinding
@@ -47,20 +45,18 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
         viewModel.start()
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun initList() {
-        getBinding().rvDiary.layoutManager = LinearLayoutManager(activity)
-        getBinding().rvDiary.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
         adapter = SimpleListAdapter(dataList, R.layout.item_diary)
         adapter.onItemClickListener = { DiaryDetailActivity.start(requireContext(), it) }
-        adapter.onItemLongClickListener = {
-            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
-        }
-        getBinding().rvDiary.adapter = adapter
+//        adapter.onItemLongClickListener = {
+//            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
+//        }
+        getBinding().refreshDiary.setup(
+            adapter as BaseListAdapter<Any, ViewDataBinding>,
+            onLoadMore = { viewModel.start(true) },
+            onRefresh = { viewModel.start(false) },
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -69,26 +65,15 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
             DiaryDetailActivity.start(requireContext())
         }
 
-        viewModel.loadListUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    dataList.clear()
-                    dataList.addAll(it.data)
-                    adapter.notifyDataSetChanged()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
-
-        viewModel.commitDataUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    ToastUtils.showShort("删除成功")
-                    viewModel.start()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
+//        viewModel.commitDataUiState.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is SimpleRequestSuccess -> {
+//                    ToastUtils.showShort("删除成功")
+//                    viewModel.start()
+//                }
+//                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
+//            }
+//        }
     }
 
 }

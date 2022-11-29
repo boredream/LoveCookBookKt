@@ -1,8 +1,6 @@
 package com.boredream.lovebook.data.repo
 
-import com.amap.api.mapcore.util.id
 import com.boredream.lovebook.base.BaseLoadRepository
-import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.LocalTraceRecordDataSource
 import com.boredream.lovebook.net.ApiService

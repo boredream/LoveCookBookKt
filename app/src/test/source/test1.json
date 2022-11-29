@@ -1,0 +1,104 @@
+{
+  "distance": 283.5983,
+  "endTime": 1669626032556,
+  "startTime": 1669625960416,
+  "title": "轨迹 2022-11-28 17:00:32",
+  "traceList": [
+    {
+      "extraData": "locationType=4, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669626000465
+    },
+    {
+      "extraData": "locationType=4, accuracy=29.0, locationDetail=#id:SbDYzNzVjOTM5ZjAwNW9tb2ZqcGlqNjRhZjhiN2Y3LA==#csid:d8980082f3684f3d8702b39fd1783aa6, speed=0.0, bearing=0.0, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217792,
+      "longitude": 121.35534,
+      "time": 1669626002477
+    },
+    {
+      "extraData": "locationType=1, accuracy=26.485796, locationDetail=, speed=2.07, bearing=135.6, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217601061328928,
+      "longitude": 121.35420191362867,
+      "time": 1669626003707
+    },
+    {
+      "extraData": "locationType=1, accuracy=33.519024, locationDetail=, speed=0.81, bearing=282.29, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.218027414365743,
+      "longitude": 121.35465623198219,
+      "time": 1669626005707
+    },
+    {
+      "extraData": "locationType=1, accuracy=25.757551, locationDetail=, speed=1.23, bearing=189.8, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217899818318152,
+      "longitude": 121.35463513877805,
+      "time": 1669626007727
+    },
+    {
+      "extraData": "locationType=1, accuracy=23.508345, locationDetail=, speed=0.56, bearing=189.8, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.21798675668749,
+      "longitude": 121.35477334927837,
+      "time": 1669626009726
+    },
+    {
+      "extraData": "locationType=1, accuracy=14.626835, locationDetail=, speed=0.86, bearing=351.2, aoi=中山国际广场, gpsStatus=-1",
+      "latitude": 31.217935452550144,
+      "longitude": 121.3544189067755,
+      "time": 1669626011701
+    },
+    {
+      "extraData": "locationType=1, accuracy=8.891773, locationDetail=, speed=0.47, bearing=18.7, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.217905549490013,
+      "longitude": 121.35446586112256,
+      "time": 1669626013694
+    },
+    {
+      "extraData": "locationType=1, accuracy=10.54705, locationDetail=, speed=0.87, bearing=228.3, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.217939028543217,
+      "longitude": 121.35450844132848,
+      "time": 1669626015717
+    },
+    {
+      "extraData": "locationType=1, accuracy=9.418642, locationDetail=, speed=0.0, bearing=0.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.217968293007395,
+      "longitude": 121.35453210226261,
+      "time": 1669626017728
+    },
+    {
+      "extraData": "locationType=1, accuracy=10.380863, locationDetail=, speed=0.3, bearing=228.3, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21797726791978,
+      "longitude": 121.35451509798014,
+      "time": 1669626019738
+    },
+    {
+      "extraData": "locationType=1, accuracy=54.700264, locationDetail=, speed=0.83, bearing=236.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21784472655546,
+      "longitude": 121.3542719970404,
+      "time": 1669626024890
+    },
+    {
+      "extraData": "locationType=1, accuracy=54.700264, locationDetail=, speed=0.83, bearing=236.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21784472655546,
+      "longitude": 121.3542719970404,
+      "time": 1669626026544
+    },
+    {
+      "extraData": "locationType=1, accuracy=54.700264, locationDetail=, speed=0.83, bearing=236.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21784472655546,
+      "longitude": 121.3542719970404,
+      "time": 1669626028551
+    },
+    {
+      "extraData": "locationType=1, accuracy=54.700264, locationDetail=, speed=0.83, bearing=236.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21784472655546,
+      "longitude": 121.3542719970404,
+      "time": 1669626030539
+    },
+    {
+      "extraData": "locationType=1, accuracy=54.700264, locationDetail=, speed=0.83, bearing=236.0, aoi=临空经济园区创业楼, gpsStatus=-1",
+      "latitude": 31.21784472655546,
+      "longitude": 121.3542719970404,
+      "time": 1669626032556
+    }
+  ]
+}
