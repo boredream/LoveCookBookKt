@@ -65,14 +65,14 @@ class RefreshListView : FrameLayout {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(uiState: RefreshUiState) {
-        refresh.setEnableLoadMore(uiState.enableLoadMore)
-        if (uiState.showRefresh) refresh.autoRefresh() else refresh.finishRefresh()
-        if (uiState.showLoadMore) refresh.autoLoadMore() else refresh.finishLoadMore()
+    fun updateData(refreshList: RefreshUiState) {
+        refresh.setEnableLoadMore(refreshList.enableLoadMore)
+        if (refreshList.showRefresh) refresh.autoRefresh() else refresh.finishRefresh()
+        if (refreshList.showLoadMore) refresh.autoLoadMore() else refresh.finishLoadMore()
 
         adapter?.let { adapter ->
             adapter.dataList.clear()
-            uiState.list?.let { adapter.dataList.addAll(it) }
+            refreshList.list?.let { adapter.dataList.addAll(it) }
             adapter.notifyDataSetChanged()
         }
     }

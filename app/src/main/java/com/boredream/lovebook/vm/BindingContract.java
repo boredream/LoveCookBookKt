@@ -55,9 +55,9 @@ public class BindingContract {
         traceMapView.setFollowingMode(isFollowing);
     }
 
-    @BindingAdapter("uiState")
-    public static void setRefreshListViewData(RefreshListView refreshListView, RefreshUiState uiState) {
-        if (uiState != null) refreshListView.updateData(uiState);
+    @BindingAdapter("refreshList")
+    public static void setRefreshListViewData(RefreshListView refreshListView, RefreshUiState refreshList) {
+        if (refreshList != null) refreshListView.updateData(refreshList);
     }
 
     // 用于解决需要转换的数据转换问题

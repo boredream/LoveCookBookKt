@@ -18,12 +18,12 @@ data class RefreshUiState(
 /**
  * 列表类 view model
  * 不影响架构，用于节省模版代码
- * VM + ... 应该是配套的一组
+ * VM + View ... 应该是配套的一组
  */
 open class BaseRefreshListViewModel : BaseViewModel() {
 
-    private val _refreshUiState = MutableLiveData<RefreshUiState>()
-    val refreshUiState: LiveData<RefreshUiState> = _refreshUiState
+    private val _refreshListUiState = MutableLiveData<RefreshUiState>()
+    val refreshListUiState: LiveData<RefreshUiState> = _refreshListUiState
 
     fun <T> loadList(
         handlePullDownDown: Boolean = true,
@@ -31,7 +31,7 @@ open class BaseRefreshListViewModel : BaseViewModel() {
         repoRequest: suspend (loadMore: Boolean) -> ResponseEntity<ListResult<T>>
     ) {
         // 只有非手动下拉刷新，才需要主动显示下拉样式
-        _refreshUiState.value = RefreshUiState(showRefresh = !handlePullDownDown && !loadMore)
+        _refreshListUiState.value = RefreshUiState(showRefresh = !handlePullDownDown && !loadMore)
 
         viewModelScope.launch {
             val response = repoRequest.invoke(loadMore)
@@ -39,13 +39,13 @@ open class BaseRefreshListViewModel : BaseViewModel() {
                 // 请求数据成功返回
                 val hasMore = response.data?.hasMore ?: false
                 val dataList = response.data?.dataList
-                _refreshUiState.value = RefreshUiState(
+                _refreshListUiState.value = RefreshUiState(
                     enableLoadMore = hasMore,
                     list = dataList,
                 )
             } else {
                 // TODO loadMore 请求失败的时候应该继续保持当前列表数据
-                _refreshUiState.value = RefreshUiState()
+                _refreshListUiState.value = RefreshUiState()
             }
         }
     }
