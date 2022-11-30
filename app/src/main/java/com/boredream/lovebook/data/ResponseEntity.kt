@@ -24,7 +24,7 @@ data class ResponseEntity<T>(
         }
 
         fun <T> httpError(e: Exception): ResponseEntity<T> {
-            return ResponseEntity(null, 1000, e.message ?: "服务器错误")
+            return ResponseEntity(null, 1000, "HTTP 错误: ${e.message}")
         }
     }
 }

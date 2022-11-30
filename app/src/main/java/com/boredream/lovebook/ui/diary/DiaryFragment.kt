@@ -10,7 +10,7 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.base.BaseListAdapter
 import com.boredream.lovebook.common.SimpleListAdapter
-import com.boredream.lovebook.common.SimpleRequestSuccess
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.databinding.FragmentDiaryBinding
 import com.boredream.lovebook.databinding.ItemDiaryBinding
@@ -49,13 +49,13 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
     private fun initList() {
         adapter = SimpleListAdapter(dataList, R.layout.item_diary)
         adapter.onItemClickListener = { DiaryDetailActivity.start(requireContext(), it) }
-//        adapter.onItemLongClickListener = {
-//            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
-//        }
+        adapter.onItemLongClickListener = {
+            DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
+        }
         getBinding().refreshDiary.setup(
             adapter as BaseListAdapter<Any, ViewDataBinding>,
-            onLoadMore = { viewModel.start(true) },
-            onRefresh = { viewModel.start(false) },
+            onLoadMore = { viewModel.refresh(true) },
+            onRefresh = { viewModel.refresh(false) },
         )
     }
 
@@ -65,15 +65,12 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
             DiaryDetailActivity.start(requireContext())
         }
 
-//        viewModel.commitDataUiState.observe(viewLifecycleOwner) {
-//            when (it) {
-//                is SimpleRequestSuccess -> {
-//                    ToastUtils.showShort("删除成功")
-//                    viewModel.start()
-//                }
-//                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-//            }
-//        }
+        SimpleUiStateObserver.setRequestObserver(viewLifecycleOwner, viewModel.deleteVMCompose)
+        viewModel.deleteVMCompose.successUiState.observe(viewLifecycleOwner) {
+            // 删除成功后刷新
+            viewModel.refresh(false)
+        }
+
     }
 
 }

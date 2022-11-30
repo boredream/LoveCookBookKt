@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseListAdapter
-import com.boredream.lovebook.base.list.RefreshUiState
+import com.boredream.lovebook.base.refreshlist.RefreshUiState
 import com.boredream.lovebook.databinding.ViewRefreshListBinding
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 

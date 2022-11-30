@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseMethod;
 
-import com.boredream.lovebook.base.list.RefreshUiState;
+import com.boredream.lovebook.base.refreshlist.RefreshUiState;
 import com.boredream.lovebook.data.TheDay;
 import com.boredream.lovebook.data.TraceLocation;
 import com.boredream.lovebook.utils.GlideUtils;

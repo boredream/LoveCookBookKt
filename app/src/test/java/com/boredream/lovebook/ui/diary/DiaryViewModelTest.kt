@@ -2,17 +2,14 @@ package com.boredream.lovebook.ui.diary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.boredream.lovebook.MainDispatcherRule
-import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.DiaryRepository
-import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import io.mockk.mockkObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -53,7 +50,7 @@ class DiaryViewModelTest {
         } returns ResponseEntity.success(ListResult(false, mockList))
 
         vm.start()
-        Assert.assertEquals(10, vm.refreshUiState.value?.list?.size)
+        Assert.assertEquals(10, vm.refreshListVMCompose.uiState.value?.list?.size)
     }
 
 }
