@@ -6,7 +6,7 @@ import com.boredream.lovebook.net.ApiService
 /**
  * 数据仓库，单例，全局复用
  */
-open class BaseRepository(service: ApiService) {
+open class BaseRepository {
 
     /**
      * http请求预处理

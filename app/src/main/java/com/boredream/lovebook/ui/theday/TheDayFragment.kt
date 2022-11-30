@@ -32,7 +32,6 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         initList()
         initObserver()
-        viewModel.clearCache()
         viewModel.loadTogetherInfo()
         return view
     }

@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class UserRepository @Inject constructor(
     private val service: ApiService,
     private val localDataSource: UserLocalDataSource
-) : BaseRepository(service) {
+) : BaseRepository() {
 
     suspend fun autoLogin() : ResponseEntity<User> {
         return if(localDataSource.getToken() != null) {

@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoRepository @Inject constructor(private val service: ApiService) :
-    BaseLoadRepository<Todo>(service) {
+    BaseLoadRepository<Todo>() {
 
     suspend fun getList(groupId: String) = getList { service.getTodoList(groupId) }
     suspend fun add(data: Todo) = commit { service.addTodo(data) }

@@ -5,7 +5,7 @@ import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.net.ApiService
 
-abstract class BaseLoadRepository<T : BaseEntity>(service: ApiService) : BaseRepository(service) {
+abstract class BaseLoadRepository<T : BaseEntity> : BaseRepository() {
 
     var cacheListPage = 1
     var cacheList: ArrayList<T> = ArrayList()

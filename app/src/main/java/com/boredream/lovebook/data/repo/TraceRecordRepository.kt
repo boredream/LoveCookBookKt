@@ -12,7 +12,7 @@ class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
     private val dataSource: LocalTraceRecordDataSource,
 ) :
-    BaseLoadRepository<TraceRecord>(service) {
+    BaseLoadRepository<TraceRecord>() {
 
 //    suspend fun getList(groupId: String) = getList { service.getTraceRecordList(groupId) }
 //    suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }

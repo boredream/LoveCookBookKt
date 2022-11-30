@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DiaryRepository @Inject constructor(private val service: ApiService) :
-    BaseLoadRepository<Diary>(service) {
+    BaseLoadRepository<Diary>() {
 
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
         getPageList(forceRemote, loadMore = loadMore) {
