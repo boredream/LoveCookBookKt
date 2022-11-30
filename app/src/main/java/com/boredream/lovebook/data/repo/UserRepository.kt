@@ -3,6 +3,7 @@ package com.boredream.lovebook.data.repo
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.constant.GlobalConstant.getLocalUser
 import com.boredream.lovebook.data.dto.LoginDto
 import com.boredream.lovebook.data.repo.source.UserLocalDataSource
 import com.boredream.lovebook.net.ApiService
@@ -15,12 +16,23 @@ class UserRepository @Inject constructor(
     private val localDataSource: UserLocalDataSource
 ) : BaseRepository(service) {
 
-    suspend fun login(username: String, password: String): ResponseEntity<String> {
-        val response = service.login(LoginDto(username, password))
-        if (response.isSuccess()) {
-            localDataSource.saveToken(response.getSuccessData())
+    suspend fun autoLogin() : ResponseEntity<User> {
+        return if(localDataSource.getToken() != null) {
+            // 有本地token，然后获取最新 user info
+            service.getUserInfo()
+        } else {
+            ResponseEntity.notExistError()
         }
-        return response
+    }
+
+    suspend fun login(username: String, password: String): ResponseEntity<User> {
+        val response = service.login(LoginDto(username, password))
+        return if (response.isSuccess()) {
+            localDataSource.saveToken(response.getSuccessData())
+            getUserInfo()
+        } else {
+            ResponseEntity(null, response.code, response.msg)
+        }
     }
 
     fun logout() {
@@ -34,10 +46,6 @@ class UserRepository @Inject constructor(
             localDataSource.saveUser(response.getSuccessData())
         }
         return response
-    }
-
-    fun getLocalToken(): String? {
-        return localDataSource.getToken()
     }
 
     fun getLocalUser(): User? {

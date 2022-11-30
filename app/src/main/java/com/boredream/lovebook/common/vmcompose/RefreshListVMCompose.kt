@@ -1,4 +1,4 @@
-package com.boredream.lovebook.base.refreshlist
+package com.boredream.lovebook.common.vmcompose
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,6 @@ data class RefreshUiState(
     val showRefresh: Boolean = false,
     val enableLoadMore: Boolean = false,
     val showLoadMore: Boolean = false,
-    val list: ArrayList<*>? = null,
 )
 
 /**
@@ -21,8 +20,11 @@ data class RefreshUiState(
  */
 class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
 
-    private val _uiState = MutableLiveData<RefreshUiState>()
-    val uiState: LiveData<RefreshUiState> = _uiState
+    private val _refreshUiState = MutableLiveData<RefreshUiState>()
+    val refreshUiState: LiveData<RefreshUiState> = _refreshUiState
+
+    private val _dataListUiState = MutableLiveData<ArrayList<*>>()
+    val dataListUiState: LiveData<ArrayList<*>> = _dataListUiState
 
     fun <T> loadList(
         handlePullDownDown: Boolean = true,
@@ -30,22 +32,23 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
         repoRequest: suspend (loadMore: Boolean) -> ResponseEntity<ListResult<T>>,
     ) {
         // 只有非手动下拉刷新，才需要主动显示下拉样式
-        _uiState.value = RefreshUiState(showRefresh = !handlePullDownDown && !loadMore)
+        if(!handlePullDownDown && !loadMore) {
+            _refreshUiState.value = RefreshUiState(showRefresh = true)
+        }
 
         viewModelScope.launch {
             val response = repoRequest.invoke(loadMore)
+            var hasMore = loadMore
             if (response.isSuccess()) {
-                // 请求数据成功返回
-                val hasMore = response.data?.hasMore ?: false
-                val dataList = response.data?.dataList
-                _uiState.value = RefreshUiState(
-                    enableLoadMore = hasMore,
-                    list = dataList,
-                )
+                // 是否还有更多，根据返回数据判断；如果无返回数据，保留原有意图
+                response.data?.hasMore?.let { hasMore = it }
+                val dataList = response.data?.dataList?: ArrayList()
+                _dataListUiState.value = dataList
             } else {
-                // TODO loadMore 请求失败的时候应该继续保持当前列表数据
-                _uiState.value = RefreshUiState()
+                // 请求失败的时候应该继续保持当前列表数据
             }
+
+            _refreshUiState.value = RefreshUiState(enableLoadMore = hasMore)
         }
     }
 

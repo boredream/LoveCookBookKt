@@ -53,19 +53,17 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
             DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
         getBinding().refreshDiary.setup(
-            adapter as BaseListAdapter<Any, ViewDataBinding>,
+            adapter,
             onLoadMore = { viewModel.refresh(true) },
             onRefresh = { viewModel.refresh(false) },
         )
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
         viewModel.toDetailEvent.observe(viewLifecycleOwner) {
             DiaryDetailActivity.start(requireContext())
         }
-
-        SimpleUiStateObserver.setRequestObserver(viewLifecycleOwner, viewModel.deleteVMCompose)
+        SimpleUiStateObserver.setRequestObserver(this, viewLifecycleOwner, viewModel.deleteVMCompose)
     }
 
 }

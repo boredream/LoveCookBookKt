@@ -27,8 +27,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
     }
 
-    override fun getLayoutId() = R.layout.activity_main
+    // TODO: 无需 vm ？
 
+    override fun getLayoutId() = R.layout.activity_main
     override fun getViewModelClass() = MainViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,6 +1,5 @@
 package com.boredream.lovebook.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.BR
 
 
-abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() {
+abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment(), BaseView {
 
     // base
     protected lateinit var baseActivity: BaseActivity<*, *>
@@ -42,7 +41,6 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
 
         viewModel.baseEvent.observe(viewLifecycleOwner) {
             when(it) {
-                is StartActivityLiveEvent<*> -> startActivity(Intent(activity, it.activity))
                 is ToastLiveEvent -> ToastUtils.showShort(it.toast)
             }
         }
@@ -50,7 +48,7 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
         return getBinding().root
     }
 
-    private fun showLoading(show: Boolean) {
+    override fun showLoading(show: Boolean) {
         baseActivity.showLoading(show)
     }
 

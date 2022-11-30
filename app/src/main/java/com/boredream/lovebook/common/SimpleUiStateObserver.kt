@@ -35,21 +35,20 @@ object SimpleUiStateObserver {
      * 参数为默认方法，需要替换操作时，传入参数；需要追加操作时，在外部再次自行observe
      */
     fun <T> setRequestObserver(
+        baseView: BaseView,
         lifecycleOwner: LifecycleOwner,
         requestVMCompose: RequestVMCompose<T>,
         isRequestingObserver: Observer<Boolean> = Observer<Boolean> {
             // 默认发起和结束请求时，更新loading
-            if (lifecycleOwner is BaseView) {
-                lifecycleOwner.showLoading(it)
-            }
+            baseView.showLoading(it)
         },
         successObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求成功时，Toast
-            ToastUtils.showShort("请求成功")
+            ToastUtils.showLong("请求成功")
         },
         failObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求失败时，Toast
-            ToastUtils.showShort("请求失败 ${it.msg}")
+            ToastUtils.showLong("请求失败 ${it.msg}")
         }
     ) {
         requestVMCompose.isRequestingUiState.observe(lifecycleOwner, isRequestingObserver)

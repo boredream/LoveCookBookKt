@@ -1,14 +1,11 @@
 package com.boredream.lovebook.ui.theday
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.data.TheDay
@@ -35,38 +32,30 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         initList()
         initObserver()
+        viewModel.clearCache()
         viewModel.loadTogetherInfo()
-        viewModel.loadTheDayList()
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.start()
+    }
+
     private fun initList() {
-        getBinding().rvTheDay.layoutManager = LinearLayoutManager(activity)
         adapter = TheDayListAdapter(dataList)
         adapter.onItemClickListener = { TheDayDetailActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
             DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
-        getBinding().rvTheDay.adapter = adapter
+        getBinding().refreshTheDay.setup(
+            adapter,
+            onRefresh = { viewModel.refresh() },
+            itemDecoration = null
+        )
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
-        viewModel.requestUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is LoadListSuccess -> {
-                    dataList.clear()
-                    dataList.addAll(it.list)
-                    adapter.notifyDataSetChanged()
-                }
-                is DeleteTheDaySuccess -> {
-                    ToastUtils.showShort("删除成功")
-                    viewModel.loadTheDayList()
-                }
-                is RequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
-
         viewModel.showPickDayState.observe(viewLifecycleOwner) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val dialog = DatePickerDialog(requireContext())

@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class DiaryDetailActivity : BaseActivity<DiaryDetailViewModel, ActivityDiaryDetailBinding>() {
 
     override fun getLayoutId() = R.layout.activity_diary_detail
-
     override fun getViewModelClass() = DiaryDetailViewModel::class.java
 
     private var data: Diary? = null
@@ -34,8 +33,13 @@ class DiaryDetailActivity : BaseActivity<DiaryDetailViewModel, ActivityDiaryDeta
 
         intent.extras?.let { data = it.getSerializable(BundleKey.DATA) as Diary? }
 
-        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
+        initObserver()
         viewModel.load(data)
+    }
+
+    private fun initObserver() {
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.commitVMCompose)
+        viewModel.commitVMCompose.successUiState.observe(this) { finish() }
     }
 
 }

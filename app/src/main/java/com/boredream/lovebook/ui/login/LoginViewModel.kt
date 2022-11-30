@@ -1,67 +1,41 @@
 package com.boredream.lovebook.ui.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.data.repo.UserRepository
-import com.boredream.lovebook.base.BaseUiState
+import com.blankj.utilcode.util.StringUtils
 import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.base.ToastLiveEvent
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
+import com.boredream.lovebook.data.User
+import com.boredream.lovebook.data.dto.LoginDto
+import com.boredream.lovebook.data.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val repository: UserRepository) : BaseViewModel() {
 
-    val username = MutableLiveData<String>()
-    val password = MutableLiveData<String>()
+    val loginVMCompose = RequestVMCompose<User>(viewModelScope)
 
-    private val _uiState = MutableLiveData<LoginUiState>()
-    val uiState: LiveData<LoginUiState> = _uiState
-
-    // TODO: 避免重复请求更好的写法？
-    private var fetchJob: Job? = null
+    private val _uiState = MutableLiveData(LoginDto())
+    val uiState: LiveData<LoginDto> = _uiState
 
     /**
      * 登陆
      */
     fun login() {
-        Log.i("DDD", "login")
-        _baseUiState.value = BaseUiState(showLoading = true)
+        val data = _uiState.value ?: LoginDto()
 
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            try {
-                val loginResponse = repository.login(username.value ?: "", password.value ?: "")
-
-                // TODO isSuccess 判断的封装
-                if (loginResponse.isSuccess()) {
-                    // 登录成功，保存token，继续获取用户信息
-
-                    val userInfoResponse = repository.getUserInfo()
-                    if (userInfoResponse.isSuccess()) {
-                        // 获取信息获取成功，完成登录
-                        Log.i("DDD", "login success")
-                        _uiState.value = LoginSuccess
-                    } else {
-                        requestError(userInfoResponse.msg)
-                    }
-                } else {
-                    requestError(loginResponse.msg)
-                }
-            } catch (e: Exception) {
-                requestError(e.message ?: "请求错误 $e")
-            }
-            _baseUiState.value = BaseUiState(showLoading = false)
+        if (StringUtils.isEmpty(data.username)) {
+            _baseEvent.value = ToastLiveEvent("用户名不能为空")
+            return
         }
-    }
+        if (StringUtils.isEmpty(data.password)) {
+            _baseEvent.value = ToastLiveEvent("密码不能为空")
+            return
+        }
 
-    /**
-     * 请求失败
-     */
-    private fun requestError(reason: String) {
-        _uiState.value = LoginFail(reason)
+        loginVMCompose.request { repository.login(data.username, data.password) }
     }
 }

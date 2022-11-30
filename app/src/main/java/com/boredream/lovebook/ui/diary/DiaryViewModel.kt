@@ -3,7 +3,7 @@ package com.boredream.lovebook.ui.diary
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.base.BaseViewModel
-import com.boredream.lovebook.base.refreshlist.RefreshListVMCompose
+import com.boredream.lovebook.common.vmcompose.RefreshListVMCompose
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.repo.DiaryRepository
@@ -27,8 +27,10 @@ class DiaryViewModel @Inject constructor(
         refreshListVMCompose.loadList(repoRequest = { repository.getPageList(false) })
     }
 
-    fun refresh(loadMore: Boolean) {
-        refreshListVMCompose.loadList(repoRequest = { repository.getPageList(loadMore, true) })
+    fun refresh(loadMore: Boolean, handlePullDownDown: Boolean = true) {
+        refreshListVMCompose.loadList(
+            handlePullDownDown = handlePullDownDown,
+            repoRequest = { repository.getPageList(loadMore, true) })
     }
 
     fun startAdd() {
@@ -37,7 +39,7 @@ class DiaryViewModel @Inject constructor(
 
     fun delete(data: Diary) {
         deleteVMCompose.request(
-            onSuccess = { refresh(false) },
+            onSuccess = { refresh(loadMore = false, handlePullDownDown = false) },
             repoRequest = { repository.delete(data.id!!) })
     }
 

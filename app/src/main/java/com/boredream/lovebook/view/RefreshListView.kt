@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseListAdapter
-import com.boredream.lovebook.base.refreshlist.RefreshUiState
+import com.boredream.lovebook.common.vmcompose.RefreshUiState
 import com.boredream.lovebook.databinding.ViewRefreshListBinding
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
@@ -43,14 +43,15 @@ class RefreshListView : FrameLayout {
         rv = dataBinding.refreshListRv
     }
 
-    fun setup(
-        adapter: BaseListAdapter<Any, ViewDataBinding>,
+    @Suppress("UNCHECKED_CAST")
+    fun <T, BD : ViewDataBinding> setup(
+        adapter: BaseListAdapter<T, BD>,
         enableLoadMore: Boolean = false,
         onLoadMore: () -> Unit = {},
         enableRefresh: Boolean = true,
         onRefresh: () -> Unit = {},
         layoutManager: LinearLayoutManager = LinearLayoutManager(context),
-        itemDecoration: ItemDecoration = DividerItemDecoration(context, VERTICAL),
+        itemDecoration: ItemDecoration? = DividerItemDecoration(context, VERTICAL),
     ) {
         refresh.setEnableLoadMore(enableLoadMore)
         refresh.setOnLoadMoreListener { onLoadMore.invoke() }
@@ -58,21 +59,23 @@ class RefreshListView : FrameLayout {
         refresh.setOnRefreshListener { onRefresh.invoke() }
 
         rv.layoutManager = layoutManager
-        rv.addItemDecoration(itemDecoration)
+        itemDecoration?.let { rv.addItemDecoration(it) }
         rv.adapter = adapter
 
-        this.adapter = adapter
+        this.adapter = adapter as BaseListAdapter<Any, ViewDataBinding>
+    }
+
+    fun updateRefreshState(refreshState: RefreshUiState) {
+        refresh.setEnableLoadMore(refreshState.enableLoadMore)
+        if (refreshState.showRefresh) refresh.autoRefresh() else refresh.finishRefresh()
+        if (refreshState.showLoadMore) refresh.autoLoadMore() else refresh.finishLoadMore()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(refreshList: RefreshUiState) {
-        refresh.setEnableLoadMore(refreshList.enableLoadMore)
-        if (refreshList.showRefresh) refresh.autoRefresh() else refresh.finishRefresh()
-        if (refreshList.showLoadMore) refresh.autoLoadMore() else refresh.finishLoadMore()
-
+    fun updateDataList(dataList: ArrayList<*>) {
         adapter?.let { adapter ->
             adapter.dataList.clear()
-            refreshList.list?.let { adapter.dataList.addAll(it) }
+            adapter.dataList.addAll(dataList)
             adapter.notifyDataSetChanged()
         }
     }

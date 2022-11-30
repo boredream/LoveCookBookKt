@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.BR
 
 
-abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompatActivity(), BaseView {
+abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompatActivity(),
+    BaseView {
 
     // base
     lateinit var viewModel: VM

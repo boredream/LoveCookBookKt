@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseMethod;
 
-import com.boredream.lovebook.base.refreshlist.RefreshUiState;
+import com.boredream.lovebook.common.vmcompose.RefreshUiState;
 import com.boredream.lovebook.data.TheDay;
 import com.boredream.lovebook.data.TraceLocation;
 import com.boredream.lovebook.utils.GlideUtils;
@@ -55,9 +55,14 @@ public class BindingContract {
         traceMapView.setFollowingMode(isFollowing);
     }
 
-    @BindingAdapter("refreshList")
-    public static void setRefreshListViewData(RefreshListView refreshListView, RefreshUiState refreshList) {
-        if (refreshList != null) refreshListView.updateData(refreshList);
+    @BindingAdapter("refreshState")
+    public static void setRefreshListViewRefreshState(RefreshListView refreshListView, RefreshUiState refreshUiState) {
+        if (refreshUiState != null) refreshListView.updateRefreshState(refreshUiState);
+    }
+
+    @BindingAdapter("dataList")
+    public static void setRefreshListViewDataList(RefreshListView refreshListView, ArrayList<?> dataList) {
+        if (dataList != null) refreshListView.updateDataList(dataList);
     }
 
     // 用于解决需要转换的数据转换问题
