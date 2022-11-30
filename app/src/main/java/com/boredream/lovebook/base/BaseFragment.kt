@@ -1,6 +1,5 @@
 package com.boredream.lovebook.base
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import com.boredream.lovebook.BR
 abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() {
 
     // base
+    protected lateinit var baseActivity: BaseActivity<*, *>
     protected lateinit var viewModel: VM
     private var binding: BD? = null
     protected abstract fun getLayoutId(): Int
@@ -26,29 +26,20 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
         return binding!!
     }
 
-    // view
-    private lateinit var loadingDialog : ProgressDialog
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        baseActivity = activity as BaseActivity<*, *>
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         viewModel = ViewModelProvider(this)[getViewModelClass()]
         getBinding().lifecycleOwner = this
         getBinding().setVariable(BR.vm, viewModel)
 
-        loadingDialog = ProgressDialog(activity)
-        loadingDialog.setMessage("加载中...")
+        // TODO: 组合替代继承？
+        viewModel.baseUiState.observe(viewLifecycleOwner) { showLoading(it.showLoading) }
 
-        viewModel.baseUiState.observe(viewLifecycleOwner) {
-            if (it.showLoading) {
-                loadingDialog.show()
-            } else {
-                loadingDialog.dismiss()
-            }
-        }
         viewModel.baseEvent.observe(viewLifecycleOwner) {
             when(it) {
                 is StartActivityLiveEvent<*> -> startActivity(Intent(activity, it.activity))
@@ -57,6 +48,10 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment() 
         }
 
         return getBinding().root
+    }
+
+    private fun showLoading(show: Boolean) {
+        baseActivity.showLoading(show)
     }
 
     override fun onDestroyView() {

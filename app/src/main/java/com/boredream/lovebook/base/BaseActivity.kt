@@ -14,7 +14,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.BR
 
 
-abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompatActivity(), BaseView {
 
     // base
     lateinit var viewModel: VM
@@ -40,20 +40,18 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
         loadingDialog = ProgressDialog(this)
         loadingDialog.setMessage("加载中...")
 
-        // TODO: 和fragment合并
-        viewModel.baseUiState.observe(this) {
-            if (it.showLoading) {
-                loadingDialog.show()
-            } else {
-                loadingDialog.dismiss()
-            }
-        }
+        viewModel.baseUiState.observe(this) { showLoading(it.showLoading) }
         viewModel.baseEvent.observe(this) {
             when(it) {
                 is StartActivityLiveEvent<*> -> startActivity(Intent(this, it.activity))
-                is FinishSelfActivityLiveEvent -> finish()
                 is ToastLiveEvent -> ToastUtils.showShort(it.toast)
             }
         }
     }
+
+    override fun showLoading(show: Boolean) {
+        if (show) loadingDialog.show()
+        else loadingDialog.dismiss()
+    }
+
 }

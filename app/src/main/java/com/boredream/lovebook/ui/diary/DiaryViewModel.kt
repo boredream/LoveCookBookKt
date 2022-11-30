@@ -18,7 +18,7 @@ class DiaryViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val refreshListVMCompose = RefreshListVMCompose(viewModelScope)
-    val deleteVMCompose = RequestVMCompose<Boolean>(viewModelScope, _baseUiState)
+    val deleteVMCompose = RequestVMCompose<Boolean>(viewModelScope)
 
     private val _toDetailEvent = SingleLiveEvent<Boolean>()
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent

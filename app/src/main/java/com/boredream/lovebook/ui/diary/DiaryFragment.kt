@@ -66,11 +66,6 @@ class DiaryFragment : BaseFragment<DiaryViewModel, FragmentDiaryBinding>() {
         }
 
         SimpleUiStateObserver.setRequestObserver(viewLifecycleOwner, viewModel.deleteVMCompose)
-        viewModel.deleteVMCompose.successUiState.observe(viewLifecycleOwner) {
-            // 删除成功后刷新
-            viewModel.refresh(false)
-        }
-
     }
 
 }
