@@ -66,6 +66,7 @@ class RefreshListView : FrameLayout {
     }
 
     fun updateRefreshState(refreshState: RefreshUiState) {
+        // TODO: 非手动下拉的刷新请求，应该换个样式，不用autoRefresh
         refresh.setEnableLoadMore(refreshState.enableLoadMore)
         if (refreshState.showRefresh) refresh.autoRefresh() else refresh.finishRefresh()
         if (refreshState.showLoadMore) refresh.autoLoadMore() else refresh.finishLoadMore()

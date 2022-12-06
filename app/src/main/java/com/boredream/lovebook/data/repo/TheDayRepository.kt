@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data.repo
 
-import com.boredream.lovebook.base.BaseLoadRepository
+import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TheDayRepository @Inject constructor(private val service: ApiService) :
-    BaseLoadRepository<TheDay>() {
+    BaseRequestRepository<TheDay>(service) {
 
     suspend fun getList(forceRemote: Boolean = false) =
         getPageList(forceRemote) {

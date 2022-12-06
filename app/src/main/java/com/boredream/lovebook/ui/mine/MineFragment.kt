@@ -69,7 +69,10 @@ class MineFragment : BaseFragment<MineViewModel, FragmentMineBinding>() {
 
         viewModel.eventUiState.observe(viewLifecycleOwner) {
             when(it) {
-                is LogoutEvent -> LoginActivity.start(requireContext())
+                is LogoutEvent -> {
+                    LoginActivity.start(requireContext())
+                    baseActivity.finish()
+                }
             }
         }
     }

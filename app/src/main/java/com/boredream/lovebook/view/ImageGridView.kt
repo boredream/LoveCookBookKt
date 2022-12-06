@@ -4,11 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
+import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
 import com.blankj.utilcode.util.PathUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.UriUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseListAdapter
@@ -30,12 +34,41 @@ import java.io.File
 
 class ImageGridView : RecyclerView {
 
-    private val dataList: ArrayList<ImageInfo> = ArrayList()
-
     companion object {
         const val ITEM_VIEW_TYPE_IMAGE = 1
         const val ITEM_VIEW_TYPE_ADD = 2
+
+        // 双向数据绑定 data -> view
+        @BindingAdapter("gridImages")
+        @JvmStatic
+        fun setData(view: ImageGridView, newValue: String?) {
+            // Important to break potential infinite loops.
+            if (view.getImages() != newValue) {
+                view.setImages(newValue)
+            }
+        }
+
+        // 双向数据绑定 view -> data
+        @InverseBindingAdapter(attribute = "gridImages")
+        @JvmStatic
+        fun getData(view: ImageGridView): String? {
+            return view.getImages()
+        }
+
+        // 双向数据绑定 view add listener
+        @BindingAdapter("gridImagesAttrChanged")
+        @JvmStatic
+        fun setDataChangeListeners(
+            view: ImageGridView,
+            attrChange: InverseBindingListener
+        ) {
+            // Set a listener for click, focus, touch, etc.
+            view.dataChangeListener = { attrChange.onChange() }
+        }
     }
+
+    private val dataList: ArrayList<ImageInfo> = ArrayList()
+    var dataChangeListener: ((ArrayList<ImageInfo>) -> Unit)? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -50,7 +83,33 @@ class ImageGridView : RecyclerView {
         adapter = Adapter(dataList)
     }
 
-    class Adapter(dataList: ArrayList<ImageInfo>) :
+    fun setImages(images: String?) {
+        if (images == null) return
+        dataList.clear()
+        for (image in images.split(",")) {
+            if (StringUtils.isEmpty(image)) continue
+            if (image.startsWith("http")) {
+                dataList.add(ImageInfo(url = image))
+            } else {
+                dataList.add(ImageInfo(path = image))
+            }
+        }
+    }
+
+    fun getImages(): String? {
+        val sb = StringBuilder()
+        dataList.forEach {
+            if (it.url != null) {
+                sb.append(",").append(it.url)
+            } else if (it.path != null) {
+                sb.append(",").append(it.path)
+            }
+        }
+        if(sb.isEmpty()) return null
+        return sb.substring(1)
+    }
+
+    inner class Adapter(dataList: ArrayList<ImageInfo>) :
         BaseListAdapter<ImageInfo, ItemGridImageBinding>(dataList) {
 
         override fun getItemLayoutId() = R.layout.item_grid_image
@@ -92,6 +151,7 @@ class ImageGridView : RecyclerView {
                     override fun onResult(result: ArrayList<LocalMedia>) {
                         addImages(result)
                     }
+
                     override fun onCancel() {}
                 })
         }
@@ -101,6 +161,7 @@ class ImageGridView : RecyclerView {
             if (CollectionUtils.isEmpty(images)) return
             images.forEach { dataList.add(ImageInfo(path = it.path)) }
             notifyDataSetChanged()
+            dataChangeListener?.invoke(dataList)
         }
     }
 

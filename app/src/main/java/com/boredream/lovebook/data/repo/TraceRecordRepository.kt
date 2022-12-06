@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data.repo
 
-import com.boredream.lovebook.base.BaseLoadRepository
+import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.LocalTraceRecordDataSource
 import com.boredream.lovebook.net.ApiService
@@ -12,7 +12,7 @@ class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
     private val dataSource: LocalTraceRecordDataSource,
 ) :
-    BaseLoadRepository<TraceRecord>() {
+    BaseRequestRepository<TraceRecord>(service) {
 
 //    suspend fun getList(groupId: String) = getList { service.getTraceRecordList(groupId) }
 //    suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }
