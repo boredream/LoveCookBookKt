@@ -36,21 +36,21 @@ class UserRepositoryTest {
     @Test
     fun login() = runTest {
         val response = repo.login("18501683422", "123456")
-        print(response)
+        println(response)
         assertNotNull(response.data)
     }
 
     @Test
     fun getUserInfo() = runTest {
         val response = repo.getUserInfo()
-        print(response)
+        println(response)
         assertNotNull(response.data)
     }
 
     @Test
     fun setTogetherDay() = runTest {
         val response = repo.updateTogetherDay("2020-02-14")
-        print(response)
+        println(response)
         assertNotNull(response.data)
     }
 

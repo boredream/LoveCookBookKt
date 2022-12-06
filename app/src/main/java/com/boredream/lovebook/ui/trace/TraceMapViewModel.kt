@@ -16,9 +16,6 @@ import javax.inject.Inject
 sealed class UIEvent
 object ShowSaveConfirmDialog : UIEvent()
 
-sealed class MapUIEvent
-data class SuccessLocation(val location: TraceLocation) : MapUIEvent()
-
 data class UiState(
     val myLocation: TraceLocation? = null,
 )
@@ -29,10 +26,6 @@ class TraceMapViewModel @Inject constructor(
 ) : BaseRequestViewModel<TraceRecord>() {
 
     // 自定义 DataBinding 连接地图这种 命令式传统view 和 vm 的关系
-
-    // 地图事件
-    private val _mapEvent = SingleLiveEvent<MapUIEvent>()
-    val mapEvent: LiveData<MapUIEvent> = _mapEvent
 
     // 主UI事件
     private val _uiEvent = SingleLiveEvent<UIEvent>()
@@ -64,17 +57,12 @@ class TraceMapViewModel @Inject constructor(
     private val _isTracing = MutableLiveData(false)
     val isTracing: LiveData<Boolean> = _isTracing
 
-    /**
-     * 页面开始时，打开定位
-     */
     fun start() {
-        traceUseCase.setOnLocationSuccess { onLocationSuccess(it) }
-        traceUseCase.startLocation()
+        // 第一次打开，先试着用已有数据刷新UI
+        _uiState.value = UiState(traceUseCase.getMyLocation())
+        _isTracing.value = traceUseCase.isTracing()
     }
 
-    /**
-     * 页面结束时，关闭定位
-     */
     fun stop() {
         traceUseCase.stopLocation()
     }
@@ -105,10 +93,8 @@ class TraceMapViewModel @Inject constructor(
             traceUseCase.stopTrace()
             // 停止轨迹跟踪后，提示保存路径
             _uiEvent.value = ShowSaveConfirmDialog
-
             // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
         } else {
-            traceUseCase.setOnTraceSuccess { onTraceSuccess(it) }
             traceUseCase.startTrace()
         }
         _isTracing.value = traceUseCase.isTracing()
@@ -137,22 +123,24 @@ class TraceMapViewModel @Inject constructor(
         // TODO: 刷新地图上轨迹线
     }
 
+    // 页面暂停时，无需刷新 uiState
     fun onPause() {
-
+        traceUseCase.removeLocationSuccessListener(onLocationSuccess)
+        traceUseCase.removeTraceSuccessListener(onTraceSuccess)
     }
 
     fun onResume() {
-
+        traceUseCase.addLocationSuccessListener(onLocationSuccess)
+        traceUseCase.addTraceSuccessListener(onTraceSuccess)
     }
 
-    private fun onLocationSuccess(location: TraceLocation) {
-        _mapEvent.value = SuccessLocation(location)
-        _uiState.value = UiState(traceUseCase.getMyLocation())
+    private val onLocationSuccess: (location: TraceLocation) -> Unit = {
+        _uiState.value = UiState(it)
     }
 
-    private fun onTraceSuccess(allTracePointList: ArrayList<TraceLocation>) {
+    private val onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = {
         // 轨迹成功回调，回调的是整个轨迹列表
-        _tracePointListUiState.value = allTracePointList
+        _tracePointListUiState.value = it
     }
 
 }

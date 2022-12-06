@@ -7,18 +7,33 @@ import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.TraceUtils
+import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * TODO: 职责划分？
+ * TODO: 不需要单例？
  * 和 repo 的区别，repo 处理数据，use case 处理业务逻辑。
  * 简单的业务，repo = use case，复杂的 use case 一般整合多个 repo。
- * 不需要单例？
  */
+@Singleton
 class TraceUseCase @Inject constructor(
     private val locationRepository: LocationRepository,
     private val traceRecordRepository: TraceRecordRepository,
 ) {
+
+    companion object {
+        const val STATUS_IDLE = 0x0
+        const val STATUS_LOCATION = 0x10
+        const val STATUS_TRACE = 0x11
+    }
+
+    var status = STATUS_IDLE
+        set(value) {
+            field = value
+            onStatusChange.forEach { it.invoke(value) }
+        }
 
     fun getMyLocation() = locationRepository.myLocation
 
@@ -29,6 +44,7 @@ class TraceUseCase @Inject constructor(
      */
     fun startLocation() {
         locationRepository.startLocation()
+        status = STATUS_LOCATION
     }
 
     /**
@@ -38,6 +54,7 @@ class TraceUseCase @Inject constructor(
         locationRepository.stopLocation()
         // 追踪依赖定位
         stopTrace()
+        status = STATUS_IDLE
     }
 
     /**
@@ -47,6 +64,7 @@ class TraceUseCase @Inject constructor(
         // 必须要先开始定位，且会清楚已有轨迹
         locationRepository.clearTraceList()
         locationRepository.startTrace()
+        status = STATUS_TRACE
     }
 
     /**
@@ -54,6 +72,7 @@ class TraceUseCase @Inject constructor(
      */
     fun stopTrace() {
         locationRepository.stopTrace()
+        status = STATUS_LOCATION
     }
 
     /**
@@ -83,13 +102,27 @@ class TraceUseCase @Inject constructor(
         return traceRecordRepository.getList()
     }
 
-    fun setOnLocationSuccess(onLocationSuccess: (location: TraceLocation) -> Unit) {
-        locationRepository.onLocationSuccess = onLocationSuccess
+    // TODO: 回调适合用函数吗？
+    fun addLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {
+        locationRepository.addLocationSuccessListener(listener)
+    }
+    fun removeLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {
+        locationRepository.removeLocationSuccessListener(listener)
     }
 
-    fun setOnTraceSuccess(onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
-        locationRepository.onTraceSuccess = onTraceSuccess
+    fun addTraceSuccessListener(listener: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
+        locationRepository.addTraceSuccessListener(listener)
+    }
+    fun removeTraceSuccessListener(listener: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
+        locationRepository.removeTraceSuccessListener(listener)
     }
 
+    private var onStatusChange: LinkedList<(status: Int) -> Unit> = LinkedList()
+    fun addStatusChangeListener(listener: (status: Int) -> Unit) {
+        onStatusChange.add(listener)
+    }
+    fun removeStatusChangeListener(listener: (status: Int) -> Unit) {
+        onStatusChange.remove(listener)
+    }
 
 }

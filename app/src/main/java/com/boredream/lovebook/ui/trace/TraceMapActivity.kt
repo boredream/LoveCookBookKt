@@ -36,7 +36,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
         initObserver()
         startLocation()
-        viewModel.start()
     }
 
     private fun initObserver() {
@@ -66,8 +65,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
     override fun onDestroy() {
         super.onDestroy()
-        stopService(serviceIntent)
-        viewModel.stop()
+        // 关闭页面后继续保持定位，除非用户主动操作停止
         binding.mapView.onDestroy()
     }
 

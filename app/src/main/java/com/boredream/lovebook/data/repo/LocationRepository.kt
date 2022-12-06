@@ -3,6 +3,7 @@ package com.boredream.lovebook.data.repo
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.repo.source.LocationDataSource
 import com.boredream.lovebook.utils.TraceFilter
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,13 +24,27 @@ class LocationRepository @Inject constructor(
 
     }
 
+    // 定位
     var myLocation: TraceLocation? = null
-    var onLocationSuccess: (location: TraceLocation) -> Unit = { }
+    private var onLocationSuccess: LinkedList<(location: TraceLocation) -> Unit> = LinkedList()
+    fun addLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {
+        onLocationSuccess.add(listener)
+    }
+    fun removeLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {
+        onLocationSuccess.remove(listener)
+    }
 
+    // 追踪
     var isTracing = false
     var traceList: ArrayList<TraceLocation> = ArrayList()
-    var onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = { }
     private lateinit var traceFilter: TraceFilter
+    private var onTraceSuccess: LinkedList<(allTracePointList: ArrayList<TraceLocation>) -> Unit> = LinkedList()
+    fun addTraceSuccessListener(listener: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
+        onTraceSuccess.add(listener)
+    }
+    fun removeTraceSuccessListener(listener: (allTracePointList: ArrayList<TraceLocation>) -> Unit) {
+        onTraceSuccess.remove(listener)
+    }
 
     /**
      * 开始定位
@@ -73,7 +88,7 @@ class LocationRepository @Inject constructor(
     fun onLocationSuccess(location: TraceLocation) {
         println("onLocationSuccess dataSource = ${dataSource.javaClass.simpleName}, location = $location")
         myLocation = location
-        onLocationSuccess.invoke(location)
+        onLocationSuccess.forEach { it.invoke(location) }
         if(isTracing) {
             appendTracePoint(location)
         }
@@ -89,7 +104,7 @@ class LocationRepository @Inject constructor(
 //        }
 
         traceList.add(location)
-        onTraceSuccess.invoke(traceList)
+        onTraceSuccess.forEach { it.invoke(traceList) }
 
 //        // 计算新的point和上一个定位point距离
 //        val lastPointLat = if (traceList.size == 0) 0.0 else traceList[0].latitude

@@ -22,7 +22,7 @@ class TheDayRepositoryTest {
     @Test
     fun getList() = runTest {
         val response = repo.getList()
-        print(response)
+        println(response)
         assertNotNull(response.data)
     }
 
