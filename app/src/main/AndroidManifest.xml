@@ -37,10 +37,10 @@
 
         <receiver
             android:name=".widget.LoveBookAppWidgetProvider"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.boredream.lovebook.widget.ACTION_UPDATE" />
             </intent-filter>
 
             <meta-data

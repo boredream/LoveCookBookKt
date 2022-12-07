@@ -4,5 +4,6 @@ object BundleKey {
 
     const val DATA = "data"
     const val ID = "id"
+    const val TOGGLE_TRACE = "toggleTraceAction"
 
 }

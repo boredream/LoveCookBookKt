@@ -40,7 +40,6 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
     private fun initObserver() {
         viewModel.uiEvent.observe(this) {
-            println("map event $it")
             when (it) {
                 is ShowSaveConfirmDialog -> {
                     AlertDialog.Builder(this)

@@ -24,9 +24,9 @@ class TraceUseCase @Inject constructor(
 ) {
 
     companion object {
-        const val STATUS_IDLE = 0x0
-        const val STATUS_LOCATION = 0x10
-        const val STATUS_TRACE = 0x11
+        const val STATUS_IDLE = 0
+        const val STATUS_LOCATION = 1
+        const val STATUS_TRACE = 2
     }
 
     var status = STATUS_IDLE
@@ -43,6 +43,7 @@ class TraceUseCase @Inject constructor(
      * 开始定位
      */
     fun startLocation() {
+        if(status == STATUS_LOCATION) return
         locationRepository.startLocation()
         status = STATUS_LOCATION
     }

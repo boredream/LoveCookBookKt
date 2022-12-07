@@ -12,7 +12,11 @@ object TraceUtils {
         return "轨迹 $time"
     }
 
-    fun calculateDistance(traceList: java.util.ArrayList<TraceLocation>): Float {
+    fun calculateDuration(traceList: ArrayList<TraceLocation>): Long {
+        return (System.currentTimeMillis() - traceList[0].time) / 1000
+    }
+
+    fun calculateDistance(traceList: ArrayList<TraceLocation>): Float {
         var totalDistance = 0f
         for (i in 1 until traceList.size) {
             val distance = AMapUtils.calculateLineDistance(
@@ -21,7 +25,8 @@ object TraceUtils {
             )
             totalDistance += distance
         }
-        return totalDistance
+        // TODO: 应该使用int，但旧数据有float
+        return totalDistance.toInt().toFloat()
     }
 
 }

@@ -57,16 +57,6 @@ class TraceMapViewModel @Inject constructor(
     private val _isTracing = MutableLiveData(false)
     val isTracing: LiveData<Boolean> = _isTracing
 
-    fun start() {
-        // 第一次打开，先试着用已有数据刷新UI
-        _uiState.value = UiState(traceUseCase.getMyLocation())
-        _isTracing.value = traceUseCase.isTracing()
-    }
-
-    fun stop() {
-        traceUseCase.stopLocation()
-    }
-
     /**
      * 切换显示历史轨迹
      */
@@ -130,6 +120,10 @@ class TraceMapViewModel @Inject constructor(
     }
 
     fun onResume() {
+        // 可能其他地方有修改，再次打开时刷新
+        _uiState.value = UiState(traceUseCase.getMyLocation())
+        _isTracing.value = traceUseCase.isTracing()
+
         traceUseCase.addLocationSuccessListener(onLocationSuccess)
         traceUseCase.addTraceSuccessListener(onTraceSuccess)
     }
