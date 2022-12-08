@@ -1,7 +1,11 @@
 package com.boredream.lovebook.ui.trace.recordlist
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.base.BaseRequestViewModel
+import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.common.vmcompose.RefreshListVMCompose
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.vm.SingleLiveEvent
@@ -11,18 +15,22 @@ import javax.inject.Inject
 @HiltViewModel
 class TraceRecordListViewModel @Inject constructor(
     private val repository: TraceRecordRepository,
-) : BaseRequestViewModel<TraceRecord>() {
+) : BaseViewModel() {
+
+    val refreshListVMCompose = RefreshListVMCompose(viewModelScope)
+    val deleteVMCompose = RequestVMCompose<Boolean>(viewModelScope)
 
     private val _toDetailEvent = SingleLiveEvent<Boolean>()
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
-    init {
-        // vm(页面) 创建时，清空缓存标志位，重新拉取接口
-        repository.cacheIsDirty = true
+    fun start() {
+        refreshListVMCompose.loadList(repoRequest = { repository.getList(false) })
     }
 
-    fun start() {
-        loadList { repository.getList() }
+    fun refresh(handlePullDownDown: Boolean = true) {
+        refreshListVMCompose.loadList(
+            handlePullDownDown = handlePullDownDown,
+            repoRequest = { repository.getList(true) })
     }
 
     fun startAdd() {
@@ -30,7 +38,9 @@ class TraceRecordListViewModel @Inject constructor(
     }
 
     fun delete(data: TraceRecord) {
-         commitData { repository.delete(data) }
+        deleteVMCompose.request(
+            onSuccess = { refresh(false) },
+            repoRequest = { repository.delete(data) })
     }
 
 }

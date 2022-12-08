@@ -20,6 +20,12 @@ class TraceRecordRepository @Inject constructor(
 //    suspend fun delete(id: String) = commit { service.deleteTraceRecord(id) }
 
     // TODO: to remote
+
+    suspend fun getList(forceRemote: Boolean = false) =
+        getList(forceRemote) {
+            dataSource.loadTraceList()
+        }
+
     suspend fun add(data: TraceRecord) = commit { dataSource.save(data) }
     suspend fun getList() = getList { dataSource.loadTraceList() }
     suspend fun delete(data: TraceRecord) = commit { dataSource.delete(data) }

@@ -22,11 +22,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:title="轨迹列表" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
+        <com.boredream.lovebook.view.RefreshListView
+            android:id="@+id/refresh_trace_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:overScrollMode="never"
+            app:refreshState="@{vm.refreshListVMCompose.refreshUiState}"
+            app:dataList="@{vm.refreshListVMCompose.dataListUiState}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

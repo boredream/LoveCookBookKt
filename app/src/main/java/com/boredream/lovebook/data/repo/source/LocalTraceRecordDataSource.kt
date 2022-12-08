@@ -57,7 +57,7 @@ class LocalTraceRecordDataSource @Inject constructor(
                     val json = FileIOUtils.readFile2String(it)
                     val record = Gson().fromJson(json, TraceRecord::class.java)
                     recordList.add(record)
-                    Log.i(TAG, "loadTraceList $it")
+                    // LogUtils.i(TAG, "loadTraceList $it")
                 } catch (e: Exception) {
                     //
                 }

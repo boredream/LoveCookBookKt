@@ -13,10 +13,15 @@ import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.constant.BundleKey
+import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.ui.trace.TraceMapActivity
 import com.boredream.lovebook.widget.LoveBookAppWidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -35,8 +40,8 @@ class TraceLocationService : Service() {
     @Inject
     lateinit var traceUseCase: TraceUseCase
 
-//    private val job: Job = SupervisorJob()
-//    private val scope = CoroutineScope(Dispatchers.IO + job)
+    private val job: Job = Job()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -98,12 +103,12 @@ class TraceLocationService : Service() {
                 } else {
                     // 打开页面/刷新widget进行询问保存？或者直接进行保存
                     traceUseCase.stopTrace()
-//                scope.launch {
-//                    traceUseCase.saveTraceRecord()
-//                }
+                    scope.launch {
+                        traceUseCase.saveTraceRecord()
+                    }
                     traceUseCase.stopLocation()
                 }
-                LogUtils.i("TOGGLE_TRACE $toggleTraceAction")
+                // LogUtils.i("TOGGLE_TRACE $toggleTraceAction")
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -112,7 +117,7 @@ class TraceLocationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-//        job.cancel()
+        job.cancel()
 
         traceUseCase.removeStatusChangeListener(onStatusChange)
         traceUseCase.stopLocation()
@@ -123,7 +128,7 @@ class TraceLocationService : Service() {
     private var onStatusChange: (status: Int) -> Unit = {
         // 定位状态变化
         LogUtils.i("status = $it")
-        if (it == TraceUseCase.STATUS_TRACE) {
+        if (it == LocationRepository.STATUS_TRACE) {
             LoveBookAppWidgetUpdater.updateTraceStatus(this, true)
         } else {
             LoveBookAppWidgetUpdater.updateTraceStatus(this, false)
@@ -138,7 +143,7 @@ class TraceLocationService : Service() {
             val updateWidgetInterval = 30_000 // widget刷新间隔，单位毫秒
             val timeIndex: Int = (timeDiff % updateWidgetInterval + 500).toInt() / 1000
             if (timeIndex == 0) {
-                LogUtils.i("updateTraceInfo $timeDiff $timeIndex")
+                // LogUtils.i("updateTraceInfo $timeDiff $timeIndex")
                 LoveBookAppWidgetUpdater.updateTraceInfo(this, it)
             }
         }

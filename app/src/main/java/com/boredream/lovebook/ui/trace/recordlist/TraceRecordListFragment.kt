@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
@@ -53,36 +54,20 @@ class TraceRecordListFragment :
     }
 
     private fun initList() {
-        getBinding().rv.layoutManager = LinearLayoutManager(requireContext())
-        getBinding().rv.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
         adapter = SimpleListAdapter(dataList, R.layout.item_trace_record)
         adapter.onItemClickListener = { TraceRecordDetailActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
             DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
-        getBinding().rv.adapter = adapter
+        getBinding().refreshTraceList.setup(
+            adapter,
+            onRefresh = { viewModel.refresh() },
+            itemDecoration = null
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
-        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
-
-        viewModel.loadListUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    dataList.clear()
-                    dataList.addAll(it.data.dataList)
-                    adapter.notifyDataSetChanged()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
-
         viewModel.toDetailEvent.observe(viewLifecycleOwner) { toDetail() }
     }
 

@@ -7,13 +7,11 @@ import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.LocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.TraceUtils
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * TODO: 职责划分？
- * TODO: 不需要单例？
  * 和 repo 的区别，repo 处理数据，use case 处理业务逻辑。
  * 简单的业务，repo = use case，复杂的 use case 一般整合多个 repo。
  */
@@ -23,29 +21,15 @@ class TraceUseCase @Inject constructor(
     private val traceRecordRepository: TraceRecordRepository,
 ) {
 
-    companion object {
-        const val STATUS_IDLE = 0
-        const val STATUS_LOCATION = 1
-        const val STATUS_TRACE = 2
-    }
-
-    var status = STATUS_IDLE
-        set(value) {
-            field = value
-            onStatusChange.forEach { it.invoke(value) }
-        }
-
     fun getMyLocation() = locationRepository.myLocation
 
-    fun isTracing() = locationRepository.isTracing
+    fun isTracing() = locationRepository.status == LocationRepository.STATUS_TRACE
 
     /**
      * 开始定位
      */
     fun startLocation() {
-        if(status == STATUS_LOCATION) return
         locationRepository.startLocation()
-        status = STATUS_LOCATION
     }
 
     /**
@@ -53,19 +37,15 @@ class TraceUseCase @Inject constructor(
      */
     fun stopLocation() {
         locationRepository.stopLocation()
-        // 追踪依赖定位
-        stopTrace()
-        status = STATUS_IDLE
     }
 
     /**
      * 开始追踪轨迹
      */
     fun startTrace() {
-        // 必须要先开始定位，且会清楚已有轨迹
+        // 必须要先开始定位，且会清除已有轨迹
         locationRepository.clearTraceList()
         locationRepository.startTrace()
-        status = STATUS_TRACE
     }
 
     /**
@@ -73,7 +53,6 @@ class TraceUseCase @Inject constructor(
      */
     fun stopTrace() {
         locationRepository.stopTrace()
-        status = STATUS_LOCATION
     }
 
     /**
@@ -118,12 +97,11 @@ class TraceUseCase @Inject constructor(
         locationRepository.removeTraceSuccessListener(listener)
     }
 
-    private var onStatusChange: LinkedList<(status: Int) -> Unit> = LinkedList()
     fun addStatusChangeListener(listener: (status: Int) -> Unit) {
-        onStatusChange.add(listener)
+        locationRepository.addStatusChangeListener(listener)
     }
     fun removeStatusChangeListener(listener: (status: Int) -> Unit) {
-        onStatusChange.remove(listener)
+        locationRepository.removeStatusChangeListener(listener)
     }
 
 }

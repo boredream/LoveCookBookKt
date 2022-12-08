@@ -22,6 +22,22 @@ class LocationRepository @Inject constructor(
          */
         const val TRACE_DISTANCE_THRESHOLD = 0.5
 
+        const val STATUS_IDLE = 0
+        const val STATUS_LOCATION = 1
+        const val STATUS_TRACE = 2
+    }
+
+    var status = STATUS_IDLE
+        set(value) {
+            field = value
+            onStatusChange.forEach { it.invoke(value) }
+        }
+    private var onStatusChange: LinkedList<(status: Int) -> Unit> = LinkedList()
+    fun addStatusChangeListener(listener: (status: Int) -> Unit) {
+        onStatusChange.add(listener)
+    }
+    fun removeStatusChangeListener(listener: (status: Int) -> Unit) {
+        onStatusChange.remove(listener)
     }
 
     // 定位
@@ -35,7 +51,6 @@ class LocationRepository @Inject constructor(
     }
 
     // 追踪
-    var isTracing = false
     var traceList: ArrayList<TraceLocation> = ArrayList()
     private lateinit var traceFilter: TraceFilter
     private var onTraceSuccess: LinkedList<(allTracePointList: ArrayList<TraceLocation>) -> Unit> = LinkedList()
@@ -50,29 +65,43 @@ class LocationRepository @Inject constructor(
      * 开始定位
      */
     fun startLocation() {
-        dataSource.startLocation(::onLocationSuccess)
+        if(status == STATUS_IDLE) {
+            dataSource.startLocation(::onLocationSuccess)
+            status = STATUS_LOCATION
+        }
     }
 
     /**
      * 停止定位
      */
     fun stopLocation() {
-        dataSource.stopLocation()
+        if(status != STATUS_IDLE) {
+            // 追踪依赖定位，如果追踪开启状态，则也顺便先关闭
+            stopTrace()
+            dataSource.stopLocation()
+            status = STATUS_IDLE
+        }
     }
 
     /**
      * 开始追踪
      */
     fun startTrace() {
-        traceFilter = TraceFilter()
-        isTracing = true
+        if(status == STATUS_LOCATION) {
+            // 只有定位状态下才能开启追踪
+            traceFilter = TraceFilter()
+            status = STATUS_TRACE
+        }
     }
 
     /**
      * 停止追踪
      */
     fun stopTrace() {
-        isTracing = false
+        if(status == STATUS_TRACE) {
+            // 追踪状态退化到定位
+            status = STATUS_LOCATION
+        }
     }
 
     /**
@@ -89,7 +118,7 @@ class LocationRepository @Inject constructor(
         println("onLocationSuccess dataSource = ${dataSource.javaClass.simpleName}, location = $location")
         myLocation = location
         onLocationSuccess.forEach { it.invoke(location) }
-        if(isTracing) {
+        if(status == STATUS_TRACE) {
             appendTracePoint(location)
         }
     }
