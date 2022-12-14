@@ -39,8 +39,8 @@ class DiaryViewModel @Inject constructor(
 
     fun delete(data: Diary) {
         deleteVMCompose.request(
-            onSuccess = { refresh(loadMore = false, handlePullDownDown = false) },
-            repoRequest = { repository.delete(data.id!!) })
+            onSuccess = { refresh(loadMore = false, handlePullDownDown = false) }
+        ) { repository.delete(data.id!!) }
     }
 
 }

@@ -64,8 +64,8 @@ class TheDayViewModel @Inject constructor(
         println("TheDayViewModel setTogetherDay")
 
         commitVMCompose.request(
-            onSuccess = { loadTogetherInfo() },
-            repoRequest = { userRepository.updateTogetherDay(date) })
+            onSuccess = { loadTogetherInfo() }
+        ) { userRepository.updateTogetherDay(date) }
     }
 
     fun startAdd() {
@@ -76,8 +76,8 @@ class TheDayViewModel @Inject constructor(
         Log.i("DDD", "TheDayViewModel deleteTheDay ${data.name}")
 
         commitVMCompose.request(
-            onSuccess = { refresh(false) },
-            repoRequest = { theDayRepository.delete(data.id!!) })
+            onSuccess = { refresh(false) }
+        ) { theDayRepository.delete(data.id!!) }
     }
 
     fun start() {

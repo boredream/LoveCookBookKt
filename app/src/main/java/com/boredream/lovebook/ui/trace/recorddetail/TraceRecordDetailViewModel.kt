@@ -7,13 +7,13 @@ import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
-import com.boredream.lovebook.data.usecase.TraceUseCase
+import com.boredream.lovebook.data.usecase.TraceDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class TraceRecordDetailViewModel @Inject constructor(
-    private val useCase: TraceUseCase
+    private val useCase: TraceDetailUseCase
 ) : BaseViewModel() {
 
     val requestVMCompose = RequestVMCompose<ArrayList<TraceLocation>>(viewModelScope)
@@ -28,9 +28,11 @@ class TraceRecordDetailViewModel @Inject constructor(
      * 页面开始时，绘制路线，并跳转到对应位置
      */
     fun start(data: TraceRecord) {
+        useCase.init(data.id!!)
+
         requestVMCompose.request(
             onSuccess = { updateTraceList(it) },
-            repoRequest = { useCase.getTraceList(data.id!!) })
+            repoRequest = { useCase.getTraceList() })
     }
 
     private fun updateTraceList(traceList: ArrayList<TraceLocation>?) {

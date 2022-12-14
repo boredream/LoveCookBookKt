@@ -13,6 +13,17 @@ class TraceLocationRepository @Inject constructor(
 
     // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
 
-    suspend fun getList(recordId: String) = getList { service.getTraceLocationList(recordId) }
+    private var traceRecordId: String? = null
+    fun init(traceRecordId: String) {
+        this.traceRecordId?.let {
+            if (it != traceRecordId) {
+                // 当切换轨迹记录时，清空缓存
+                cacheIsDirty = true
+            }
+        }
+        this.traceRecordId = traceRecordId
+    }
+
+    suspend fun getList() = getList { service.getTraceLocationList(traceRecordId!!) }
 
 }

@@ -38,8 +38,8 @@ class TraceRecordListViewModel @Inject constructor(
 
     fun delete(data: TraceRecord) {
         deleteVMCompose.request(
-            onSuccess = { refresh(false) },
-            repoRequest = { repository.delete(data) })
+            onSuccess = { refresh(false) }
+        ) { repository.delete(data) }
     }
 
 }
