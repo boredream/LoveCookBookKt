@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseListAdapter
 import com.boredream.lovebook.common.vmcompose.RefreshUiState
@@ -60,6 +61,7 @@ class RefreshListView : FrameLayout {
 
         rv.layoutManager = layoutManager
         itemDecoration?.let { rv.addItemDecoration(it) }
+        adapter.setHasStableIds(true)
         rv.adapter = adapter
 
         this.adapter = adapter as BaseListAdapter<Any, ViewDataBinding>

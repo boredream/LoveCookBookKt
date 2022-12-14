@@ -7,12 +7,30 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import com.blankj.utilcode.util.SizeUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.databinding.ViewTitleBarBinding
 
 class TitleBarView : ConstraintLayout {
+
+    companion object {
+        @BindingAdapter("rightText")
+        @JvmStatic
+        fun setRightText(view: TitleBarView, text: CharSequence) {
+            view.dataBinding.tvRight.visibility = VISIBLE
+            view.dataBinding.tvRight.text = text
+
+        }
+        @BindingAdapter("rightClick")
+        @JvmStatic
+        fun setRightClick(view: TitleBarView, callback: () -> Unit) {
+            view.dataBinding.tvRight.setOnClickListener { callback.invoke() }
+        }
+    }
 
     private var dataBinding: ViewTitleBarBinding
 
@@ -47,4 +65,6 @@ class TitleBarView : ConstraintLayout {
         minHeight = SizeUtils.dp2px(56f)
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
     }
+
+
 }

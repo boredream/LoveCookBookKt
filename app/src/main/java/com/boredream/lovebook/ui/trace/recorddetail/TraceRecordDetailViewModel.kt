@@ -2,17 +2,21 @@ package com.boredream.lovebook.ui.trace.recorddetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.boredream.lovebook.base.BaseRequestViewModel
+import androidx.lifecycle.viewModelScope
+import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
-import com.boredream.lovebook.data.repo.TraceRecordRepository
+import com.boredream.lovebook.data.usecase.TraceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class TraceRecordDetailViewModel @Inject constructor(
-    private val repository: TraceRecordRepository
-) : BaseRequestViewModel<TraceRecord>() {
+    private val useCase: TraceUseCase
+) : BaseViewModel() {
+
+    val requestVMCompose = RequestVMCompose<ArrayList<TraceLocation>>(viewModelScope)
 
     private val _traceListUiState = MutableLiveData(ArrayList<ArrayList<TraceLocation>>())
     val traceListUiState: LiveData<ArrayList<ArrayList<TraceLocation>>> = _traceListUiState
@@ -24,10 +28,17 @@ class TraceRecordDetailViewModel @Inject constructor(
      * 页面开始时，绘制路线，并跳转到对应位置
      */
     fun start(data: TraceRecord) {
-        _traceListUiState.value = arrayListOf(data.traceList)
+        requestVMCompose.request(
+            onSuccess = { updateTraceList(it) },
+            repoRequest = { useCase.getTraceList(data.id!!) })
+    }
 
-        // TODO:  根据路线，选择合适的 camera zoom 和 position
-        _startLocationUiState.value = data.traceList[data.traceList.lastIndex]
+    private fun updateTraceList(traceList: ArrayList<TraceLocation>?) {
+        traceList?.let {
+            _traceListUiState.value = arrayListOf(it)
+            // TODO:  根据路线，选择合适的 camera zoom 和 position
+            _startLocationUiState.value = it[it.lastIndex]
+        }
     }
 
 }

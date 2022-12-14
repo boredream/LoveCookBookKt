@@ -1,6 +1,6 @@
 package com.boredream.lovebook.data.repo
 
-import com.boredream.lovebook.data.repo.source.LocalTraceRecordDataSource
+import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +12,7 @@ import org.junit.Test
 class TraceRepositoryTest {
 
     @MockK
-    private lateinit var dataSource: LocalTraceRecordDataSource
+    private lateinit var dataSource: TraceRecordLocalDataSource
 
     private lateinit var repo: TraceRecordRepository
 

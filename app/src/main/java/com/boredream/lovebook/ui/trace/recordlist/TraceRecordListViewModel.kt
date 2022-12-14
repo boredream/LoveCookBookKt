@@ -2,7 +2,6 @@ package com.boredream.lovebook.ui.trace.recordlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.common.vmcompose.RefreshListVMCompose
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
@@ -24,13 +23,13 @@ class TraceRecordListViewModel @Inject constructor(
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
     fun start() {
-        refreshListVMCompose.loadList(repoRequest = { repository.getList(false) })
+        refreshListVMCompose.loadPageList(repoRequest = { repository.getPageList(false) })
     }
 
-    fun refresh(handlePullDownDown: Boolean = true) {
-        refreshListVMCompose.loadList(
+    fun refresh(loadMore: Boolean, handlePullDownDown: Boolean = true) {
+        refreshListVMCompose.loadPageList(
             handlePullDownDown = handlePullDownDown,
-            repoRequest = { repository.getList(true) })
+            repoRequest = { repository.getPageList(loadMore, true) })
     }
 
     fun startAdd() {

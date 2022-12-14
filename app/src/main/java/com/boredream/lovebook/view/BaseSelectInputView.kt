@@ -59,9 +59,9 @@ abstract class BaseSelectInputView : LinearLayout {
 
         // 双向数据绑定 data -> view
         @BindingAdapter("inputSelect")
-        @JvmStatic fun setInputSelect(view: BaseSelectInputView, newValue: String) {
+        @JvmStatic fun setInputSelect(view: BaseSelectInputView, newValue: String?) {
             // Important to break potential infinite loops.
-            if (view.data != newValue) {
+            if (newValue != null && view.data != newValue) {
                 view.data = newValue
             }
         }

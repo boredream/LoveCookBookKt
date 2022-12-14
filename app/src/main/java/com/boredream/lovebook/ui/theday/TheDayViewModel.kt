@@ -81,11 +81,11 @@ class TheDayViewModel @Inject constructor(
     }
 
     fun start() {
-        refreshListVMCompose.loadList(repoRequest = { theDayRepository.getList(false) })
+        refreshListVMCompose.loadPageList(repoRequest = { theDayRepository.getList(false) })
     }
 
     fun refresh(handlePullDownDown: Boolean = true) {
-        refreshListVMCompose.loadList(
+        refreshListVMCompose.loadPageList(
             handlePullDownDown = handlePullDownDown,
             repoRequest = { theDayRepository.getList(true) })
     }

@@ -13,6 +13,7 @@ import com.boredream.lovebook.data.ResponseEntity
  */
 object SimpleUiStateObserver {
 
+    @Deprecated("use setRequestObserver")
     fun setCommitRequestObserver(
         viewModel: BaseRequestViewModel<*>,
         lifecycleOwner: LifecycleOwner

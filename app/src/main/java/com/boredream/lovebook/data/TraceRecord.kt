@@ -5,8 +5,10 @@ package com.boredream.lovebook.data
  */
 data class TraceRecord(
     val traceList: ArrayList<TraceLocation>,
-    val title: String,
-    val startTime: Long,
-    val endTime: Long,
-    val distance: Float, // 单位米
+    var name: String,
+    var startTime: Long,
+    var endTime: Long,
+    var distance: Int, // 单位米
+    var detail: String? = null,
+    var traceListStr: String? = null,
 ) : Belong2UserEntity()

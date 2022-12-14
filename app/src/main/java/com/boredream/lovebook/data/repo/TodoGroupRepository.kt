@@ -10,7 +10,9 @@ import javax.inject.Singleton
 class TodoGroupRepository @Inject constructor(private val service: ApiService) :
     BaseRequestRepository<TodoGroup>(service) {
 
-    suspend fun getList() = getList { service.getTodoGroupList() }
+    suspend fun getList(forceRemote: Boolean) =
+        getList(forceRemote) { service.getTodoGroupList() }
+
     suspend fun add(data: TodoGroup) = commit { service.addTodoGroup(data) }
     suspend fun update(data: TodoGroup) = commit { service.updateTodoGroup(data.id!!, data) }
     suspend fun delete(id: String) = commit { service.deleteTodoGroup(id) }

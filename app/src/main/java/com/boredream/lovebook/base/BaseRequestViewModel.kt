@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
  * 带请求的 view model
  * 不影响架构，用于节省模版代码
  */
+@Deprecated("使用 vm compose 组合替代继承")
 open class BaseRequestViewModel<T> : BaseViewModel() {
 
     // 主job，保证同一时间只能一个在工作

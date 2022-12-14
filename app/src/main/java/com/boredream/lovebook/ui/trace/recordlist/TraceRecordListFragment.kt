@@ -61,8 +61,8 @@ class TraceRecordListFragment :
         }
         getBinding().refreshTraceList.setup(
             adapter,
-            onRefresh = { viewModel.refresh() },
-            itemDecoration = null
+            onLoadMore = { viewModel.refresh(true) },
+            onRefresh = { viewModel.refresh(false) },
         )
     }
 

@@ -26,7 +26,7 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
     private val _dataListUiState = MutableLiveData<ArrayList<*>>()
     val dataListUiState: LiveData<ArrayList<*>> = _dataListUiState
 
-    fun <T> loadList(
+    fun <T> loadPageList(
         handlePullDownDown: Boolean = true,
         loadMore: Boolean = false,
         repoRequest: suspend (loadMore: Boolean) -> ResponseEntity<ListResult<T>>,
@@ -49,6 +49,28 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
             }
 
             _refreshUiState.value = RefreshUiState(enableLoadMore = hasMore)
+        }
+    }
+
+    fun <T> loadList(
+        handlePullDownDown: Boolean = true,
+        repoRequest: suspend () -> ResponseEntity<ArrayList<T>>,
+    ) {
+        // 只有非手动下拉刷新，才需要主动显示下拉样式
+        if(!handlePullDownDown) {
+            _refreshUiState.value = RefreshUiState(showRefresh = true)
+        }
+
+        viewModelScope.launch {
+            val response = repoRequest.invoke()
+            if (response.isSuccess()) {
+                // 是否还有更多，根据返回数据判断；如果无返回数据，保留原有意图
+                val dataList = response.data?: ArrayList()
+                _dataListUiState.value = dataList
+            } else {
+                // 请求失败的时候应该继续保持当前列表数据
+            }
+            _refreshUiState.value = RefreshUiState()
         }
     }
 

@@ -5,6 +5,7 @@ import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.LocationRepository
+import com.boredream.lovebook.data.repo.TraceLocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.TraceUtils
 import javax.inject.Inject
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 class TraceUseCase @Inject constructor(
     private val locationRepository: LocationRepository,
     private val traceRecordRepository: TraceRecordRepository,
+    private val traceLocationRepository: TraceLocationRepository,
 ) {
 
     fun getMyLocation() = locationRepository.myLocation
@@ -75,12 +77,14 @@ class TraceUseCase @Inject constructor(
         locationRepository.clearTraceList()
     }
 
+    suspend fun getTraceList(recordId: String) = traceLocationRepository.getList(recordId)
+
     /**
-     * 获取所有历史轨迹
+     * TODO: 获取所有历史轨迹
      */
-    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ListResult<TraceRecord>> {
-        return traceRecordRepository.getList()
-    }
+//    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ListResult<TraceRecord>> {
+//        return traceRecordRepository.getList()
+//    }
 
     // TODO: 回调适合用函数吗？
     fun addLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {

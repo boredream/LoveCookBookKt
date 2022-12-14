@@ -2,7 +2,7 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.TraceRecord
-import com.boredream.lovebook.data.repo.source.LocalTraceRecordDataSource
+import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,24 +10,17 @@ import javax.inject.Singleton
 @Singleton
 class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
-    private val dataSource: LocalTraceRecordDataSource,
-) :
-    BaseRequestRepository<TraceRecord>(service) {
+    private val localDataSource: TraceRecordLocalDataSource,
+) : BaseRequestRepository<TraceRecord>(service) {
 
-//    suspend fun getList(groupId: String) = getList { service.getTraceRecordList(groupId) }
-//    suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }
-//    suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
-//    suspend fun delete(id: String) = commit { service.deleteTraceRecord(id) }
+    // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
 
-    // TODO: to remote
-
-    suspend fun getList(forceRemote: Boolean = false) =
-        getList(forceRemote) {
-            dataSource.loadTraceList()
+    suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
+        getPageList(forceRemote, loadMore = loadMore) {
+            service.getTraceRecordList(it)
         }
 
-    suspend fun add(data: TraceRecord) = commit { dataSource.save(data) }
-    suspend fun getList() = getList { dataSource.loadTraceList() }
-    suspend fun delete(data: TraceRecord) = commit { dataSource.delete(data) }
+    suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }
+    suspend fun delete(data: TraceRecord) = commit { service.deleteTraceRecord(data.id!!) }
 
 }

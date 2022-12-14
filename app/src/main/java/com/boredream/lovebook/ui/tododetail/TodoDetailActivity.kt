@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.common.SimpleUiStateObserver
+import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.Todo
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTodoDetailBinding
@@ -23,7 +24,7 @@ class TodoDetailActivity : BaseActivity<TodoDetailViewModel, ActivityTodoDetailB
     private var data: Todo? = null
 
     companion object {
-        fun start(context: Context, groupId: String, data: Todo?) {
+        fun start(context: Context, groupId: String, data: Todo? = null) {
             val intent = Intent(context, TodoDetailActivity::class.java)
             intent.putExtra(BundleKey.ID, groupId)
             intent.putExtra(BundleKey.DATA, data)
@@ -39,8 +40,13 @@ class TodoDetailActivity : BaseActivity<TodoDetailViewModel, ActivityTodoDetailB
             data = it.getSerializable(BundleKey.DATA) as Todo?
         }
 
-        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
+        initObserver()
         viewModel.load(groupId, data)
+    }
+
+    private fun initObserver() {
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.commitVMCompose)
+        viewModel.commitVMCompose.successUiState.observe(this) { finish() }
     }
 
 }

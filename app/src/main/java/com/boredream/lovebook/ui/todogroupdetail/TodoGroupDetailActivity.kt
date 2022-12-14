@@ -23,9 +23,9 @@ class TodoGroupDetailActivity :
     private var data: TodoGroup? = null
 
     companion object {
-        fun start(context: Context, data: TodoGroup) {
+        fun start(context: Context, data: TodoGroup? = null) {
             val intent = Intent(context, TodoGroupDetailActivity::class.java)
-            intent.putExtra(BundleKey.DATA, data)
+            data?.let { intent.putExtra(BundleKey.DATA, it) }
             context.startActivity(intent)
         }
     }

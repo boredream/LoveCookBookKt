@@ -24,11 +24,11 @@ class DiaryViewModel @Inject constructor(
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
     fun start() {
-        refreshListVMCompose.loadList(repoRequest = { repository.getPageList(false) })
+        refreshListVMCompose.loadPageList(repoRequest = { repository.getPageList(false) })
     }
 
     fun refresh(loadMore: Boolean, handlePullDownDown: Boolean = true) {
-        refreshListVMCompose.loadList(
+        refreshListVMCompose.loadPageList(
             handlePullDownDown = handlePullDownDown,
             repoRequest = { repository.getPageList(loadMore, true) })
     }

@@ -7,15 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.common.SimpleListAdapter
 import com.boredream.lovebook.common.SimpleRequestFail
 import com.boredream.lovebook.common.SimpleRequestSuccess
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.databinding.FragmentTodoGroupBinding
 import com.boredream.lovebook.databinding.ItemTodoGroupBinding
+import com.boredream.lovebook.ui.diarydetail.DiaryDetailActivity
+import com.boredream.lovebook.ui.todogroupdetail.TodoGroupDetailActivity
 import com.boredream.lovebook.ui.todolist.TodoListActivity
 import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,42 +52,23 @@ class TodoGroupFragment : BaseFragment<TodoGroupViewModel, FragmentTodoGroupBind
     }
 
     private fun initList() {
-        getBinding().rv.layoutManager = LinearLayoutManager(activity)
-        getBinding().rv.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
         adapter = SimpleListAdapter(dataList, R.layout.item_todo_group)
         adapter.onItemClickListener = { TodoListActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
             DialogUtils.showDeleteConfirmDialog(requireContext(), { viewModel.delete(it) })
         }
-        getBinding().rv.adapter = adapter
+        getBinding().refresh.setup(
+            adapter,
+            onRefresh = { viewModel.refresh(false) },
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
-        viewModel.loadListUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    dataList.clear()
-                    dataList.addAll(it.data.dataList)
-                    adapter.notifyDataSetChanged()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
+        viewModel.toDetailEvent.observe(viewLifecycleOwner) {
+            TodoGroupDetailActivity.start(requireContext())
         }
-        viewModel.commitDataUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    ToastUtils.showShort("删除成功")
-                    viewModel.start()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
+        SimpleUiStateObserver.setRequestObserver(this, viewLifecycleOwner, viewModel.deleteVMCompose)
     }
 
 }

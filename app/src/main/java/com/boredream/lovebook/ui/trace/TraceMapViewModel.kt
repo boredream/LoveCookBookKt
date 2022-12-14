@@ -66,12 +66,12 @@ class TraceMapViewModel @Inject constructor(
 
         if (!old) {
             // TODO: 可能是远程获取，需要loading
-            viewModelScope.launch {
-                val recordList = traceUseCase.getAllHistoryTraceListRecord()
-                val historyList = ArrayList<ArrayList<TraceLocation>>()
-                recordList.data?.dataList?.let { it -> it.forEach { historyList.add(it.traceList) } }
-                _historyTracePointListUiState.value = historyList
-            }
+//            viewModelScope.launch {
+//                val recordList = traceUseCase.getAllHistoryTraceListRecord()
+//                val historyList = ArrayList<ArrayList<TraceLocation>>()
+//                recordList.data?.dataList?.let { it -> it.forEach { historyList.add(it.traceList) } }
+//                _historyTracePointListUiState.value = historyList
+//            }
         }
     }
 

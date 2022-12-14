@@ -1,13 +1,15 @@
 package com.boredream.lovebook.data
 
 import com.blankj.utilcode.util.TimeUtils
+import com.boredream.lovebook.base.BaseEntity
 
 open class TraceLocation(
+    var traceRecordId: Long? = null,
     var time: Long = System.currentTimeMillis(),
     var latitude: Double,
     var longitude: Double,
     var extraData: String? = null,
-) : java.io.Serializable {
+) : BaseEntity(), java.io.Serializable {
     override fun toString(): String {
         return "${TimeUtils.millis2String(time)}  $latitude,$longitude"
     }

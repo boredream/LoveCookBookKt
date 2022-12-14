@@ -107,7 +107,7 @@ interface ApiService {
 
     @GET("todo_group/only_group")
     suspend fun getTodoGroupList(
-    ): ResponseEntity<List<TodoGroup>>
+    ): ResponseEntity<ArrayList<TodoGroup>>
 
     @POST("todo_group")
     suspend fun addTodoGroup(
@@ -130,7 +130,7 @@ interface ApiService {
     @GET("todo/{id}")
     suspend fun getTodoList(
         @Path("id") groupId: String,
-    ): ResponseEntity<List<Todo>>
+    ): ResponseEntity<ArrayList<Todo>>
 
     @POST("todo")
     suspend fun addTodo(
@@ -150,10 +150,12 @@ interface ApiService {
 
     // ******** trace record ********
 
-    @GET("trace_record/{id}")
+
+    @GET("trace_record/page")
     suspend fun getTraceRecordList(
-        @Path("id") groupId: String,
-    ): ResponseEntity<List<TraceRecord>>
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20,
+    ): ResponseEntity<PageResultDto<TraceRecord>>
 
     @POST("trace_record")
     suspend fun addTraceRecord(
@@ -168,6 +170,29 @@ interface ApiService {
 
     @DELETE("trace_record/{id}")
     suspend fun deleteTraceRecord(
+        @Path("id") id: String,
+    ): ResponseEntity<Boolean>
+
+    // ******** trace location ********
+
+    @GET("trace_location/{id}")
+    suspend fun getTraceLocationList(
+        @Path("id") groupId: String,
+    ): ResponseEntity<ArrayList<TraceLocation>>
+
+    @POST("trace_location")
+    suspend fun addTraceLocation(
+        @Body dto: TraceLocation,
+    ): ResponseEntity<Boolean>
+
+    @PUT("trace_location/{id}")
+    suspend fun updateTraceLocation(
+        @Path("id") id: String,
+        @Body dto: TraceLocation,
+    ): ResponseEntity<Boolean>
+
+    @DELETE("trace_location/{id}")
+    suspend fun deleteTraceLocation(
         @Path("id") id: String,
     ): ResponseEntity<Boolean>
 

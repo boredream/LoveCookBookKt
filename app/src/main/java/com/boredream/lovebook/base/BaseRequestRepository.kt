@@ -59,14 +59,14 @@ abstract class BaseRequestRepository<T : BaseEntity>(private val service: ApiSer
 
     protected suspend fun getList(
         forceRemote: Boolean = false,
-        request: suspend () -> ResponseEntity<List<T>>
-    ): ResponseEntity<ListResult<T>> {
+        request: suspend () -> ResponseEntity<ArrayList<T>>
+    ): ResponseEntity<ArrayList<T>> {
         if (!forceRemote && !cacheIsDirty) {
             // 非强制远程，且缓存数据有效时，直接返回
-            return ResponseEntity.success(ListResult(false, cacheList))
+            return ResponseEntity.success(cacheList)
         }
 
-        val response: ResponseEntity<List<T>> = tryHttpError { request.invoke() }
+        val response: ResponseEntity<ArrayList<T>> = tryHttpError { request.invoke() }
         if (response.isSuccess()) {
             // TODO: db local data source
             // 缓存在本地
@@ -77,7 +77,7 @@ abstract class BaseRequestRepository<T : BaseEntity>(private val service: ApiSer
 
         // 数据转换一层，List -> ListResult
         return ResponseEntity(
-            ListResult(cacheListCanLoadMore, cacheList),
+            cacheList,
             response.code,
             response.msg
         )

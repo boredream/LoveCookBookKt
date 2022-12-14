@@ -19,7 +19,6 @@
             android:id="@+id/cb_done"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:clickable="false"
             android:checked="@{bean.done}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -48,19 +47,6 @@
             app:layout_constraintStart_toEndOf="@+id/cb_done"
             app:layout_constraintTop_toTopOf="@+id/cb_done"
             tools:text="1990-02-14" />
-
-        <TextView
-            android:id="@+id/tv_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@{bean.detail}"
-            android:textColor="@color/txt_black"
-            android:textSize="@dimen/txt_body"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name"
-            tools:text="日记内容" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

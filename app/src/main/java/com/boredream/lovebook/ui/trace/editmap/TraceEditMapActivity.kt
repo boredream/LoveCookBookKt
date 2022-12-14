@@ -50,7 +50,7 @@ class TraceEditMapActivity : BaseActivity<TraceEditMapViewModel, ActivityTraceEd
         val filter = TraceFilter()
         data = TraceRecord(
             ArrayList(oldData.traceList.filter { filter.filterPos(it) }),
-            "test", 0, 0, 100f
+            "test", 0, 0, 100
         )
 
         viewModel.start(data)
