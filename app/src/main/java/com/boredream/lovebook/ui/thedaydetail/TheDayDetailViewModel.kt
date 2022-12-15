@@ -2,10 +2,12 @@ package com.boredream.lovebook.ui.thedaydetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.boredream.lovebook.base.BaseRequestViewModel
-import com.boredream.lovebook.common.SimpleRequestFail
+import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.base.ToastLiveEvent
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TheDayDetailViewModel @Inject constructor(
     private val repository: TheDayRepository
-) : BaseRequestViewModel<TheDay>() {
+) : BaseViewModel() {
+
+    val commitVMCompose = RequestVMCompose<Boolean>(viewModelScope)
 
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
@@ -30,17 +34,24 @@ class TheDayDetailViewModel @Inject constructor(
         val theDay = _uiState.value!!
 
         if (StringUtils.isEmpty(theDay.name)) {
-            _commitDataUiState.value = SimpleRequestFail("名字不能为空")
+            _baseEvent.value = ToastLiveEvent("名字不能为空")
             return
         }
         if (StringUtils.isEmpty(theDay.theDayDate)) {
-            _commitDataUiState.value = SimpleRequestFail("日期不能为空")
+            _baseEvent.value = ToastLiveEvent("日期不能为空")
             return
         }
 
-        commitData {
-            if (theDay.id != null) repository.update(theDay)
-            else repository.add(theDay)
+        if (theDay.id != null) {
+            commitVMCompose.request(
+                onSuccess = { _baseEvent.value = ToastLiveEvent("修改成功") },
+                repoRequest = { repository.update(theDay) }
+            )
+        } else {
+            commitVMCompose.request(
+                onSuccess = { _baseEvent.value = ToastLiveEvent("新增成功") },
+                repoRequest = { repository.add(theDay) }
+            )
         }
     }
 

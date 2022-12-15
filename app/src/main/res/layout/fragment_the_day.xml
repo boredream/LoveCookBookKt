@@ -31,7 +31,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:onClick="@{() -> vm.pickTogetherDay()}"
-            android:text="@{vm.uiState.togetherDayTitle}"
+            android:text="@{vm.headerUiState.togetherDayTitle}"
             android:textColor="@color/white"
             android:textSize="@dimen/txt_body"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:text="@{vm.uiState.togetherDay}"
+            android:text="@{vm.headerUiState.togetherDay}"
             android:textColor="@color/white"
             android:textSize="@dimen/txt_title"
             android:textStyle="bold"
@@ -69,7 +69,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginRight="@dimen/margin_large"
-            android:src="@{vm.uiState.rightAvatar}"
+            android:src="@{vm.headerUiState.rightAvatar}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_together_day"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -79,7 +79,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginRight="-16dp"
-            android:src="@{vm.uiState.leftAvatar}"
+            android:src="@{vm.headerUiState.leftAvatar}"
             app:layout_constraintRight_toLeftOf="@+id/iv_right"
             app:layout_constraintTop_toTopOf="@+id/iv_right" />
 

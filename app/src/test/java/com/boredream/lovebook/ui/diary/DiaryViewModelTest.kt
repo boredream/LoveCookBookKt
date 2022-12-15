@@ -50,7 +50,7 @@ class DiaryViewModelTest {
         } returns ResponseEntity.success(ListResult(false, mockList))
 
         vm.start()
-        Assert.assertEquals(10, vm.refreshListVMCompose.refreshUiState.value?.list?.size)
+        Assert.assertEquals(10, vm.refreshListVMCompose.dataListUiState.value?.size)
     }
 
 }

@@ -3,6 +3,7 @@ package com.boredream.lovebook.ui.thedaydetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.common.SimpleUiStateObserver
@@ -22,7 +23,7 @@ class TheDayDetailActivity : BaseActivity<TheDayDetailViewModel, ActivityTheDayD
     private var theDay: TheDay? = null
 
     companion object {
-        fun start(context: Context, theDay: TheDay) {
+        fun start(context: Context, theDay: TheDay? = null) {
             val intent = Intent(context, TheDayDetailActivity::class.java)
             intent.putExtra(BundleKey.DATA, theDay)
             context.startActivity(intent)
@@ -36,7 +37,11 @@ class TheDayDetailActivity : BaseActivity<TheDayDetailViewModel, ActivityTheDayD
             theDay = it.getSerializable(BundleKey.DATA) as TheDay?
         }
 
-        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
+        SimpleUiStateObserver.setRequestObserver(
+            this,
+            this,
+            viewModel.commitVMCompose,
+            successObserver = { finish() })
         viewModel.load(theDay)
     }
 

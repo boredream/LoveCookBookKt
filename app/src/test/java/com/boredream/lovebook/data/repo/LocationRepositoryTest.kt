@@ -79,25 +79,25 @@ class LocationRepositoryTest {
 
             firstArg<(location: TraceLocation) -> Unit>().invoke(
                 TraceLocation(
-                    startLocation.time + 2000,
-                    startLocation.latitude + 0.1,
-                    startLocation.longitude
+                    time = startLocation.time + 2000,
+                    latitude = startLocation.latitude + 0.1,
+                    longitude = startLocation.longitude
                 )
             )
 
             firstArg<(location: TraceLocation) -> Unit>().invoke(
                 TraceLocation(
-                    startLocation.time + 4000,
-                    startLocation.latitude,
-                    startLocation.longitude
+                    time = startLocation.time + 4000,
+                    latitude = startLocation.latitude,
+                    longitude = startLocation.longitude
                 )
             )
 
             firstArg<(location: TraceLocation) -> Unit>().invoke(
                 TraceLocation(
-                    startLocation.time + 6000,
-                    startLocation.latitude + 0.000001,
-                    startLocation.longitude
+                    time = startLocation.time + 6000,
+                    latitude = startLocation.latitude + 0.000001,
+                    longitude = startLocation.longitude
                 )
             )
         }
@@ -114,7 +114,7 @@ class LocationRepositoryTest {
     fun testTrace_stepTooFar() = runTest {
         repo.startTrace()
         // 过滤器需要前3个定位点作为参考，不作为轨迹记录
-        for(i in 0..10) {
+        for (i in 0..10) {
             repo.onLocationSuccess(getStepTraceLocation())
             println(repo.traceList.size)
         }

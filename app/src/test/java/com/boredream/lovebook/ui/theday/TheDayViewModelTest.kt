@@ -8,6 +8,7 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
 import com.boredream.lovebook.data.repo.UserRepository
+import com.boredream.lovebook.ui.todogroup.LoadListSuccess
 import com.boredream.lovebook.utils.MockUtils
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -55,9 +56,9 @@ class TheDayViewModelTest {
 
         vm.loadTogetherInfo()
 
-        assertNotNull(vm.uiState.value)
-        assertEquals("点我设置", vm.uiState.value?.togetherDayTitle)
-        assertEquals("0", vm.uiState.value?.togetherDay)
+        assertNotNull(vm.headerUiState.value)
+        assertEquals("点我设置", vm.headerUiState.value?.togetherDayTitle)
+        assertEquals("0", vm.headerUiState.value?.togetherDay)
     }
 
     @Test
@@ -75,9 +76,9 @@ class TheDayViewModelTest {
 
         vm.loadTogetherInfo()
 
-        assertNotNull(vm.uiState.value)
-        assertEquals("我们已恋爱", vm.uiState.value?.togetherDayTitle)
-        assertEquals("2", vm.uiState.value?.togetherDay)
+        assertNotNull(vm.headerUiState.value)
+        assertEquals("我们已恋爱", vm.headerUiState.value?.togetherDayTitle)
+        assertEquals("2", vm.headerUiState.value?.togetherDay)
     }
 
     @Test
@@ -86,14 +87,10 @@ class TheDayViewModelTest {
             runBlocking {
                 repo.getList()
             }
-        } returns ResponseEntity.success(MockUtils.mockPageResult(TheDay::class.java))
+        } returns ResponseEntity.success(MockUtils.mockListResult(TheDay::class.java))
 
-        vm.loadTheDayList()
-
-        assertNotNull(vm.requestUiState.value)
-        assertEquals(LoadListSuccess::class.java, vm.requestUiState.value?.javaClass)
-        val state = vm.requestUiState.value as LoadListSuccess
-        assertNotEquals(0, state.list.size)
+        vm.refresh(loadMore = false, handlePullDownDown = false)
+        assertNotNull(vm.refreshListVMCompose.dataListUiState.value)
     }
 
     @Test
@@ -114,9 +111,9 @@ class TheDayViewModelTest {
         } returns user
 
         vm.setTogetherDay(togetherDate)
-        assertNotNull(vm.uiState.value)
-        assertEquals("我们已恋爱", vm.uiState.value?.togetherDayTitle)
-        assertEquals("2", vm.uiState.value?.togetherDay)
+        assertNotNull(vm.headerUiState.value)
+        assertEquals("我们已恋爱", vm.headerUiState.value?.togetherDayTitle)
+        assertEquals("2", vm.headerUiState.value?.togetherDay)
     }
 
 }

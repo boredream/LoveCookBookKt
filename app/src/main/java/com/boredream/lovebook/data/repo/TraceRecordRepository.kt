@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
     private val localDataSource: TraceRecordLocalDataSource,
-) : BaseRequestRepository<TraceRecord>(service) {
+) : BaseRequestRepository<TraceRecord>() {
 
     // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
 

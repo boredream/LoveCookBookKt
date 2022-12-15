@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class TraceLocationRepository @Inject constructor(
     private val service: ApiService,
-) : BaseRequestRepository<TraceLocation>(service) {
+) : BaseRequestRepository<TraceLocation>() {
 
     // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
 

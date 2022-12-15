@@ -1,6 +1,7 @@
 package com.boredream.lovebook.utils;
 
 import com.boredream.lovebook.data.TheDay;
+import com.boredream.lovebook.data.dto.ListResult;
 import com.boredream.lovebook.data.dto.PageResultDto;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,6 +68,12 @@ public class MockUtils {
    public static <T> PageResultDto<T> mockPageResult(@NotNull Class<T> clazz) {
       int count = 10;
       return new PageResultDto<>(1, 20, count, 1, mockList(clazz, count));
+   }
+
+   @NotNull
+   public static <T> ListResult<T> mockListResult(@NotNull Class<T> clazz) {
+      int count = 10;
+      return new ListResult<>(false, new ArrayList<>(mockList(clazz, count)));
    }
 
    private static <T> void setValue(Object object, Class<T> clazz) throws IllegalAccessException {

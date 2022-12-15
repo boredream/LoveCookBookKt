@@ -8,15 +8,15 @@ import javax.inject.Singleton
 
 @Singleton
 class TheDayRepository @Inject constructor(private val service: ApiService) :
-    BaseRequestRepository<TheDay>(service) {
+    BaseRequestRepository<TheDay>() {
 
     suspend fun getList(forceRemote: Boolean = false) =
         getPageList(forceRemote) {
             service.getTheDayList(it)
         }
 
-    suspend fun add(data: TheDay) = service.addTheDay(data)
-    suspend fun update(data: TheDay) = service.updateTheDay(data.id!!, data)
-    suspend fun delete(id: String) = service.deleteTheDay(id)
+    suspend fun add(data: TheDay) = commit { service.addTheDay(data) }
+    suspend fun update(data: TheDay) = commit { service.updateTheDay(data.id!!, data) }
+    suspend fun delete(id: String) = commit { service.deleteTheDay(id) }
 
 }

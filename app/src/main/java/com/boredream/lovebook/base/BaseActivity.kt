@@ -43,7 +43,6 @@ abstract class BaseActivity<VM : BaseViewModel, BD : ViewDataBinding> : AppCompa
         viewModel.baseUiState.observe(this) { showLoading(it.showLoading) }
         viewModel.baseEvent.observe(this) {
             when(it) {
-                is StartActivityLiveEvent<*> -> startActivity(Intent(this, it.activity))
                 is ToastLiveEvent -> ToastUtils.showShort(it.toast)
             }
         }
