@@ -1,6 +1,7 @@
 package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.base.BaseRequestRepository
+import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.net.ApiService
@@ -20,7 +21,21 @@ class TraceRecordRepository @Inject constructor(
             service.getTraceRecordList(it)
         }
 
-    suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }
+    suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {
+        // 提交数据时，放在 traceListStr里，减少报文大小
+        val sb = StringBuilder()
+        data.traceList.forEach {
+            sb.append("_").append(it.time)
+                .append(",").append(it.latitude)
+                .append(",").append(it.longitude)
+        }
+        if(sb.isNotEmpty()) {
+            data.traceListStr = sb.substring(1)
+        }
+        data.traceList.clear()
+        return commit { service.addTraceRecord(data) }
+    }
+
     suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
     suspend fun delete(data: TraceRecord) = commit { service.deleteTraceRecord(data.id!!) }
 

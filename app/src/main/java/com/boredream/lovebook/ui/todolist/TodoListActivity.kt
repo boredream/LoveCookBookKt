@@ -6,13 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
-import com.boredream.lovebook.common.SimpleListAdapter
 import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.Todo
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTodoListBinding
-import com.boredream.lovebook.databinding.ItemSettingBinding
 import com.boredream.lovebook.ui.tododetail.TodoDetailActivity
 import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +57,9 @@ class TodoListActivity : BaseActivity<TodoListViewModel, ActivityTodoListBinding
             DialogUtils.showDeleteConfirmDialog(this, { viewModel.delete(it) })
         }
         binding.refresh.setup(adapter, onRefresh = { viewModel.refresh(false) })
+        adapter.onTodoCheck = {
+            viewModel.doneTodo(it)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -67,6 +68,8 @@ class TodoListActivity : BaseActivity<TodoListViewModel, ActivityTodoListBinding
             TodoDetailActivity.start(this, data.id!!)
         }
         SimpleUiStateObserver.setRequestObserver(this, this, viewModel.deleteVMCompose)
+        // 修改完成状态希望无感知，所以默认回调都不需要
+        // SimpleUiStateObserver.setRequestObserver(this, this, viewModel.updateVMCompose)
     }
 
 }

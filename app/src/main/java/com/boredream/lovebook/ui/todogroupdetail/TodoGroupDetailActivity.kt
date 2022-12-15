@@ -37,7 +37,9 @@ class TodoGroupDetailActivity :
             data = it.getSerializable(BundleKey.DATA) as TodoGroup?
         }
 
-        SimpleUiStateObserver.setCommitRequestObserver(viewModel, this)
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.commitVMCompose)
+        viewModel.commitVMCompose.successUiState.observe(this) { finish() }
+
         viewModel.load(data)
     }
 

@@ -93,6 +93,30 @@ abstract class BaseRequestRepository<T : BaseEntity> : BaseRepository() {
     }
 
     /**
+     * 删除请求
+     * @param request SuspendFunction0<ResponseEntity<Boolean>> 请求
+     * @return ResponseEntity<Boolean> 相应
+     */
+    protected suspend fun commitDelete(
+        id: String,
+        request: suspend () -> ResponseEntity<Boolean>
+    ): ResponseEntity<Boolean> {
+        val response: ResponseEntity<Boolean> = tryHttpError { request.invoke() }
+        if (response.isSuccess()) {
+            // 删除成功后，无需刷新缓存，直接删掉对应数据即可
+            var deleteItem: T? = null
+            for (item in cacheList) {
+                if (id == item.id) {
+                    deleteItem = item
+                    break
+                }
+            }
+            deleteItem?.let { cacheList.remove(it) }
+        }
+        return response
+    }
+
+    /**
      * http请求预处理
      */
     private suspend fun <T> tryHttpError(request: suspend () -> ResponseEntity<T>): ResponseEntity<T> {

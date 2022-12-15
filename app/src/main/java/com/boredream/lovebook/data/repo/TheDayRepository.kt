@@ -17,6 +17,6 @@ class TheDayRepository @Inject constructor(private val service: ApiService) :
 
     suspend fun add(data: TheDay) = commit { service.addTheDay(data) }
     suspend fun update(data: TheDay) = commit { service.updateTheDay(data.id!!, data) }
-    suspend fun delete(id: String) = commit { service.deleteTheDay(id) }
+    suspend fun delete(id: String) = commitDelete(id) { service.deleteTheDay(id) }
 
 }

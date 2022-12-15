@@ -75,7 +75,7 @@ abstract class SimpleListViewModel<T> : BaseViewModel() {
 
     fun delete(data: T) {
         deleteVMCompose.request(
-            onSuccess = { refresh(loadMore = false, handlePullDownDown = false) },
+            onSuccess = { start() },
             repoRequest = { repoDeleteRequest(data) })
     }
 

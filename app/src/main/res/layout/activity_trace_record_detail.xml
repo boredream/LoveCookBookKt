@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                android:text='@{"时间：" + TimeUtils.millis2String(vm.uiState.startTime) + " ~ " + TimeUtils.millis2String(vm.uiState.endTime) }'
+                android:text='@{"时间：" + TimeUtils.millis2String(vm.uiState.startTime) + " ~ " + TimeUtils.millis2String(vm.uiState.endTime, "HH:mm:ss") }'
                 tools:text="时间：" />
 
             <TextView

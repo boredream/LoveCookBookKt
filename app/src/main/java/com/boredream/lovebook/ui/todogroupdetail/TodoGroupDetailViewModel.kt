@@ -2,9 +2,11 @@ package com.boredream.lovebook.ui.todogroupdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.StringUtils
-import com.boredream.lovebook.base.BaseRequestViewModel
+import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.base.ToastLiveEvent
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TodoGroup
 import com.boredream.lovebook.data.repo.TodoGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoGroupDetailViewModel @Inject constructor(
     private val repository: TodoGroupRepository
-) : BaseRequestViewModel<TodoGroup>() {
+) : BaseViewModel() {
+
+    val commitVMCompose = RequestVMCompose<Boolean>(viewModelScope)
 
     private val _uiState = MutableLiveData<TodoGroup>()
     val uiState: LiveData<TodoGroup> = _uiState
@@ -31,7 +35,7 @@ class TodoGroupDetailViewModel @Inject constructor(
             return
         }
 
-        commitData {
+        commitVMCompose.request {
             if (data.id != null) repository.update(data)
             else repository.add(data)
         }

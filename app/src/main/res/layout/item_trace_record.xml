@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_tiny"
-            android:text='@{"时间：" + TimeUtils.millis2String(bean.startTime) + " ~ " + TimeUtils.millis2String(bean.endTime) }'
+            android:text='@{"时间：" + TimeUtils.millis2String(bean.startTime) + " ~ " + TimeUtils.millis2String(bean.endTime, "HH:mm:ss") }'
             android:textColor="@color/txt_black"
             android:textSize="@dimen/txt_body"
             app:layout_constraintLeft_toLeftOf="parent"

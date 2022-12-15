@@ -13,24 +13,6 @@ import com.boredream.lovebook.data.ResponseEntity
  */
 object SimpleUiStateObserver {
 
-    @Deprecated("use setRequestObserver")
-    fun setCommitRequestObserver(
-        viewModel: BaseRequestViewModel<*>,
-        lifecycleOwner: LifecycleOwner
-    ) {
-        viewModel.commitDataUiState.observe(lifecycleOwner) {
-            when (it) {
-                is SimpleRequestSuccess -> {
-                    ToastUtils.showShort("提交成功")
-
-                    // TODO: 提交成功默认处理，关闭页面？
-                    // activity.finish()
-                }
-                is SimpleRequestFail -> ToastUtils.showShort(it.reason)
-            }
-        }
-    }
-
     /**
      * 设置请求观察者。
      * 参数为默认方法，需要替换操作时，传入参数；需要追加操作时，在外部再次自行observe
@@ -43,13 +25,13 @@ object SimpleUiStateObserver {
             // 默认发起和结束请求时，更新loading
             baseView.showLoading(it)
         },
-        successObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
-            // 默认请求成功时，Toast
-            ToastUtils.showLong("请求成功")
-        },
         failObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求失败时，Toast
             ToastUtils.showLong("请求失败 ${it.msg}")
+        },
+        successObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
+            // 默认请求成功时，Toast
+            ToastUtils.showLong("请求成功")
         }
     ) {
         requestVMCompose.isRequestingUiState.observe(lifecycleOwner, isRequestingObserver)

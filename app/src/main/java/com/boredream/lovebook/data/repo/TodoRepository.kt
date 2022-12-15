@@ -15,6 +15,6 @@ class TodoRepository @Inject constructor(private val service: ApiService) :
 
     suspend fun add(data: Todo) = commit { service.addTodo(data) }
     suspend fun update(data: Todo) = commit { service.updateTodo(data.id!!, data) }
-    suspend fun delete(id: String) = commit { service.deleteTodo(id) }
+    suspend fun delete(id: String) = commitDelete(id) { service.deleteTodo(id) }
 
 }

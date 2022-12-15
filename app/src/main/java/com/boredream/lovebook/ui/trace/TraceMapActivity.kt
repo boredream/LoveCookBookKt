@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.service.TraceLocationService
@@ -52,6 +53,9 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
                 }
             }
         }
+
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.commitVMCompose)
+        viewModel.commitVMCompose.successUiState.observe(this) { finish() }
     }
 
     private fun toggleLocation(start: Boolean) {

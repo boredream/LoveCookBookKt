@@ -2,7 +2,10 @@ package com.boredream.lovebook.ui.trace
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.boredream.lovebook.base.BaseRequestViewModel
+import com.boredream.lovebook.base.BaseViewModel
+import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.usecase.TraceUseCase
@@ -20,15 +23,13 @@ data class UiState(
 @HiltViewModel
 class TraceMapViewModel @Inject constructor(
     private val traceUseCase: TraceUseCase
-) : BaseRequestViewModel<TraceRecord>() {
+) : BaseViewModel() {
 
-    // 自定义 DataBinding 连接地图这种 命令式传统view 和 vm 的关系
+    val commitVMCompose = RequestVMCompose<Boolean>(viewModelScope)
 
     // 主UI事件
     private val _uiEvent = SingleLiveEvent<UIEvent>()
     val uiEvent: LiveData<UIEvent> = _uiEvent
-
-    // 单独更新的需要各自LiveData
 
     // 主UI元素
     private val _uiState = MutableLiveData(UiState())
@@ -99,7 +100,7 @@ class TraceMapViewModel @Inject constructor(
      * 保存当前轨迹
      */
     fun saveTrace() {
-        commitData { traceUseCase.saveTraceRecord() }
+        commitVMCompose.request { traceUseCase.saveTraceRecord() }
     }
 
     /**
