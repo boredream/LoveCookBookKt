@@ -2,7 +2,7 @@ package com.boredream.lovebook.ui.trace.editmap
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.boredream.lovebook.base.BaseRequestViewModel
+import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.TraceRecordRepository
@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TraceEditMapViewModel @Inject constructor(
     private val repository: TraceRecordRepository
-) : BaseRequestViewModel<TraceRecord>() {
+) : BaseViewModel() {
 
     private var step = 1800
     private lateinit var data: TraceRecord

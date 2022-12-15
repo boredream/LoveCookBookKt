@@ -20,8 +20,6 @@ class RequestVMCompose<T>(
     private val _isRequestingUiState = MutableLiveData<Boolean>()
     val isRequestingUiState: LiveData<Boolean> = _isRequestingUiState
 
-    // TODO: 需要合并uiState嘛？
-
     private val _failUiState = MutableLiveData<ResponseEntity<T>>()
     val failUiState: LiveData<ResponseEntity<T>> = _failUiState
 

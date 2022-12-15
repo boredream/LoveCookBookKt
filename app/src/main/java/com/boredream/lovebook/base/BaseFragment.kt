@@ -36,9 +36,7 @@ abstract class BaseFragment<VM: BaseViewModel, BD: ViewDataBinding>: Fragment(),
         getBinding().lifecycleOwner = this
         getBinding().setVariable(BR.vm, viewModel)
 
-        // TODO: 组合替代继承？
         viewModel.baseUiState.observe(viewLifecycleOwner) { showLoading(it.showLoading) }
-
         viewModel.baseEvent.observe(viewLifecycleOwner) {
             when(it) {
                 is ToastLiveEvent -> ToastUtils.showShort(it.toast)

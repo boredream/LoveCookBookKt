@@ -57,18 +57,7 @@ class TraceRecordDetailViewModel @Inject constructor(
     }
 
     private fun getTraceListSuccess(traceList: ArrayList<TraceLocation>) {
-        // FIXME: error data
-        if(data.startTime == 0L) {
-            data.startTime = traceList[0].time
-        }
-        if(data.endTime == 0L) {
-            data.endTime = traceList[traceList.lastIndex].time
-        }
-        if(data.distance == 0) {
-            data.distance = TraceUtils.calculateDistance(traceList)
-        }
         _uiState.value = data
-
         updateTraceList(traceList)
     }
 

@@ -3,11 +3,9 @@ package com.boredream.lovebook.ui.trace
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TraceLocation
-import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,7 +61,6 @@ class TraceMapViewModel @Inject constructor(
         _isShowHistoryTrace.value = !old
 
         if (!old) {
-            // TODO: 只获取这附近的？
 //            viewModelScope.launch {
 //                val recordList = traceUseCase.getAllHistoryTraceListRecord()
 //                val historyList = ArrayList<ArrayList<TraceLocation>>()

@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.usecase
 
+import com.boredream.lovebook.base.BaseUseCase
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
@@ -9,16 +10,11 @@ import com.boredream.lovebook.utils.TraceUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * TODO: 职责划分？
- * 和 repo 的区别，repo 处理数据，use case 处理业务逻辑。
- * 简单的业务，repo = use case，复杂的 use case 一般整合多个 repo。
- */
 @Singleton
 class TraceUseCase @Inject constructor(
     private val locationRepository: LocationRepository,
     private val traceRecordRepository: TraceRecordRepository,
-) {
+): BaseUseCase() {
 
     fun getMyLocation() = locationRepository.myLocation
 
@@ -75,7 +71,7 @@ class TraceUseCase @Inject constructor(
     }
 
     /**
-     * TODO: 获取所有历史轨迹
+     * TODO: 获取所有历史轨迹 / 只获取附近的
      */
 //    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ListResult<TraceRecord>> {
 //        return traceRecordRepository.getList()

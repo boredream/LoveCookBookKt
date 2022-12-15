@@ -14,8 +14,6 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRequestRepository<TraceRecord>() {
 
-    // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
-
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
         getPageList(forceRemote, loadMore = loadMore) {
             service.getTraceRecordList(it)
