@@ -21,6 +21,7 @@ class TraceRecordRepository @Inject constructor(
         }
 
     suspend fun add(data: TraceRecord) = commit { service.addTraceRecord(data) }
+    suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
     suspend fun delete(data: TraceRecord) = commit { service.deleteTraceRecord(data.id!!) }
 
 }

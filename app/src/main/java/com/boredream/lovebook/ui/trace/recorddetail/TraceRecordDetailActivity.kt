@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTraceRecordDetailBinding
@@ -12,7 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class TraceRecordDetailActivity : BaseActivity<TraceRecordDetailViewModel, ActivityTraceRecordDetailBinding>() {
+class TraceRecordDetailActivity :
+    BaseActivity<TraceRecordDetailViewModel, ActivityTraceRecordDetailBinding>() {
 
     private lateinit var data: TraceRecord
 
@@ -35,7 +37,22 @@ class TraceRecordDetailActivity : BaseActivity<TraceRecordDetailViewModel, Activ
         binding.mapView.onCreate(savedInstanceState)
 
         data = intent.extras?.getSerializable(BundleKey.DATA) as TraceRecord
+        initObserver()
         viewModel.start(data)
+    }
+
+    private fun initObserver() {
+        SimpleUiStateObserver.setRequestObserver(
+            this,
+            this,
+            viewModel.requestVMCompose,
+            successObserver = {})
+
+        SimpleUiStateObserver.setRequestObserver(
+            this,
+            this,
+            viewModel.commitVMCompose
+        )
     }
 
     override fun onDestroy() {

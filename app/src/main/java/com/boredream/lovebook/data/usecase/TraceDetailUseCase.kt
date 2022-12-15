@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.usecase
 
+import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.TraceLocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import javax.inject.Inject
@@ -16,5 +17,6 @@ class TraceDetailUseCase @Inject constructor(
     }
 
     suspend fun getTraceList() = traceLocationRepository.getList()
+    suspend fun updateRecord(data: TraceRecord) = traceRecordRepository.update(data)
 
 }

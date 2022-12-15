@@ -19,7 +19,7 @@ class TraceMapView : MapView {
 
     private var zoomLevel = 17f
     private var myLocation: TraceLocation? = null
-    private var myLocationMarker: Marker
+    private var myLocationMarker: Marker? = null
     private var startDrawIndex = 0
 
     var isFollowingMode = true
@@ -37,19 +37,21 @@ class TraceMapView : MapView {
         defStyleAttr
     ) {
         // 样式
-        map.uiSettings.isScaleControlsEnabled = false
-        map.uiSettings.isZoomControlsEnabled = false
-        map.addOnCameraChangeListener(object : OnCameraChangeListener {
-            override fun onCameraChange(position: CameraPosition?) {
+        map?.let {
+            it.uiSettings.isScaleControlsEnabled = false
+            it.uiSettings.isZoomControlsEnabled = false
+            it.addOnCameraChangeListener(object : OnCameraChangeListener {
+                override fun onCameraChange(position: CameraPosition?) {
 
-            }
+                }
 
-            override fun onCameraChangeFinish(position: CameraPosition?) {
-                position?.let { zoomLevel = it.zoom }
-            }
+                override fun onCameraChangeFinish(position: CameraPosition?) {
+                    position?.let { it -> zoomLevel = it.zoom }
+                }
 
-        })
-        myLocationMarker = map.addMarker(MarkerOptions())
+            })
+            myLocationMarker = it.addMarker(MarkerOptions())
+        }
     }
 
     private var firstMoveCamera = true
@@ -68,7 +70,7 @@ class TraceMapView : MapView {
 
     fun setMyLocation(location: TraceLocation) {
         myLocation = location
-        myLocationMarker.position = LatLng(location.latitude, location.longitude)
+        myLocationMarker?.position = LatLng(location.latitude, location.longitude)
 
         // TODO: draw my location 和 move camera 分开
         if (isFollowingMode) {

@@ -67,7 +67,7 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         locationOption.isNeedAddress = false;
         // 4g网络定位精度是500~2000，wifi是5~200。从精度上4g没必要，从场景上wifi没必要。所以只用 Device_Sensors
         // 仅用设备定位模式：不需要连接网络，只使用GPS进行定位，这种模式下不支持室内环境的定位，需要在室外环境下才可以成功定位。
-         locationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Device_Sensors
+        // locationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Device_Sensors
 
         // 设置定位参数
         client.setLocationOption(locationOption)

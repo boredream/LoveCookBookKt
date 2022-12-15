@@ -18,13 +18,6 @@ import com.boredream.lovebook.databinding.ViewTitleBarBinding
 class TitleBarView : ConstraintLayout {
 
     companion object {
-        @BindingAdapter("rightText")
-        @JvmStatic
-        fun setRightText(view: TitleBarView, text: CharSequence) {
-            view.dataBinding.tvRight.visibility = VISIBLE
-            view.dataBinding.tvRight.text = text
-
-        }
         @BindingAdapter("rightClick")
         @JvmStatic
         fun setRightClick(view: TitleBarView, callback: () -> Unit) {
@@ -52,6 +45,8 @@ class TitleBarView : ConstraintLayout {
         val hasBack = a.getBoolean(R.styleable.TitleBarView_hasBack, false)
         dataBinding.tvTitle.text = a.getString(R.styleable.TitleBarView_title)
             ?: resources.getString(R.string.app_name)
+        val rightText = a.getString(R.styleable.TitleBarView_rightText)
+        rightText?.let { setRightText(it) }
         if (hasBack) {
             dataBinding.ivLeft.visibility = View.VISIBLE
             dataBinding.ivLeft.setOnClickListener {
@@ -66,5 +61,9 @@ class TitleBarView : ConstraintLayout {
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
     }
 
+    fun setRightText(text: CharSequence) {
+        dataBinding.tvRight.visibility = VISIBLE
+        dataBinding.tvRight.text = text
+    }
 
 }

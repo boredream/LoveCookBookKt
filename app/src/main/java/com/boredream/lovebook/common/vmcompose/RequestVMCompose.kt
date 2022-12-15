@@ -28,7 +28,7 @@ class RequestVMCompose<T>(
     private val _successUiState = MutableLiveData<ResponseEntity<T>>()
     val successUiState: LiveData<ResponseEntity<T>> = _successUiState
 
-    fun request(onSuccess: (data: T?) -> Unit = {}, repoRequest: suspend () -> ResponseEntity<T>) {
+    fun request(onSuccess: (data: T) -> Unit = {}, repoRequest: suspend () -> ResponseEntity<T>) {
         _isRequestingUiState.value = true
 
         fetchJob?.cancel()
@@ -37,7 +37,7 @@ class RequestVMCompose<T>(
                 val response = repoRequest.invoke()
                 if (response.isSuccess()) {
                     _successUiState.value = response
-                    onSuccess.invoke(response.data)
+                    onSuccess.invoke(response.getSuccessData())
                 } else {
                     _failUiState.value = response
                 }

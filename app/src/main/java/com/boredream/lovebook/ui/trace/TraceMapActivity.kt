@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
+import com.boredream.lovebook.data.constant.BundleKey
 import com.boredream.lovebook.databinding.ActivityTraceMapBinding
 import com.boredream.lovebook.service.TraceLocationService
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +36,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         binding.mapView.onCreate(savedInstanceState)
 
         initObserver()
-        startLocation()
+        toggleLocation(true)
     }
 
     private fun initObserver() {
@@ -53,8 +54,10 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
         }
     }
 
-    private fun startLocation() {
+    private fun toggleLocation(start: Boolean) {
+        // TODO: start service 应该放在架构哪一层？
         serviceIntent = Intent(this, TraceLocationService::class.java)
+        serviceIntent.putExtra(BundleKey.TOGGLE_LOCATION, start)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
@@ -63,9 +66,9 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        // 关闭页面后继续保持定位，除非用户主动操作停止
+        toggleLocation(false)
         binding.mapView.onDestroy()
+        super.onDestroy()
     }
 
     override fun onResume() {
@@ -75,9 +78,9 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
     }
 
     override fun onPause() {
-        super.onPause()
         viewModel.onPause()
         binding.mapView.onPause()
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

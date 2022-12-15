@@ -96,8 +96,8 @@ class TraceLocationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             if (it.hasExtra(BundleKey.TOGGLE_TRACE)) {
-                val toggleTraceAction = it.getBooleanExtra(BundleKey.TOGGLE_TRACE, false)
-                if (toggleTraceAction) {
+                val start = it.getBooleanExtra(BundleKey.TOGGLE_TRACE, false)
+                if (start) {
                     traceUseCase.startLocation()
                     traceUseCase.startTrace()
                 } else {
@@ -109,6 +109,17 @@ class TraceLocationService : Service() {
                     traceUseCase.stopLocation()
                 }
                 // LogUtils.i("TOGGLE_TRACE $toggleTraceAction")
+            } else if (it.hasExtra(BundleKey.TOGGLE_LOCATION)) {
+                val start = it.getBooleanExtra(BundleKey.TOGGLE_LOCATION, false)
+                if (start) {
+                    traceUseCase.startLocation()
+                } else {
+                    // 关闭时判断，如果是在追踪中，不可关闭
+                    if (!traceUseCase.isTracing()) {
+                        traceUseCase.stopLocation()
+                        stopSelf()
+                    }
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)

@@ -1,8 +1,10 @@
 package com.boredream.lovebook.common
 
+import android.os.Build
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.ToastUtils
+import com.boredream.lovebook.BuildConfig
 import com.boredream.lovebook.base.BaseRequestViewModel
 import com.boredream.lovebook.base.BaseView
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
