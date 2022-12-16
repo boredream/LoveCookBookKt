@@ -72,17 +72,14 @@ class TraceRecordListFragment :
     }
 
     private fun toDetail() {
-        val locationPermissions: ArrayList<String> = ArrayList()
-        locationPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        locationPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         AndPermission.with(context)
             .runtime()
-            .permission(locationPermissions.toTypedArray())
+            .permission(Manifest.permission.ACCESS_FINE_LOCATION)
             .onGranted {
                 TraceMapActivity.start(requireContext())
             }
             .onDenied { permissions ->
-                if (AndPermission.hasAlwaysDeniedPermission(context, locationPermissions)) {
+                if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
                     PermissionSettingUtil.showSetting(requireContext(), permissions)
                 }
             }

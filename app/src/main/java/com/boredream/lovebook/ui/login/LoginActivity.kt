@@ -3,6 +3,7 @@ package com.boredream.lovebook.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.base.RepoCacheHelper
@@ -32,11 +33,11 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         // 登录时，清空原有所有缓存
         RepoCacheHelper.repoCache.clear()
 
-        SimpleUiStateObserver.setRequestObserver(this, this,
-            viewModel.loginVMCompose,
-            successObserver = {
-                MainActivity.start(this)
-            })
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.loginVMCompose) {
+            ToastUtils.showShort("登录成功")
+            MainActivity.start(this)
+            finish()
+        }
     }
 
 }

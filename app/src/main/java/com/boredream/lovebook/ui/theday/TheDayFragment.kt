@@ -11,7 +11,6 @@ import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.databinding.FragmentTheDayBinding
-import com.boredream.lovebook.ui.diarydetail.DiaryDetailActivity
 import com.boredream.lovebook.ui.thedaydetail.TheDayDetailActivity
 import com.boredream.lovebook.utils.DialogUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,7 +71,11 @@ class TheDayFragment : BaseFragment<TheDayViewModel, FragmentTheDayBinding>() {
             TheDayDetailActivity.start(requireContext())
         }
 
-        SimpleUiStateObserver.setRequestObserver(this, viewLifecycleOwner, viewModel.deleteVMCompose)
+        SimpleUiStateObserver.setRequestObserver(
+            this,
+            viewLifecycleOwner,
+            viewModel.deleteVMCompose
+        )
     }
 
 }

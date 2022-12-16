@@ -18,4 +18,9 @@ data class TheDay(
          */
         const val NOTIFY_TYPE_YEAR_COUNT_DOWN = 2
     }
+
+    override fun toString(): String {
+        return "TheDay(name='$name', theDayDate='$theDayDate')"
+    }
+
 }
