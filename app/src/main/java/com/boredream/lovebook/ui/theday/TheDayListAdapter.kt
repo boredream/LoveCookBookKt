@@ -21,6 +21,7 @@ class TheDayListAdapter(dataList: ArrayList<TheDay>) :
             val dateMillion = TimeUtils.string2Date(data.theDayDate, format).time
             val date = Calendar.getInstance()
             date.timeInMillis = dateMillion
+            date.add(Calendar.HOUR_OF_DAY, +12) // - 0.5d 然后 toInt 相当于四舍五入
 
             // 先设置成同一年
             date.set(Calendar.YEAR, now.get(Calendar.YEAR))

@@ -10,6 +10,7 @@ import com.boredream.lovebook.base.ToastLiveEvent
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.TheDay
 import com.boredream.lovebook.data.repo.TheDayRepository
+import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -24,6 +25,9 @@ class TheDayDetailViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<TheDay>()
     val uiState: LiveData<TheDay> = _uiState
+
+    private val _commitSuccessEvent = SingleLiveEvent<TheDay>()
+    val commitSuccessEvent: LiveData<TheDay> = _commitSuccessEvent
 
     fun load(data: TheDay?) {
         // 默认今天
@@ -44,12 +48,18 @@ class TheDayDetailViewModel @Inject constructor(
 
         if (theDay.id != null) {
             commitVMCompose.request(
-                onSuccess = { _baseEvent.value = ToastLiveEvent("修改成功") },
+                onSuccess = {
+                    _baseEvent.value = ToastLiveEvent("修改成功")
+                    _commitSuccessEvent.value = theDay
+                },
                 repoRequest = { repository.update(theDay) }
             )
         } else {
             commitVMCompose.request(
-                onSuccess = { _baseEvent.value = ToastLiveEvent("新增成功") },
+                onSuccess = {
+                    _baseEvent.value = ToastLiveEvent("新增成功")
+                    _commitSuccessEvent.value = theDay
+                },
                 repoRequest = { repository.add(theDay) }
             )
         }
