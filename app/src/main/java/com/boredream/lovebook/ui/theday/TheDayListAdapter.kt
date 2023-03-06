@@ -17,11 +17,15 @@ class TheDayListAdapter(dataList: ArrayList<TheDay>) :
         val format = TimeUtils.getSafeDateFormat("yyyy-MM-dd")
         if (data.notifyType == TheDay.NOTIFY_TYPE_YEAR_COUNT_DOWN) {
             // 按年倒计天数
-            val now = Calendar.getInstance()
-            val dateMillion = TimeUtils.string2Date(data.theDayDate, format).time
-            val date = Calendar.getInstance()
-            date.timeInMillis = dateMillion
-            date.add(Calendar.HOUR_OF_DAY, +12) // - 0.5d 然后 toInt 相当于四舍五入
+            val now = Calendar.getInstance().apply {
+                // 清空时分秒
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }
+            val date = Calendar.getInstance().apply {
+                timeInMillis = TimeUtils.string2Date(data.theDayDate, format).time
+            }
 
             // 先设置成同一年
             date.set(Calendar.YEAR, now.get(Calendar.YEAR))
@@ -29,7 +33,7 @@ class TheDayListAdapter(dataList: ArrayList<TheDay>) :
             if (date.before(now)) {
                 date.add(Calendar.YEAR, 1)
             }
-            val span = TimeUtils.getTimeSpanByNow(date.timeInMillis, TimeConstants.DAY)
+            val span = TimeUtils.getTimeSpan(date.timeInMillis, now.timeInMillis, TimeConstants.DAY) + 1
             binding.tvNotifyPre.text = "还有"
             binding.tvNotifyDay.text = span.toString()
         } else {

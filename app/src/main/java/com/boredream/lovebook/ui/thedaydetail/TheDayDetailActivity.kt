@@ -71,7 +71,7 @@ class TheDayDetailActivity : BaseActivity<TheDayDetailViewModel, ActivityTheDayD
                 Manifest.permission.WRITE_CALENDAR
             )
             .onGranted {
-                AlarmUtils.insertCalendarEvent(this, theDay) {
+                AlarmUtils.insertOrUpdateCalendarEvent(this, theDay) {
                     if (it != null) {
                         ToastUtils.showShort(it)
                     } else {
