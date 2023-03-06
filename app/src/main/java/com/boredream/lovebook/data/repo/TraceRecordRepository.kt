@@ -2,7 +2,6 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.net.ApiService
@@ -18,32 +17,14 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRequestRepository<TraceRecord>() {
 
-    /**
-     * 当前正在本地记录中的轨迹
-     */
-    private var localTraceRecord: TraceRecord? = null
-
-    /**
-     * 开启一条本地记录轨迹
-     */
-    fun startLocalTraceRecord() {
-        localTraceRecord = localDataSource.createTraceRecord()
-    }
-
-    /**
-     * 向本地记录轨迹插入一条位置信息
-     */
-    fun appendLocalTraceLocation(traceLocation: TraceLocation) {
-        localTraceRecord?.let {
-            traceLocation.traceRecordId = it.id
-            localDataSource.addTraceLocation(traceLocation)
-        }
-    }
-
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
         getPageList(forceRemote, loadMore = loadMore) {
             service.getTraceRecordList(it)
         }
+
+    fun addLocal(data: TraceRecord) {
+        localDataSource.addTraceRecord(data)
+    }
 
     suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {
         // 提交数据时，放在 traceListStr里，减少报文大小

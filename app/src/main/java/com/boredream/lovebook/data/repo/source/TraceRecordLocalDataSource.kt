@@ -1,19 +1,11 @@
 package com.boredream.lovebook.data.repo.source
 
 import android.util.Log
-import com.blankj.utilcode.util.CollectionUtils
-import com.blankj.utilcode.util.FileIOUtils
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.PathUtils
+import androidx.core.os.trace
 import com.blankj.utilcode.util.TimeUtils
-import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.db.AppDatabase
-import com.boredream.lovebook.net.ApiService
-import com.boredream.lovebook.utils.TraceUtils
-import com.google.gson.Gson
-import java.io.File
 import javax.inject.Inject
 
 /**
@@ -44,7 +36,12 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         return record
     }
 
-    fun addTraceLocation(traceLocation: TraceLocation) {
+    fun addTraceRecord(record: TraceRecord) {
+        val res = traceRecordDao.insert(record)
+        Log.i(TAG, "addTraceRecord: $res")
+    }
+
+    fun addTraceLocation(traceLocation: List<TraceLocation>) {
         val res = traceLocationDao.insertAll(traceLocation)
         Log.i(TAG, "addTraceLocation: $res")
     }

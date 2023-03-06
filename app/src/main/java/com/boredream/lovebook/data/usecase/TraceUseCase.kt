@@ -5,7 +5,6 @@ import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.LocationRepository
-import com.boredream.lovebook.data.repo.TraceLocationRepository
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.TraceUtils
 import javax.inject.Inject
@@ -20,11 +19,6 @@ class TraceUseCase @Inject constructor(
     fun getMyLocation() = locationRepository.myLocation
 
     fun isTracing() = locationRepository.status == LocationRepository.STATUS_TRACE
-
-    private val onLocalTraceRecordListener: (allTracePointList: ArrayList<TraceLocation>) -> Unit = {
-        // 当定位轨迹返回后，直接插入到本地数据库当前的记录轨迹中
-        traceRecordRepository.appendLocalTraceLocation(it.last())
-    }
 
     /**
      * 开始定位
@@ -44,14 +38,8 @@ class TraceUseCase @Inject constructor(
      * 开始追踪轨迹
      */
     fun startTrace() {
-        // 必须要先开始定位
-        // 先清除已有轨迹
+        // 必须要先开始定位，先清除已有轨迹
         locationRepository.clearTraceList()
-
-        // 开始追踪轨迹的时候就创建本地轨迹记录
-        traceRecordRepository.startLocalTraceRecord()
-        // 开启定位，并记录
-        locationRepository.addTraceSuccessListener(onLocalTraceRecordListener)
         locationRepository.startTrace()
     }
 
@@ -60,7 +48,6 @@ class TraceUseCase @Inject constructor(
      */
     fun stopTrace() {
         locationRepository.stopTrace()
-        locationRepository.removeTraceSuccessListener(onLocalTraceRecordListener)
     }
 
     /**
@@ -73,7 +60,9 @@ class TraceUseCase @Inject constructor(
         val endTime = traceList[traceList.lastIndex].time
         val distance = TraceUtils.calculateDistance(traceList)
         val traceRecord = TraceRecord(traceList, title, startTime, endTime, distance)
-        return traceRecordRepository.add(traceRecord)
+
+        traceRecordRepository.addLocal(traceRecord)
+        return ResponseEntity.success(true)
     }
 
     /**

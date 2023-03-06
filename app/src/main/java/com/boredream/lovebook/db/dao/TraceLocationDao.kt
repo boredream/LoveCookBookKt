@@ -13,7 +13,7 @@ interface TraceLocationDao {
     fun loadByTraceRecordId(traceRecordId: String): List<TraceLocation>
 
     @Insert
-    fun insertAll(vararg dataList: TraceLocation)
+    fun insertAll(dataList: List<TraceLocation>)
 
     @Delete
     fun delete(data: TraceLocation)
