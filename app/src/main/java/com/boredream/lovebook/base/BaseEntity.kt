@@ -1,7 +1,11 @@
 package com.boredream.lovebook.base
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 open class BaseEntity : java.io.Serializable {
 
-    var id: String? = null
+    @PrimaryKey var id: String? = null
 
 }

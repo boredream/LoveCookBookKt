@@ -1,10 +1,12 @@
 package com.boredream.lovebook.data
 
+import androidx.room.Entity
 import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.base.BaseEntity
 
+@Entity
 open class TraceLocation(
-    var traceRecordId: Long? = null,
+    var traceRecordId: String? = null,
     var time: Long = System.currentTimeMillis(),
     var latitude: Double,
     var longitude: Double,
