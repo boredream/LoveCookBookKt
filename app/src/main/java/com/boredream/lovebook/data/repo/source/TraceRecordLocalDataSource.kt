@@ -1,16 +1,12 @@
 package com.boredream.lovebook.data.repo.source
 
 import android.util.Log
-import androidx.core.os.trace
-import androidx.room.Relation
 import androidx.room.Transaction
-import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.db.AppDatabase
-import com.boredream.lovebook.db.relation.TraceRecordWithLocation
 import javax.inject.Inject
 
 /**
@@ -40,6 +36,11 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         val pages = 1f * traceRecordDao.getRowCount() / limit + 0.5f
         val list = traceRecordDao.loadByPage(limit, offset)
         return ResponseEntity.success(PageResultDto(page, pages.toInt(), list))
+    }
+
+    suspend fun getTraceLocationList(traceRecordDbId: Long): ResponseEntity<ArrayList<TraceLocation>> {
+        val list = traceLocationDao.loadByTraceRecordId(traceRecordDbId)
+        return ResponseEntity.success(ArrayList(list))
     }
 
 }

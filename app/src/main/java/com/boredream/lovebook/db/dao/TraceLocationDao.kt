@@ -9,8 +9,8 @@ import com.boredream.lovebook.data.TraceLocation
 @Dao
 interface TraceLocationDao {
 
-    @Query("SELECT * FROM TraceLocation WHERE traceRecordId = :traceRecordId")
-    suspend fun loadByTraceRecordId(traceRecordId: String): List<TraceLocation>
+    @Query("SELECT * FROM TraceLocation WHERE traceRecordDbId = :traceRecordDbId")
+    suspend fun loadByTraceRecordId(traceRecordDbId: Long): List<TraceLocation>
 
     @Insert
     suspend fun insertAll(dataList: List<TraceLocation>)

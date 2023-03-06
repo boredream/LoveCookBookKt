@@ -39,7 +39,7 @@ class TraceRecordDetailViewModel @Inject constructor(
      */
     fun start(data: TraceRecord) {
         this.data = data
-        useCase.init(data.id!!)
+        useCase.init(data.dbId)
         requestVMCompose.request(
             onSuccess = { getTraceListSuccess(it) },
             repoRequest = { useCase.getTraceList() })

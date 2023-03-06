@@ -2,28 +2,24 @@ package com.boredream.lovebook.data.repo
 
 import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * 轨迹记录，针对的是整条轨迹线路
+ */
 @Singleton
 class TraceLocationRepository @Inject constructor(
     private val service: ApiService,
+    private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRequestRepository<TraceLocation>() {
 
-    // TODO: 轨迹数据量比较大，可以考虑保存在本地然后增量更新
-
-    private var traceRecordId: String? = null
-    fun init(traceRecordId: String) {
-        this.traceRecordId?.let {
-            if (it != traceRecordId) {
-                // 当切换轨迹记录时，清空缓存
-                cacheIsDirty = true
-            }
+    suspend fun getLocalTraceLocationList(dbId: Long) =
+        getList {
+            // service.getTraceRecordList(it)
+            localDataSource.getTraceLocationList(dbId)
         }
-        this.traceRecordId = traceRecordId
-    }
-
-    suspend fun getList() = getList { service.getTraceLocationList(traceRecordId!!) }
 
 }

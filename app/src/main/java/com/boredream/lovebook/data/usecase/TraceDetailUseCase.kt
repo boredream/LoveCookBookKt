@@ -13,11 +13,13 @@ class TraceDetailUseCase @Inject constructor(
     private val traceLocationRepository: TraceLocationRepository,
 ) : BaseUseCase() {
 
-    fun init(traceRecordId: String) {
-        traceLocationRepository.init(traceRecordId)
+    private var traceRecordId: Long? = null
+
+    fun init(traceRecordId: Long) {
+        this.traceRecordId = traceRecordId
     }
 
-    suspend fun getTraceList() = traceLocationRepository.getList()
+    suspend fun getTraceList() = traceLocationRepository.getLocalTraceLocationList(traceRecordId!!)
     suspend fun updateRecord(data: TraceRecord) = traceRecordRepository.update(data)
 
 }
