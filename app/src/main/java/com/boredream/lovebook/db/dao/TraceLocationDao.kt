@@ -1,4 +1,4 @@
-package com.boredream.lovebook.data.dao
+package com.boredream.lovebook.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -10,12 +10,12 @@ import com.boredream.lovebook.data.TraceLocation
 interface TraceLocationDao {
 
     @Query("SELECT * FROM TraceLocation WHERE traceRecordId = :traceRecordId")
-    fun loadByTraceRecordId(traceRecordId: String): List<TraceLocation>
+    suspend fun loadByTraceRecordId(traceRecordId: String): List<TraceLocation>
 
     @Insert
-    fun insertAll(dataList: List<TraceLocation>)
+    suspend fun insertAll(dataList: List<TraceLocation>)
 
     @Delete
-    fun delete(data: TraceLocation)
+    suspend fun delete(data: TraceLocation)
 
 }

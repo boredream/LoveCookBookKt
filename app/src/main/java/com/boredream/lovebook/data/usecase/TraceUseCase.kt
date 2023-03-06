@@ -59,7 +59,8 @@ class TraceUseCase @Inject constructor(
         val startTime = traceList[0].time
         val endTime = traceList[traceList.lastIndex].time
         val distance = TraceUtils.calculateDistance(traceList)
-        val traceRecord = TraceRecord(traceList, title, startTime, endTime, distance)
+        val traceRecord = TraceRecord(title, startTime, endTime, distance)
+        traceRecord.traceList = traceList
 
         traceRecordRepository.addLocal(traceRecord)
         return ResponseEntity.success(true)

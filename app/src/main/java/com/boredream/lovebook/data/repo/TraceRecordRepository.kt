@@ -22,7 +22,7 @@ class TraceRecordRepository @Inject constructor(
             service.getTraceRecordList(it)
         }
 
-    fun addLocal(data: TraceRecord) {
+    suspend fun addLocal(data: TraceRecord) {
         localDataSource.addTraceRecord(data)
     }
 

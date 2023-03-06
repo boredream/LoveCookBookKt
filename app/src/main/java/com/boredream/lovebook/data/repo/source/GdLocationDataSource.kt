@@ -39,19 +39,16 @@ class GdLocationDataSource @Inject constructor(@ApplicationContext val context: 
         // 设置定位监听
         client.setLocationListener {
             if (it.errorCode == 0) {
-                // TODO: 记录除了经纬度以外的其他重要信息
-                val extraData =
-                    "locationType：${it.locationType}, " + // 定位类型 https://lbs.amap.com/api/android-location-sdk/guide/utilities/location-type/
-                            "accuracy：${it.accuracy}, " + // 精度 米
-                            "speed：${it.speed}, " + // 速度 米/秒
-                            "bearing：${it.bearing}, " // 角度 0~360
-                onSuccess.invoke(
-                    TraceLocation(
-                        latitude = it.latitude,
-                        longitude = it.longitude,
-                        extraData = extraData
-                    )
+                val location = TraceLocation(
+                    latitude = it.latitude,
+                    longitude = it.longitude,
                 )
+                // TODO: 记录除了经纬度以外的其他重要信息
+                location.extraData =  "locationType：${it.locationType}, " + // 定位类型 https://lbs.amap.com/api/android-location-sdk/guide/utilities/location-type/
+                        "accuracy：${it.accuracy}, " + // 精度 米
+                        "speed：${it.speed}, " + // 速度 米/秒
+                        "bearing：${it.bearing}, " // 角度 0~360
+                onSuccess.invoke(location)
             } else Log.e(
                 TAG, "initClient Error, ErrCode:" + it.errorCode + ", errInfo:" + it.errorInfo
             )

@@ -1,22 +1,24 @@
-package com.boredream.lovebook.data.dao
+package com.boredream.lovebook.db.dao
 
 import androidx.room.*
+import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
+import com.boredream.lovebook.db.relation.TraceRecordWithLocation
 
 @Dao
 interface TraceRecordDao {
 
     @Query("SELECT * FROM TraceRecord")
-    fun getAll(): List<TraceRecord>
+    suspend fun getAll(): List<TraceRecord>
 
     @Transaction
     @Query("SELECT * FROM TraceRecord WHERE id = :id")
-    fun loadById(id: String): TraceRecord
+    suspend fun loadById(id: String): TraceRecord
 
     @Insert
-    fun insert(data: TraceRecord)
+    suspend fun insert(traceRecord: TraceRecord): Long
 
     @Delete
-    fun delete(data: TraceRecord)
+    suspend fun delete(data: TraceRecord)
 
 }

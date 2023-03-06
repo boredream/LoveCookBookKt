@@ -40,7 +40,7 @@ class FakeLocationDataSource @Inject constructor() : LocationDataSource {
     fun testStepLocation(): TraceLocation {
         val yStep = 0.00001 * (Random.nextInt(100) - 30)
         val xStep = 0.00001 * (Random.nextInt(50) - 20)
-        val ratio = 0.1
+        val ratio = 0.3
         moveLocation.latitude = moveLocation.latitude + yStep * ratio
         moveLocation.longitude = moveLocation.longitude + xStep * ratio
         return TraceLocation(latitude = moveLocation.latitude, longitude = moveLocation.longitude)

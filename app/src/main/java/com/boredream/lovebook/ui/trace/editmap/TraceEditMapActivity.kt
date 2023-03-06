@@ -43,16 +43,6 @@ class TraceEditMapActivity : BaseActivity<TraceEditMapViewModel, ActivityTraceEd
         binding.mapView.onCreate(savedInstanceState)
 
         // data = intent.extras?.getSerializable(BundleKey.DATA) as TraceRecord
-        // FIXME: 4 test
-        val json = FileIOUtils.readFile2String(
-            "/data/data/com.boredream.lovebook/files/trace/轨迹 2022-11-27 15:10:09.txt")
-        val oldData = Gson().fromJson(json, TraceRecord::class.java)
-        val filter = TraceFilter()
-        data = TraceRecord(
-            ArrayList(oldData.traceList.filter { filter.filterPos(it) }),
-            "test", 0, 0, 100
-        )
-
         viewModel.start(data)
     }
 

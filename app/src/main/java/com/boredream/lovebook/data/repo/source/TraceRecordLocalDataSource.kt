@@ -2,10 +2,13 @@ package com.boredream.lovebook.data.repo.source
 
 import android.util.Log
 import androidx.core.os.trace
+import androidx.room.Relation
+import androidx.room.Transaction
 import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.db.AppDatabase
+import com.boredream.lovebook.db.relation.TraceRecordWithLocation
 import javax.inject.Inject
 
 /**
@@ -20,30 +23,12 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         const val TAG = "TraceDataSource"
     }
 
-    /**
-     * 新建一条新的轨迹记录
-     */
-    fun createTraceRecord(): TraceRecord {
-        val record = TraceRecord(
-            arrayListOf(),
-            "缓存线路 " + TimeUtils.getNowString(),
-            System.currentTimeMillis(),
-            System.currentTimeMillis(),
-            0,
-        )
-        val res = traceRecordDao.insert(record)
-        Log.i(TAG, "createTraceRecord: $res")
-        return record
-    }
-
-    fun addTraceRecord(record: TraceRecord) {
-        val res = traceRecordDao.insert(record)
-        Log.i(TAG, "addTraceRecord: $res")
-    }
-
-    fun addTraceLocation(traceLocation: List<TraceLocation>) {
-        val res = traceLocationDao.insertAll(traceLocation)
-        Log.i(TAG, "addTraceLocation: $res")
+    @Transaction
+    suspend fun addTraceRecord(record: TraceRecord) {
+        val dbId = traceRecordDao.insert(record)
+        record.traceList.forEach { it.traceRecordDbId = dbId }
+        traceLocationDao.insertAll(record.traceList)
+        Log.i(TAG, "addTraceRecord: $dbId")
     }
 
 }
