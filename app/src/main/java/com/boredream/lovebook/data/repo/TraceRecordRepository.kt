@@ -20,7 +20,6 @@ class TraceRecordRepository @Inject constructor(
 
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
         getPageList(forceRemote, loadMore = loadMore) {
-            // service.getTraceRecordList(it)
             localDataSource.getTraceRecordList(it)
         }
 
@@ -44,6 +43,6 @@ class TraceRecordRepository @Inject constructor(
     }
 
     suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
-    suspend fun delete(data: TraceRecord) = commit { service.deleteTraceRecord(data.id!!) }
+    suspend fun delete(data: TraceRecord) = commit { localDataSource.deleteTraceRecord(data) }
 
 }

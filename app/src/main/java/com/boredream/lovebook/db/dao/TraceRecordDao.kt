@@ -23,6 +23,6 @@ interface TraceRecordDao {
     suspend fun insert(traceRecord: TraceRecord): Long
 
     @Delete
-    suspend fun delete(data: TraceRecord)
+    suspend fun delete(data: TraceRecord): Int
 
 }

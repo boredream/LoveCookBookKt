@@ -43,4 +43,9 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         return ResponseEntity.success(ArrayList(list))
     }
 
+    suspend fun deleteTraceRecord(traceRecord: TraceRecord): ResponseEntity<Boolean> {
+        val delete = traceRecordDao.delete(traceRecord)
+        return ResponseEntity.success(delete > 0)
+    }
+
 }
