@@ -67,7 +67,7 @@ public class MockUtils {
    @NotNull
    public static <T> PageResultDto<T> mockPageResult(@NotNull Class<T> clazz) {
       int count = 10;
-      return new PageResultDto<>(1, 20, count, 1, mockList(clazz, count));
+      return new PageResultDto<>(1, count, mockList(clazz, count));
    }
 
    @NotNull

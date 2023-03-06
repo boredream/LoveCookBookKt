@@ -19,7 +19,8 @@ class TraceRecordRepository @Inject constructor(
 
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
         getPageList(forceRemote, loadMore = loadMore) {
-            service.getTraceRecordList(it)
+            // service.getTraceRecordList(it)
+            localDataSource.getTraceRecordList(it)
         }
 
     suspend fun addLocal(data: TraceRecord) {
