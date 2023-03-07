@@ -22,11 +22,23 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
     }
 
     @Transaction
-    suspend fun addTraceRecord(record: TraceRecord) {
-        val dbId = traceRecordDao.insert(record)
+    suspend fun addTraceRecord(record: TraceRecord): ResponseEntity<Boolean> {
+        val dbId: Long
+        try {
+            dbId = traceRecordDao.insert(record)
+        } catch (e: Exception) {
+            return ResponseEntity(false, 500, e.toString())
+        }
+
+        if(dbId <= 0) {
+            return ResponseEntity(false, 500, "数据插入失败")
+        }
+
+        record.dbId = dbId
         record.traceList.forEach { it.traceRecordDbId = dbId }
         traceLocationDao.insertAll(record.traceList)
         Log.i(TAG, "addTraceRecord: $dbId")
+        return ResponseEntity.success(true)
     }
 
     suspend fun getTraceRecordList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {

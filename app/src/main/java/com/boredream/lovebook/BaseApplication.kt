@@ -1,6 +1,8 @@
 package com.boredream.lovebook
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.blankj.utilcode.util.Utils
 import com.boredream.lovebook.utils.CrashHandler
 import com.boredream.lovebook.utils.DataStoreUtils
@@ -8,10 +10,11 @@ import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 
 @HiltAndroidApp
-class BaseApplication: Application() {
+class BaseApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
@@ -34,5 +37,10 @@ class BaseApplication: Application() {
             ClassicsFooter(context).setDrawableSize(20f)
         }
     }
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder().setWorkerFactory(workerFactory).build()
 
 }

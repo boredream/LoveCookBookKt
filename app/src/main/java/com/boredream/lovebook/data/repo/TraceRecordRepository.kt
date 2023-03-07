@@ -1,11 +1,16 @@
 package com.boredream.lovebook.data.repo
 
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
 import com.amap.api.mapcore.util.it
 import com.boredream.lovebook.base.BaseRequestRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.net.ApiService
+import com.boredream.lovebook.work.UploadWorker
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +21,7 @@ import javax.inject.Singleton
 class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
     private val localDataSource: TraceRecordLocalDataSource,
+    private val workManager: WorkManager
 ) : BaseRequestRepository<TraceRecord>() {
 
     suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
@@ -23,8 +29,16 @@ class TraceRecordRepository @Inject constructor(
             localDataSource.getTraceRecordList(it)
         }
 
-    suspend fun addLocal(data: TraceRecord) {
-        localDataSource.addTraceRecord(data)
+    suspend fun addLocal(data: TraceRecord): ResponseEntity<Boolean> {
+        val response = localDataSource.addTraceRecord(data)
+
+        // 同时WorkManager同步到服务端
+        val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadWorker>()
+            .setInputData(workDataOf("traceRecordDbId" to data.dbId))
+            .build()
+        workManager.enqueue(uploadWorkRequest)
+
+        return commit { response }
     }
 
     suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {

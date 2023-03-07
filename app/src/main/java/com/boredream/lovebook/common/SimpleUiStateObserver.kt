@@ -26,11 +26,12 @@ object SimpleUiStateObserver {
         },
         failObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求失败时，Toast
-            ToastUtils.showLong("请求失败 ${it.msg}")
+            // ToastUtils.showLong("请求失败 ${it.msg}")
         },
         successObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求成功时，Toast
-            ToastUtils.showLong("请求成功")
+            // FIXME:  Activity com.boredream.lovebook.ui.trace.TraceMapActivity has leaked window
+            // ToastUtils.showLong("请求成功")
         }
     ) {
         requestVMCompose.isRequestingUiState.observe(lifecycleOwner, isRequestingObserver)
