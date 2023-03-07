@@ -150,6 +150,10 @@ interface ApiService {
 
     // ******** trace record ********
 
+    @GET("trace_record/sync")
+    suspend fun syncTraceRecordList(
+        @Query("localTimestamp") localTimestamp: Long,
+    ): ResponseEntity<ArrayList<TraceRecord>>
 
     @GET("trace_record/page")
     suspend fun getTraceRecordList(
@@ -160,7 +164,7 @@ interface ApiService {
     @POST("trace_record")
     suspend fun addTraceRecord(
         @Body dto: TraceRecord,
-    ): ResponseEntity<Boolean>
+    ): ResponseEntity<TraceRecord>
 
     @PUT("trace_record/{id}")
     suspend fun updateTraceRecord(

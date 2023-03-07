@@ -21,6 +21,11 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         const val TAG = "TraceDataSource"
     }
 
+    suspend fun getUnSyncedTraceRecord(): ResponseEntity<ArrayList<TraceRecord>> {
+        val list = traceRecordDao.loadUnSynced()
+        return ResponseEntity.success(ArrayList(list))
+    }
+
     @Transaction
     suspend fun addTraceRecord(record: TraceRecord): ResponseEntity<Boolean> {
         val dbId: Long
@@ -39,6 +44,16 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
         traceLocationDao.insertAll(record.traceList)
         Log.i(TAG, "addTraceRecord: $dbId")
         return ResponseEntity.success(true)
+    }
+
+    suspend fun getTraceRecordById(id: String): ResponseEntity<TraceRecord> {
+        val record = traceRecordDao.loadById(id)
+        return ResponseEntity.success(record)
+    }
+
+    suspend fun getTraceRecordByDbId(dbId: Long): ResponseEntity<TraceRecord> {
+        val record = traceRecordDao.loadByDbId(dbId)
+        return ResponseEntity.success(record)
     }
 
     suspend fun getTraceRecordList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {

@@ -9,6 +9,7 @@ import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +31,9 @@ class TraceRecordListViewModel @Inject constructor(
         refreshListVMCompose.loadPageList(
             handlePullDownDown = handlePullDownDown,
             repoRequest = { repository.getPageList(loadMore, true) })
+
+        // TODO: 回调
+        viewModelScope.launch { repository.syncData() }
     }
 
     fun startAdd() {
