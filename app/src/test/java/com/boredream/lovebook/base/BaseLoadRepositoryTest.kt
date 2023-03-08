@@ -38,7 +38,7 @@ class BaseLoadRepositoryTest {
         }
 
         // 加载第一页
-        val page1Result = PageResultDto(1, 10, 20, 2, mockList)
+        val page1Result = PageResultDto(1, mockList)
         every {
             runBlocking { apiService.getDiaryList(1, any()) }
         } returns ResponseEntity.success(page1Result)
@@ -48,7 +48,7 @@ class BaseLoadRepositoryTest {
         Assert.assertEquals(true, repo.cacheListCanLoadMore)
 
         // 加载第二页
-        val page2Result = PageResultDto(2, 10, 20, 2, mockList)
+        val page2Result = PageResultDto(2, mockList)
         every {
             runBlocking { apiService.getDiaryList(2, any()) }
         } returns ResponseEntity.success(page2Result)

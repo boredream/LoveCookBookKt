@@ -21,6 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,7 +88,7 @@ class TheDayViewModelTest {
             runBlocking {
                 repo.getList()
             }
-        } returns ResponseEntity.success(MockUtils.mockListResult(TheDay::class.java))
+        } returns ResponseEntity.success(ArrayList(MockUtils.mockList(TheDay::class.java)))
 
         vm.refresh(loadMore = false, handlePullDownDown = false)
         assertNotNull(vm.refreshListVMCompose.dataListUiState.value)

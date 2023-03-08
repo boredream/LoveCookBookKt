@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.boredream.lovebook.MainDispatcherRule
 import com.boredream.lovebook.data.Diary
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.repo.DiaryRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -47,7 +46,7 @@ class DiaryViewModelTest {
             runBlocking {
                 repo.getPageList(any())
             }
-        } returns ResponseEntity.success(ListResult(false, mockList))
+        } returns ResponseEntity.success(mockList)
 
         vm.start()
         Assert.assertEquals(10, vm.refreshListVMCompose.dataListUiState.value?.size)

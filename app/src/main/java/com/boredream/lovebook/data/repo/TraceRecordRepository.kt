@@ -1,17 +1,13 @@
 package com.boredream.lovebook.data.repo
 
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
-import androidx.work.workDataOf
-import com.amap.api.mapcore.util.it
-import com.boredream.lovebook.base.BaseRequestRepository
+import com.blankj.utilcode.util.LogUtils
+import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
+import com.boredream.lovebook.data.repo.source.TraceRecordRemoteDataSource
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.utils.SyncUtils
-import com.boredream.lovebook.work.UploadWorker
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,9 +17,12 @@ import javax.inject.Singleton
 @Singleton
 class TraceRecordRepository @Inject constructor(
     private val service: ApiService,
+    private val remoteDataSource: TraceRecordRemoteDataSource,
     private val localDataSource: TraceRecordLocalDataSource,
-    private val workManager: WorkManager
-) : BaseRequestRepository<TraceRecord>() {
+) : BaseRepository() {
+
+    private var curPage = 1
+    private val pageList = ArrayList<TraceRecord>()
 
     /**
      * 同步数据，先拉取，再上传
@@ -33,76 +32,88 @@ class TraceRecordRepository @Inject constructor(
         syncDataPush()
     }
 
-    private suspend fun syncDataPull() {
+    suspend fun syncDataPull() {
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
         val localTimestamp = SyncUtils.get() // TODO: SyncUtils 里有context引用
 
         // 不关注 response
-        val traceRecordList = service.syncTraceRecordList(localTimestamp).data ?: return
+        try {
+            val response = service.syncTraceRecordList(localTimestamp)
+            val traceRecordList = response.data ?: return
 
-        for (traceRecord in traceRecordList) {
-            // 1. 拉取的数据先和本地进行比较，id不存在的新数据直接插入，如果是id存在的继续判断
-            val response = localDataSource.getTraceRecordById(traceRecord.id!!)
-            if(response.data == null) {
-                localDataSource.addTraceRecord(traceRecord)
-                continue
+            for (traceRecord in traceRecordList) {
+                // 1. 拉取的数据先和本地进行比较，id不存在的新数据直接插入，如果是id存在的继续判断
+                val localResponse = localDataSource.getTraceRecordById(traceRecord.id!!)
+                if (localResponse.data == null) {
+                    localDataSource.add(traceRecord)
+                    continue
+                }
+
+                // 2. 如果本地待更新的这笔数据，同步标志位是false，直接以服务端为准，覆盖即可
+                val localRecord = localResponse.data
+                if (!localRecord.synced) {
+                    localDataSource.add(traceRecord)
+                    continue
+                }
+
+                // 3. 如果本地待更新的这笔数据，同步标志位是true，即本地有修改还没提交给服务端的，进入到冲突处理
+                // 4. 冲突数据【保留本地的】，因为大部分是珍贵的轨迹收集数据，所以本地为准，服务端数据抛弃
             }
-
-            // 2. 如果本地待更新的这笔数据，同步标志位是false，直接以服务端为准，覆盖即可
-            val localRecord = response.data
-            if(!localRecord.synced) {
-                localDataSource.addTraceRecord(traceRecord)
-                continue
-            }
-
-            // 3. 如果本地待更新的这笔数据，同步标志位是true，即本地有修改还没提交给服务端的，进入到冲突处理
-            // 4. 冲突数据【保留本地的】，因为大部分是珍贵的轨迹收集数据，所以本地为准，服务端数据抛弃
+        } catch (e: Exception) {
+            //
         }
     }
 
-    private suspend fun syncDataPush() {
+    suspend fun syncDataPush() {
         val traceRecordList = localDataSource.getUnSyncedTraceRecord().data ?: return
-
-        // check本地是否有数据要提交
-        traceRecordList.filter { !it.synced }
-            .forEach { uploadLocal2Remote(it) }
+        LogUtils.i("getUnSyncedTraceRecord ${traceRecordList.size}")
+        traceRecordList.forEach { add2remote(it) }
     }
 
-    suspend fun getPageList(loadMore: Boolean, forceRemote: Boolean = false) =
-        getPageList(forceRemote, loadMore = loadMore) {
-            localDataSource.getTraceRecordList(it)
+    suspend fun getPageList(loadMore: Boolean): ResponseEntity<ArrayList<TraceRecord>> {
+        val requestPage = if (loadMore) (curPage + 1) else 1
+
+        // 从本地取
+        val response = localDataSource.getPageList(page = requestPage)
+
+        if (response.isSuccess()) {
+            val data = response.getSuccessData()
+            curPage = requestPage
+            if (!loadMore) pageList.clear()
+            pageList.addAll(data.records)
+        } else {
+            pageList.clear()
         }
-
-    suspend fun addLocal(data: TraceRecord): ResponseEntity<Boolean> {
-        val response = localDataSource.addTraceRecord(data)
-        uploadLocal2Remote(data)
-        return commit { response }
+        return ResponseEntity(pageList, response.code, response.msg)
     }
 
-    private fun uploadLocal2Remote(data: TraceRecord) {
-        // 同时WorkManager同步到服务端
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<UploadWorker>()
-            .setInputData(workDataOf("traceRecordDbId" to data.dbId))
-            .build()
-        workManager.enqueue(uploadWorkRequest)
+    suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
+        return localDataSource.add(data)
     }
 
-//    suspend fun add(data: TraceRecord): ResponseEntity<Boolean> {
-//        // 提交数据时，放在 traceListStr里，减少报文大小
-//        val sb = StringBuilder()
-//        data.traceList.forEach {
-//            sb.append("_").append(it.time)
-//                .append(",").append(it.latitude)
-//                .append(",").append(it.longitude)
-//        }
-//        if(sb.isNotEmpty()) {
-//            data.traceListStr = sb.substring(1)
-//        }
-//        data.traceList.clear()
-//        return commit { service.addTraceRecord(data) }
-//    }
+    suspend fun add2remote(dbId: Long): ResponseEntity<TraceRecord> {
+        val response = localDataSource.getTraceRecordByDbId(dbId)
+        return if (response.isSuccess()) {
+            add2remote(response.getSuccessData())
+        } else {
+            response
+        }
+    }
 
-    suspend fun update(data: TraceRecord) = commit { service.updateTraceRecord(data.id!!, data) }
-    suspend fun delete(data: TraceRecord) = commit { localDataSource.deleteTraceRecord(data) }
+    suspend fun add2remote(data: TraceRecord): ResponseEntity<TraceRecord> {
+        // 更新本地数据库的id
+        val response = remoteDataSource.add(data)
+        if (response.isSuccess() && response.data != null) {
+            localDataSource.update(response.data)
+            // 本地数据更新成功后，记录全局时间戳
+            SyncUtils.update(response.data.syncTimestamp)
+            LogUtils.i("add success: ${response.data.name} , local update = ${response.data.dbId}")
+        }
+        return response
+    }
+
+    suspend fun update(data: TraceRecord) = service.updateTraceRecord(data.id!!, data)
+
+    suspend fun delete(data: TraceRecord) = localDataSource.delete(data)
 
 }

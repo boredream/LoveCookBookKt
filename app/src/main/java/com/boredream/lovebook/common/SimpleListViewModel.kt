@@ -6,7 +6,6 @@ import com.boredream.lovebook.base.BaseViewModel
 import com.boredream.lovebook.common.vmcompose.RefreshListVMCompose
 import com.boredream.lovebook.common.vmcompose.RequestVMCompose
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.vm.SingleLiveEvent
 
 /**
@@ -24,7 +23,7 @@ abstract class SimpleListViewModel<T> : BaseViewModel() {
     protected open suspend fun repoPageListRequest(
         loadMore: Boolean,
         forceRemote: Boolean
-    ): ResponseEntity<ListResult<T>>? = null
+    ): ResponseEntity<ArrayList<T>>? = null
 
     protected abstract suspend fun repoDeleteRequest(
         data: T

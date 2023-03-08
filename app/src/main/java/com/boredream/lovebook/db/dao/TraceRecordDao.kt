@@ -9,7 +9,7 @@ interface TraceRecordDao {
     @Query("SELECT COUNT(dbId) FROM TraceRecord")
     suspend fun getRowCount(): Int
 
-    @Query("SELECT * FROM TraceRecord WHERE synced = false")
+    @Query("SELECT * FROM TraceRecord WHERE synced = 0")
     suspend fun loadUnSynced(): List<TraceRecord>
 
     @Query("SELECT * FROM TraceRecord limit :limit offset :offset")
@@ -24,11 +24,8 @@ interface TraceRecordDao {
     @Query("SELECT * FROM TraceRecord WHERE id = :id")
     suspend fun loadById(id: String): TraceRecord
 
-    @Update
-    suspend fun update(traceRecord: TraceRecord)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(traceRecord: TraceRecord): Long
+    suspend fun insertOrUpdate(traceRecord: TraceRecord): Long
 
     @Delete
     suspend fun delete(data: TraceRecord): Int

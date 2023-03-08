@@ -1,6 +1,5 @@
 package com.boredream.lovebook.data.repo.source
 
-import android.util.Log
 import androidx.room.Transaction
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
@@ -9,70 +8,93 @@ import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.db.AppDatabase
 import javax.inject.Inject
 
-/**
- * 轨迹记录本地数据源
- */
-class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) {
+class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
+    TraceRecordDataSource {
 
     private val traceRecordDao = appDatabase.traceRecordDao()
     private val traceLocationDao = appDatabase.traceLocationDao()
 
-    companion object {
-        const val TAG = "TraceDataSource"
-    }
-
     suspend fun getUnSyncedTraceRecord(): ResponseEntity<ArrayList<TraceRecord>> {
-        val list = traceRecordDao.loadUnSynced()
-        return ResponseEntity.success(ArrayList(list))
+        return try {
+            val list = traceRecordDao.loadUnSynced()
+            ResponseEntity.success(ArrayList(list))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
     @Transaction
-    suspend fun addTraceRecord(record: TraceRecord): ResponseEntity<Boolean> {
-        val dbId: Long
+    override suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
+        var dbId: Long = -1
         try {
-            dbId = traceRecordDao.insert(record)
+            dbId = traceRecordDao.insertOrUpdate(data)
         } catch (e: Exception) {
-            return ResponseEntity(false, 500, e.toString())
+            //
         }
 
-        if(dbId <= 0) {
-            return ResponseEntity(false, 500, "数据插入失败")
+        if (dbId <= 0) {
+            return ResponseEntity(null, 500, "数据插入失败")
         }
 
-        record.dbId = dbId
-        record.traceList.forEach { it.traceRecordDbId = dbId }
-        traceLocationDao.insertAll(record.traceList)
-        Log.i(TAG, "addTraceRecord: $dbId")
-        return ResponseEntity.success(true)
+        data.dbId = dbId
+        data.traceList.forEach { it.traceRecordDbId = dbId }
+        return try {
+            traceLocationDao.insertAll(data.traceList)
+            ResponseEntity.success(data)
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
     suspend fun getTraceRecordById(id: String): ResponseEntity<TraceRecord> {
-        val record = traceRecordDao.loadById(id)
-        return ResponseEntity.success(record)
+        return try {
+            ResponseEntity.success(traceRecordDao.loadById(id))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
     suspend fun getTraceRecordByDbId(dbId: Long): ResponseEntity<TraceRecord> {
-        val record = traceRecordDao.loadByDbId(dbId)
-        return ResponseEntity.success(record)
+        return try {
+            ResponseEntity.success(traceRecordDao.loadByDbId(dbId))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
-    suspend fun getTraceRecordList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {
+    override suspend fun getPageList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {
         // page 从1开始
         val limit = 20
         val offset = (page - 1) * limit
-        val pages = 1f * traceRecordDao.getRowCount() / limit + 0.5f
-        val list = traceRecordDao.loadByPage(limit, offset)
-        return ResponseEntity.success(PageResultDto(page, pages.toInt(), list))
+        return try {
+            ResponseEntity.success(PageResultDto(page, traceRecordDao.loadByPage(limit, offset)))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
     suspend fun getTraceLocationList(traceRecordDbId: Long): ResponseEntity<ArrayList<TraceLocation>> {
-        val list = traceLocationDao.loadByTraceRecordId(traceRecordDbId)
-        return ResponseEntity.success(ArrayList(list))
+        return try {
+            ResponseEntity.success(ArrayList(traceLocationDao.loadByTraceRecordId(traceRecordDbId)))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
-    suspend fun deleteTraceRecord(traceRecord: TraceRecord): ResponseEntity<Boolean> {
-        val delete = traceRecordDao.delete(traceRecord)
-        return ResponseEntity.success(delete > 0)
+    override suspend fun update(data: TraceRecord): ResponseEntity<Boolean> {
+        return try {
+            return ResponseEntity.success(traceRecordDao.insertOrUpdate(data) > 0)
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
+    }
+
+    override suspend fun delete(data: TraceRecord): ResponseEntity<Boolean> {
+        return try {
+            return ResponseEntity.success(traceRecordDao.delete(data) > 0)
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
     }
 
 }

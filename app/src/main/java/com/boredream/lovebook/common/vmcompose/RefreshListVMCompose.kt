@@ -3,7 +3,6 @@ package com.boredream.lovebook.common.vmcompose
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.dto.ListResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -29,7 +28,7 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
     fun <T> loadPageList(
         handlePullDownDown: Boolean = true,
         loadMore: Boolean = false,
-        repoRequest: suspend (loadMore: Boolean) -> ResponseEntity<ListResult<T>>,
+        repoRequest: suspend (loadMore: Boolean) -> ResponseEntity<ArrayList<T>>,
     ) {
         // 只有非手动下拉刷新，才需要主动显示下拉样式
         if(!handlePullDownDown && !loadMore) {
@@ -41,8 +40,8 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
             var hasMore = loadMore
             if (response.isSuccess()) {
                 // 是否还有更多，根据返回数据判断；如果无返回数据，保留原有意图
-                response.data?.hasMore?.let { hasMore = it }
-                val dataList = response.data?.dataList?: ArrayList()
+                hasMore = response.data?.size == 20
+                val dataList = response.data?: ArrayList()
                 _dataListUiState.value = dataList
             } else {
                 // 请求失败的时候应该继续保持当前列表数据

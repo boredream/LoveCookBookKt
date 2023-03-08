@@ -62,7 +62,7 @@ class TraceUseCase @Inject constructor(
         val traceRecord = TraceRecord(title, startTime, endTime, distance)
         traceRecord.traceList = traceList
 
-        traceRecordRepository.addLocal(traceRecord)
+        traceRecordRepository.add(traceRecord)
         return ResponseEntity.success(true)
     }
 

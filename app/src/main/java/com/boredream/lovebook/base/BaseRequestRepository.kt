@@ -1,7 +1,6 @@
 package com.boredream.lovebook.base
 
 import com.boredream.lovebook.data.ResponseEntity
-import com.boredream.lovebook.data.dto.ListResult
 import com.boredream.lovebook.data.dto.PageResultDto
 
 /**
@@ -22,10 +21,10 @@ abstract class BaseRequestRepository<T : BaseEntity> : BaseRepository() {
         forceRemote: Boolean = false,
         loadMore: Boolean = false,
         request: suspend (page: Int) -> ResponseEntity<PageResultDto<T>>
-    ): ResponseEntity<ListResult<T>> {
+    ): ResponseEntity<ArrayList<T>> {
         if (!forceRemote && !cacheIsDirty && !loadMore) {
             // 非强制远程，且缓存数据有效，且是非加载更多模式时，直接返回
-            return ResponseEntity.success(ListResult(cacheListCanLoadMore, cacheList))
+            return ResponseEntity.success(cacheList)
         }
 
         val requestPage = if (loadMore) (cacheListPage + 1) else 1
@@ -38,13 +37,13 @@ abstract class BaseRequestRepository<T : BaseEntity> : BaseRepository() {
             cacheListPage = requestPage
             if (!loadMore) cacheList.clear()
             cacheList.addAll(responseData.records)
-            cacheListCanLoadMore = responseData.current < responseData.pages
+            cacheListCanLoadMore = responseData.records.size == 20
             cacheIsDirty = false
         }
 
         // 数据转换一层，PageResult -> ListResult
         return ResponseEntity(
-            ListResult(cacheListCanLoadMore, cacheList),
+            cacheList,
             response.code,
             response.msg
         )
