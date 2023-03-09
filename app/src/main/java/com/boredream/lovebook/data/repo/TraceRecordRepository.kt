@@ -21,8 +21,6 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
-    private val list = ArrayList<TraceRecord>()
-
     /**
      * 同步数据，先拉取，再上传
      */
@@ -65,18 +63,14 @@ class TraceRecordRepository @Inject constructor(
         traceRecordList.forEach { add2remote(it) }
     }
 
-    suspend fun getList(): ResponseEntity<ArrayList<TraceRecord>> {
-        list.clear()
-        val response = localDataSource.getList()
-        if (response.isSuccess()) {
-            list.addAll(response.getSuccessData())
-        }
-        return response
-    }
+    suspend fun getList() = localDataSource.getList()
+
+    suspend fun getLocationList(traceRecordDbId: String) =
+        localDataSource.getTraceLocationList(traceRecordDbId)
 
     suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
         val response = localDataSource.add(data)
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             response.data?.let { SyncUtils.update(it.syncTimestamp) }
         }
         return response
@@ -94,7 +88,7 @@ class TraceRecordRepository @Inject constructor(
 
     suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
         val response = localDataSource.update(data)
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             response.data?.let { SyncUtils.update(it.syncTimestamp) }
         }
         return response
