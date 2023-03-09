@@ -30,4 +30,7 @@ interface TraceRecordDao {
     @Delete
     suspend fun delete(data: TraceRecord): Int
 
+    @Update
+    suspend fun update(data: TraceRecord): Int
+
 }

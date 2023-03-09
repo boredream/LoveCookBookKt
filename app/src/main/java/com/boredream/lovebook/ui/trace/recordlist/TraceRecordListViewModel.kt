@@ -17,7 +17,7 @@ class TraceRecordListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val refreshListVMCompose = RefreshListVMCompose(viewModelScope)
-    val deleteVMCompose = RequestVMCompose<Boolean>(viewModelScope)
+    val deleteVMCompose = RequestVMCompose<TraceRecord>(viewModelScope)
 
     private val _toDetailEvent = SingleLiveEvent<Boolean>()
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent

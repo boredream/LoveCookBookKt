@@ -18,7 +18,8 @@ class LoginViewModel @Inject constructor(private val repository: UserRepository)
 
     val loginVMCompose = RequestVMCompose<User>(viewModelScope)
 
-    private val _uiState = MutableLiveData(LoginDto())
+    // FIXME: remove me
+    private val _uiState = MutableLiveData(LoginDto("18501683421", "123456"))
     val uiState: LiveData<LoginDto> = _uiState
 
     /**

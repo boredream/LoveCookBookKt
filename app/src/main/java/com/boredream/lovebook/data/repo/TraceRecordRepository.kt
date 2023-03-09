@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
@@ -10,6 +11,7 @@ import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.utils.SyncUtils
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
 
 /**
  * 轨迹记录，针对的是整条轨迹线路
@@ -44,6 +46,7 @@ class TraceRecordRepository @Inject constructor(
                 // 1. 拉取的数据先和本地进行比较，id不存在的新数据直接插入，如果是id存在的继续判断
                 val localResponse = localDataSource.getTraceRecordById(traceRecord.id!!)
                 if (localResponse.data == null) {
+                    SyncUtils.update(traceRecord.syncTimestamp)
                     localDataSource.add(traceRecord)
                     continue
                 }
@@ -51,6 +54,7 @@ class TraceRecordRepository @Inject constructor(
                 // 2. 如果本地待更新的这笔数据，同步标志位是false，直接以服务端为准，覆盖即可
                 val localRecord = localResponse.data
                 if (!localRecord.synced) {
+                    SyncUtils.update(traceRecord.syncTimestamp)
                     localDataSource.add(traceRecord)
                     continue
                 }
@@ -72,14 +76,18 @@ class TraceRecordRepository @Inject constructor(
     suspend fun getList(): ResponseEntity<ArrayList<TraceRecord>> {
         list.clear()
         val response = localDataSource.getList()
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             list.addAll(response.getSuccessData())
         }
         return response
     }
 
     suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
-        return localDataSource.add(data)
+        val response = localDataSource.add(data)
+        if(response.isSuccess()) {
+            response.data?.let { SyncUtils.update(it.syncTimestamp) }
+        }
+        return response
     }
 
     suspend fun add2remote(dbId: Long): ResponseEntity<TraceRecord> {
@@ -95,15 +103,20 @@ class TraceRecordRepository @Inject constructor(
         // 更新本地数据库的id
         val response = remoteDataSource.add(data)
         if (response.isSuccess() && response.data != null) {
-            localDataSource.update(response.data)
-            // 本地数据更新成功后，记录全局时间戳
+            update(response.data)
             SyncUtils.update(response.data.syncTimestamp)
             LogUtils.i("add success: ${response.data.name} , local update = ${response.data.dbId}")
         }
         return response
     }
 
-    suspend fun update(data: TraceRecord) = service.updateTraceRecord(data.id!!, data)
+    suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
+        val response = localDataSource.update(data)
+        if(response.isSuccess()) {
+            response.data?.let { SyncUtils.update(it.syncTimestamp) }
+        }
+        return response
+    }
 
     suspend fun delete(data: TraceRecord) = localDataSource.delete(data)
 

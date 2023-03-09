@@ -89,17 +89,30 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
         }
     }
 
-    override suspend fun update(data: TraceRecord): ResponseEntity<Boolean> {
-        return try {
-            return ResponseEntity.success(traceRecordDao.insertOrUpdate(data) > 0)
-        } catch (e: Exception) {
-            ResponseEntity(null, 500, e.toString())
-        }
+    override suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
+        // add or update
+        return add(data)
     }
 
-    override suspend fun delete(data: TraceRecord): ResponseEntity<Boolean> {
+    @Transaction
+    override suspend fun delete(data: TraceRecord): ResponseEntity<TraceRecord> {
+        var delete: Int = -1
+        try {
+            // 软删除，方便同步用
+            data.isDelete = true
+            delete = traceRecordDao.update(data)
+        } catch (e: Exception) {
+            //
+        }
+
+        if (delete <= 0) {
+            return ResponseEntity(null, 500, "数据删除失败")
+        }
+
         return try {
-            return ResponseEntity.success(traceRecordDao.delete(data) > 0)
+            // location跟着trace record走，不用于判断同步，所以直接删除
+            traceLocationDao.deleteByTraceRecordId(data.dbId)
+            ResponseEntity.success(data)
         } catch (e: Exception) {
             ResponseEntity(null, 500, e.toString())
         }

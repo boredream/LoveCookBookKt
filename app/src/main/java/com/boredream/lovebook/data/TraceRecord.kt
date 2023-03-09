@@ -16,6 +16,7 @@ data class TraceRecord(
     var detail: String? = null,
     var traceListStr: String? = null,
     var synced: Boolean = false, // 是否需要同步（上传）
+    var isDelete: Boolean = false, // 软删除
     var syncTimestamp: Long? = null, // 同步数据的时间
 ) : Belong2UserEntity() {
 

@@ -170,12 +170,12 @@ interface ApiService {
     suspend fun updateTraceRecord(
         @Path("id") id: String,
         @Body dto: TraceRecord,
-    ): ResponseEntity<Boolean>
+    ): ResponseEntity<TraceRecord>
 
     @DELETE("trace_record/{id}")
     suspend fun deleteTraceRecord(
         @Path("id") id: String,
-    ): ResponseEntity<Boolean>
+    ): ResponseEntity<TraceRecord>
 
     // ******** trace location ********
 

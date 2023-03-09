@@ -18,4 +18,7 @@ interface TraceLocationDao {
     @Delete
     suspend fun delete(data: TraceLocation)
 
+    @Query("DELETE FROM TraceLocation WHERE traceRecordDbId = :traceRecordDbId")
+    suspend fun deleteByTraceRecordId(traceRecordDbId: Long)
+
 }

@@ -20,7 +20,7 @@ class TraceRecordDetailViewModel @Inject constructor(
     private val useCase: TraceDetailUseCase
 ) : BaseViewModel() {
 
-    val commitVMCompose = RequestVMCompose<Boolean>(viewModelScope)
+    val commitVMCompose = RequestVMCompose<TraceRecord>(viewModelScope)
     val requestVMCompose = RequestVMCompose<ArrayList<TraceLocation>>(viewModelScope)
 
     private val _uiState = MutableLiveData<TraceRecord>()

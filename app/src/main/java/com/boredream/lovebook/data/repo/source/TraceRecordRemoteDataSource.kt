@@ -35,7 +35,7 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
         }
     }
 
-    override suspend fun update(data: TraceRecord): ResponseEntity<Boolean> {
+    override suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
         return try {
             service.updateTraceRecord(data.id!!, data)
         } catch (e: Exception) {
@@ -43,7 +43,7 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
         }
     }
 
-    override suspend fun delete(data: TraceRecord): ResponseEntity<Boolean> {
+    override suspend fun delete(data: TraceRecord): ResponseEntity<TraceRecord> {
         return try {
             service.deleteTraceRecord(data.id!!)
         } catch (e: Exception) {
