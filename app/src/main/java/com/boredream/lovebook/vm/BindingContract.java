@@ -10,6 +10,7 @@ import com.boredream.lovebook.data.TheDay;
 import com.boredream.lovebook.data.TraceLocation;
 import com.boredream.lovebook.utils.GlideUtils;
 import com.boredream.lovebook.view.RefreshListView;
+import com.boredream.lovebook.view.SyncStatusView;
 import com.boredream.lovebook.view.TraceMapView;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -63,6 +64,11 @@ public class BindingContract {
     @BindingAdapter("dataList")
     public static void setRefreshListViewDataList(RefreshListView refreshListView, ArrayList<?> dataList) {
         if (dataList != null) refreshListView.updateDataList(dataList);
+    }
+
+    @BindingAdapter("isSyncing")
+    public static void setRefreshListViewDataList(SyncStatusView view, boolean isSyncing) {
+        if (view != null) view.setRefresh(isSyncing);
     }
 
     // 用于解决需要转换的数据转换问题

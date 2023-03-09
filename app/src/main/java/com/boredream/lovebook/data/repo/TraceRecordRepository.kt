@@ -1,5 +1,6 @@
 package com.boredream.lovebook.data.repo
 
+import com.blankj.utilcode.util.CollectionUtils
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
@@ -8,6 +9,7 @@ import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.data.repo.source.TraceRecordRemoteDataSource
 import com.boredream.lovebook.net.ApiService
 import com.boredream.lovebook.utils.SyncUtils
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,15 +23,23 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
-    /**
-     * 同步数据，先拉取，再上传
-     */
-    suspend fun syncData() {
-        syncDataPull()
-        syncDataPush()
-    }
+    private var onStatusChangeList: LinkedList<(status: Boolean) -> Unit> = LinkedList()
+    fun addStatusChangeListener(listener: (status: Boolean) -> Unit) =
+        onStatusChangeList.add(listener)
+
+    fun removeStatusChangeListener(listener: (status: Boolean) -> Unit) =
+        onStatusChangeList.remove(listener)
+
+    private var isSyncing = false
+        set(value) {
+            field = value
+            onStatusChangeList.forEach { it.invoke(value) }
+        }
 
     suspend fun syncDataPull() {
+        if(isSyncing) return
+        isSyncing = true
+
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
         val localTimestamp = SyncUtils.get() // TODO: SyncUtils 里有context引用
 
@@ -46,7 +56,9 @@ class TraceRecordRepository @Inject constructor(
 
                 // 2. 如果本地数据不存在，或者已经同步到服务器过了，直接覆盖
                 if (localRecord == null || localRecord.synced) {
-                    LogUtils.i("pull and save data = ${traceRecord.name}")
+                    // 还要拉取location list
+                    traceRecord.traceList = remoteDataSource.getTraceLocationList(traceRecord.id!!).data
+                    LogUtils.i("pull and save data = ${traceRecord.name} , location size = ${traceRecord.traceList?.size}")
                     SyncUtils.update(traceRecord.syncTimestamp)
                     add(traceRecord)
                 } else {
@@ -57,12 +69,16 @@ class TraceRecordRepository @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        isSyncing = false
     }
 
     suspend fun syncDataPush() {
+        if(isSyncing) return
+        isSyncing = true
         val traceRecordList = localDataSource.getUnSyncedTraceRecord().data ?: return
         LogUtils.i("getUnSyncedTraceRecord ${traceRecordList.size}")
         traceRecordList.forEach { pushDataToRemote(it) }
+        isSyncing = false
     }
 
     suspend fun getList() = localDataSource.getList()
@@ -76,6 +92,10 @@ class TraceRecordRepository @Inject constructor(
         val response = if (data.id != null) {
             remoteDataSource.update(data)
         } else {
+            // 如果是add新数据，同时要把location list数据也带着
+            if(CollectionUtils.isEmpty(data.traceList)) {
+                data.traceList = localDataSource.getTraceLocationList(data.dbId).data
+            }
             remoteDataSource.add(data)
         }
         if (response.isSuccess() && response.data != null) {

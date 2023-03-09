@@ -40,6 +40,7 @@ class TraceRecordListFragment :
         val view = super.onCreateView(inflater, container, savedInstanceState)
         initList()
         initObserver()
+        viewModel.onCreate()
         return view
     }
 
@@ -47,6 +48,11 @@ class TraceRecordListFragment :
         super.onResume()
         viewModel.start()
         SyncDataService.startSync(requireContext())
+    }
+
+    override fun onDestroyView() {
+        viewModel.onDestroy()
+        super.onDestroyView()
     }
 
     private fun initList() {

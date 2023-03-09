@@ -1,6 +1,7 @@
 package com.boredream.lovebook.data.repo.source
 
 import com.boredream.lovebook.data.ResponseEntity
+import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
@@ -25,6 +26,14 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
             service.addTraceRecord(data)
         } catch (e: Exception) {
             ResponseEntity.httpError(e)
+        }
+    }
+
+    suspend fun getTraceLocationList(traceRecordId: String): ResponseEntity<ArrayList<TraceLocation>> {
+        return try {
+            service.getTraceLocationList(traceRecordId)
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
         }
     }
 

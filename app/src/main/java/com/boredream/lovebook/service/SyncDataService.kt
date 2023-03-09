@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.data.repo.TraceRecordRepository
+import com.boredream.lovebook.utils.SyncUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,8 +72,13 @@ class SyncDataService : Service() {
             it.getStringExtra(BUNDLE_KEY_ACTION)?.let { action ->
                 LogUtils.i("action = $action")
                 when (action) {
-                    ACTION_SYNC -> scope.launch { traceRecordRepository.syncData() }
-                    ACTION_PUSH -> scope.launch { traceRecordRepository.syncDataPush() }
+                    ACTION_SYNC -> scope.launch {
+                        traceRecordRepository.syncDataPull()
+                        traceRecordRepository.syncDataPush()
+                    }
+                    ACTION_PUSH -> scope.launch {
+                        traceRecordRepository.syncDataPush()
+                    }
                     else -> {}
                 }
             }
