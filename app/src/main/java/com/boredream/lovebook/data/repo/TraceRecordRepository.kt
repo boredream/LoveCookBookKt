@@ -38,29 +38,31 @@ class TraceRecordRepository @Inject constructor(
             val response = service.getTraceRecordListBySyncTimestamp(localTimestamp)
             val traceRecordList = response.data ?: return
 
+            LogUtils.i("pull data size = ${traceRecordList.size}")
             for (traceRecord in traceRecordList) {
                 // 1. 拉取的数据先和本地进行比较
                 val localResponse = localDataSource.getTraceRecordByDbId(traceRecord.dbId)
                 val localRecord = localResponse.data
 
-                // 2. 如果本地数据不存在，或者本地存在的数据不是待同步状态，直接覆盖本地数据
-                if (localRecord == null || !localRecord.synced) {
+                // 2. 如果本地数据不存在，或者已经同步到服务器过了，直接覆盖
+                if (localRecord == null || localRecord.synced) {
+                    LogUtils.i("pull and save data = ${traceRecord.name}")
                     SyncUtils.update(traceRecord.syncTimestamp)
-                    localDataSource.add(traceRecord)
+                    add(traceRecord)
                 } else {
-                    // 3. 如果本地待更新的这笔数据，同步标志位是true，即本地有修改还没提交给服务端的，处理冲突
+                    // 3. 如果本地数据，同步标志位是false，即本地有修改还没提交给服务端的，处理冲突
                     // 冲突数据【本地的】，因为大部分是珍贵的轨迹收集数据，所以本地为准，服务端数据抛弃
                 }
             }
         } catch (e: Exception) {
-            //
+            e.printStackTrace()
         }
     }
 
     suspend fun syncDataPush() {
         val traceRecordList = localDataSource.getUnSyncedTraceRecord().data ?: return
         LogUtils.i("getUnSyncedTraceRecord ${traceRecordList.size}")
-        traceRecordList.forEach { add2remote(it) }
+        traceRecordList.forEach { pushDataToRemote(it) }
     }
 
     suspend fun getList() = localDataSource.getList()
@@ -68,32 +70,31 @@ class TraceRecordRepository @Inject constructor(
     suspend fun getLocationList(traceRecordDbId: String) =
         localDataSource.getTraceLocationList(traceRecordDbId)
 
-    suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
-        val response = localDataSource.add(data)
-        if (response.isSuccess()) {
-            response.data?.let { SyncUtils.update(it.syncTimestamp) }
-        }
-        return response
-    }
+    suspend fun add(data: TraceRecord) = localDataSource.add(data)
 
-    suspend fun add2remote(data: TraceRecord): ResponseEntity<TraceRecord> {
-        // 更新本地数据库的id
-        val response = remoteDataSource.add(data)
+    suspend fun pushDataToRemote(data: TraceRecord): ResponseEntity<TraceRecord> {
+        val response = if (data.id != null) {
+            remoteDataSource.update(data)
+        } else {
+            remoteDataSource.add(data)
+        }
         if (response.isSuccess() && response.data != null) {
-            LogUtils.i("add success: ${response.data.name} , local update = ${response.data.dbId}")
-            update(response.data)
+            LogUtils.i("push success: ${response.data.name} , " +
+                    "local update syncTimestamp = ${response.data.syncTimestamp}")
+            localDataSource.update(response.data)
+            SyncUtils.update(response.data.syncTimestamp)
         }
         return response
     }
 
     suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
-        val response = localDataSource.update(data)
-        if (response.isSuccess()) {
-            response.data?.let { SyncUtils.update(it.syncTimestamp) }
-        }
-        return response
+        data.synced = false // 同步标志位，有修改的都需要设为false
+        return localDataSource.update(data)
     }
 
-    suspend fun delete(data: TraceRecord) = localDataSource.delete(data)
+    suspend fun delete(data: TraceRecord): ResponseEntity<TraceRecord> {
+        data.synced = false // 同步标志位，有修改的都需要设为false
+        return localDataSource.delete(data)
+    }
 
 }

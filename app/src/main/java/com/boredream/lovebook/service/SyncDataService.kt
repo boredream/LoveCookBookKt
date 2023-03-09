@@ -60,18 +60,13 @@ class SyncDataService : Service() {
         return null
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        LogUtils.i("onCreate")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // TODO: 直接监听数据库然后开始同步操作
         intent?.let {
             it.getStringExtra(BUNDLE_KEY_ACTION)?.let { action ->
                 LogUtils.i("action = $action")

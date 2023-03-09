@@ -1,6 +1,8 @@
 package com.boredream.lovebook.data.repo.source
 
 import androidx.room.Transaction
+import com.amap.api.mapcore.util.it
+import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
@@ -35,10 +37,12 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
             return ResponseEntity(null, 500, "数据插入失败")
         }
 
-        data.traceList.forEach { it.traceRecordId = data.dbId }
         return try {
-            traceLocationDao.deleteByTraceRecordId(data.dbId)
-            traceLocationDao.insertAll(data.traceList)
+            data.traceList?.let { list ->
+                traceLocationDao.deleteByTraceRecordId(data.dbId)
+                list.forEach { it.traceRecordId = data.dbId }
+                traceLocationDao.insertAll(list)
+            }
             ResponseEntity.success(data)
         } catch (e: Exception) {
             ResponseEntity(null, 500, e.toString())
@@ -86,9 +90,9 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
     override suspend fun delete(data: TraceRecord): ResponseEntity<TraceRecord> {
         var delete: Int = -1
         try {
-            // 软删除，方便同步用
-            data.isDelete = true
+            data.isDelete = true // 软删除，方便同步用
             delete = traceRecordDao.update(data)
+            LogUtils.i("delete record ${data.name}")
         } catch (e: Exception) {
             //
         }
@@ -99,7 +103,8 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
 
         return try {
             // location跟着trace record走，不用于判断同步，所以直接删除
-            traceLocationDao.deleteByTraceRecordId(data.dbId)
+            val deleteListCount = traceLocationDao.deleteByTraceRecordId(data.dbId)
+            LogUtils.i("delete location list size = $deleteListCount")
             ResponseEntity.success(data)
         } catch (e: Exception) {
             ResponseEntity(null, 500, e.toString())

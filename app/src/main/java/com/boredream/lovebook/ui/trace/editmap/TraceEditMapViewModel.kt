@@ -31,7 +31,7 @@ class TraceEditMapViewModel @Inject constructor(
         this.data = data
 
         // TODO:  根据路线，选择合适的 camera zoom 和 position
-        _startLocationUiState.value = data.traceList[step]
+        data.traceList?.let { _startLocationUiState.value = it[step] }
     }
 
     fun preStepTrace() {
@@ -41,10 +41,10 @@ class TraceEditMapViewModel @Inject constructor(
     }
 
     fun nextStepTrace() {
-        val newTracePoint = data.traceList[step]
-        traceList.add(newTracePoint)
-        _traceListUiState.value = arrayListOf(traceList)
-        step += 1
+//        val newTracePoint = data.traceList?.get(step)
+//        traceList.add(newTracePoint)
+//        _traceListUiState.value = arrayListOf(traceList)
+//        step += 1
     }
 
 }

@@ -17,13 +17,13 @@ data class TraceRecord(
     var distance: Int, // 单位米
     var detail: String? = null,
     var traceListStr: String? = null,
-    var synced: Boolean = false, // 是否需要同步（上传）
+    var synced: Boolean = false, // 是否已经同步到服务器
     var isDelete: Boolean = false, // 软删除
     var syncTimestamp: Long? = null, // 同步数据的时间
     @PrimaryKey var dbId: String = UUID.randomUUID().toString()
 ) : Belong2UserEntity() {
 
     @Ignore
-    var traceList: ArrayList<TraceLocation> = arrayListOf()
+    var traceList: ArrayList<TraceLocation>? = arrayListOf()
 
 }

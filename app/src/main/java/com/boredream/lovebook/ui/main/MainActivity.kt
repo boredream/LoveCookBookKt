@@ -7,7 +7,6 @@ import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseActivity
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.databinding.ActivityMainBinding
-import com.boredream.lovebook.service.SyncDataService
 import com.boredream.lovebook.ui.FragmentController
 import com.boredream.lovebook.ui.diary.DiaryFragment
 import com.boredream.lovebook.ui.mine.MineFragment
@@ -46,8 +45,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
         val controller = FragmentController(navView, supportFragmentManager, R.id.fl_fragment, fragmentList)
         controller.initFragment()
-
-        SyncDataService.startSync(this)
     }
 
 }

@@ -26,7 +26,7 @@ object SimpleUiStateObserver {
         },
         failObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求失败时，Toast
-            // ToastUtils.showLong("请求失败 ${it.msg}")
+            ToastUtils.showLong("请求失败 ${it.msg}")
         },
         successObserver: Observer<ResponseEntity<T>> = Observer<ResponseEntity<T>> {
             // 默认请求成功时，Toast

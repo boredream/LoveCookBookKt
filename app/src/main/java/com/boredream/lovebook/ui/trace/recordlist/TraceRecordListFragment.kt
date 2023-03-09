@@ -13,6 +13,7 @@ import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.databinding.FragmentTraceRecordListBinding
 import com.boredream.lovebook.databinding.ItemTraceRecordBinding
+import com.boredream.lovebook.service.SyncDataService
 import com.boredream.lovebook.ui.trace.TraceMapActivity
 import com.boredream.lovebook.ui.trace.recorddetail.TraceRecordDetailActivity
 import com.boredream.lovebook.utils.DialogUtils
@@ -45,6 +46,7 @@ class TraceRecordListFragment :
     override fun onResume() {
         super.onResume()
         viewModel.start()
+        SyncDataService.startSync(requireContext())
     }
 
     private fun initList() {
@@ -63,7 +65,8 @@ class TraceRecordListFragment :
     private fun initObserver() {
         viewModel.toDetailEvent.observe(viewLifecycleOwner) { toDetail() }
         SimpleUiStateObserver.setRequestObserver(this, this, viewModel.deleteVMCompose) {
-            // TODO: 删除如何设计，软删除然后同步？
+            // 提交成功后，开始推送信息
+            SyncDataService.startPush(requireContext())
         }
     }
 

@@ -57,6 +57,7 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
 
         SimpleUiStateObserver.setRequestObserver(this, this, viewModel.commitVMCompose)
         viewModel.commitVMCompose.successUiState.observe(this) {
+            // 提交成功后，开始推送信息
             SyncDataService.startPush(this)
             finish()
         }
