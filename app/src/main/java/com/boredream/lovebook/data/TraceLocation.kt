@@ -13,8 +13,6 @@ open class TraceLocation(
 ) : BaseEntity(), java.io.Serializable {
 
     @PrimaryKey(autoGenerate = true) var dbId: Long = 0
-    var traceRecordDbId: Long = -1
-
     var traceRecordId: String? = null
     var extraData: String? = null
 

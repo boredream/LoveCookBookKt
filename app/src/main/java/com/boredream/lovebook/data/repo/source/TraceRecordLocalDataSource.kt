@@ -4,7 +4,6 @@ import androidx.room.Transaction
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.TraceRecord
-import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.db.AppDatabase
 import javax.inject.Inject
 
@@ -25,20 +24,20 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
 
     @Transaction
     override suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
-        var dbId: Long = -1
+        var insert: Long = -1
         try {
-            dbId = traceRecordDao.insertOrUpdate(data)
+            insert = traceRecordDao.insertOrUpdate(data)
         } catch (e: Exception) {
             //
         }
 
-        if (dbId <= 0) {
+        if (insert <= 0) {
             return ResponseEntity(null, 500, "数据插入失败")
         }
 
-        data.dbId = dbId
-        data.traceList.forEach { it.traceRecordDbId = dbId }
+        data.traceList.forEach { it.traceRecordId = data.dbId }
         return try {
+            traceLocationDao.deleteByTraceRecordId(data.dbId)
             traceLocationDao.insertAll(data.traceList)
             ResponseEntity.success(data)
         } catch (e: Exception) {
@@ -46,15 +45,7 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
         }
     }
 
-    suspend fun getTraceRecordById(id: String): ResponseEntity<TraceRecord> {
-        return try {
-            ResponseEntity.success(traceRecordDao.loadById(id))
-        } catch (e: Exception) {
-            ResponseEntity(null, 500, e.toString())
-        }
-    }
-
-    suspend fun getTraceRecordByDbId(dbId: Long): ResponseEntity<TraceRecord> {
+    suspend fun getTraceRecordByDbId(dbId: String): ResponseEntity<TraceRecord> {
         return try {
             ResponseEntity.success(traceRecordDao.loadByDbId(dbId))
         } catch (e: Exception) {
@@ -70,18 +61,7 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
         }
     }
 
-    override suspend fun getPageList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {
-        // page 从1开始
-        val limit = 20
-        val offset = (page - 1) * limit
-        return try {
-            ResponseEntity.success(PageResultDto(page, traceRecordDao.loadByPage(limit, offset)))
-        } catch (e: Exception) {
-            ResponseEntity(null, 500, e.toString())
-        }
-    }
-
-    suspend fun getTraceLocationList(traceRecordDbId: Long): ResponseEntity<ArrayList<TraceLocation>> {
+    suspend fun getTraceLocationList(traceRecordDbId: String): ResponseEntity<ArrayList<TraceLocation>> {
         return try {
             ResponseEntity.success(ArrayList(traceLocationDao.loadByTraceRecordId(traceRecordDbId)))
         } catch (e: Exception) {
@@ -90,8 +70,16 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
     }
 
     override suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {
-        // add or update
-        return add(data)
+        var update: Int = -1
+        try {
+            update = traceRecordDao.update(data)
+        } catch (e: Exception) {
+            //
+        }
+        if (update <= 0) {
+            return ResponseEntity(null, 500, "数据更新失败")
+        }
+        return ResponseEntity.success(data)
     }
 
     @Transaction

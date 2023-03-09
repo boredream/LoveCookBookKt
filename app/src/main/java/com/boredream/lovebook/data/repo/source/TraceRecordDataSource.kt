@@ -8,8 +8,6 @@ interface TraceRecordDataSource {
 
     suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord>
 
-    suspend fun getPageList(page: Int): ResponseEntity<PageResultDto<TraceRecord>>
-
     suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord>
 
     suspend fun delete(data: TraceRecord): ResponseEntity<TraceRecord>

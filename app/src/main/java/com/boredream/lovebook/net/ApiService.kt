@@ -151,7 +151,7 @@ interface ApiService {
     // ******** trace record ********
 
     @GET("trace_record/sync")
-    suspend fun syncTraceRecordList(
+    suspend fun getTraceRecordListBySyncTimestamp(
         @Query("localTimestamp") localTimestamp: Long,
     ): ResponseEntity<ArrayList<TraceRecord>>
 

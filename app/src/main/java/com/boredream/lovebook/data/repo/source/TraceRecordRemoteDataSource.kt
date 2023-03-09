@@ -2,7 +2,6 @@ package com.boredream.lovebook.data.repo.source
 
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
-import com.boredream.lovebook.data.dto.PageResultDto
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
 
@@ -22,14 +21,6 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
         data.traceList.clear()
         return try {
             service.addTraceRecord(data)
-        } catch (e: Exception) {
-            ResponseEntity.httpError(e)
-        }
-    }
-
-    override suspend fun getPageList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {
-        return try {
-            service.getTraceRecordList(page)
         } catch (e: Exception) {
             ResponseEntity.httpError(e)
         }

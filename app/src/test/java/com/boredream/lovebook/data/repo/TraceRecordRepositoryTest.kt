@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TraceRepositoryTest {
+class TraceRecordRepositoryTest {
 
     @MockK
     private lateinit var dataSource: TraceRecordLocalDataSource

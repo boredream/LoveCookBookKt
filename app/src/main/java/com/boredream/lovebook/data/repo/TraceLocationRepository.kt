@@ -16,7 +16,7 @@ class TraceLocationRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRequestRepository<TraceLocation>() {
 
-    suspend fun getLocalTraceLocationList(dbId: Long) =
+    suspend fun getLocalTraceLocationList(dbId: String) =
         getList {
             // service.getTraceRecordList(it)
             localDataSource.getTraceLocationList(dbId)

@@ -12,7 +12,6 @@ object SyncUtils {
      * 更新同步全局时间戳，一般在本地数据更新成功后调用
      */
     fun update(syncTimestamp: Long?) {
-        LogUtils.i("update syncTimestamp $syncTimestamp")
         val timestamp = syncTimestamp ?: return
 
         val localTimestamp = get()
