@@ -21,8 +21,7 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
-    private var curPage = 1
-    private val pageList = ArrayList<TraceRecord>()
+    private val list = ArrayList<TraceRecord>()
 
     /**
      * 同步数据，先拉取，再上传
@@ -70,21 +69,13 @@ class TraceRecordRepository @Inject constructor(
         traceRecordList.forEach { add2remote(it) }
     }
 
-    suspend fun getPageList(loadMore: Boolean): ResponseEntity<ArrayList<TraceRecord>> {
-        val requestPage = if (loadMore) (curPage + 1) else 1
-
-        // 从本地取
-        val response = localDataSource.getPageList(page = requestPage)
-
-        if (response.isSuccess()) {
-            val data = response.getSuccessData()
-            curPage = requestPage
-            if (!loadMore) pageList.clear()
-            pageList.addAll(data.records)
-        } else {
-            pageList.clear()
+    suspend fun getList(): ResponseEntity<ArrayList<TraceRecord>> {
+        list.clear()
+        val response = localDataSource.getList()
+        if(response.isSuccess()) {
+            list.addAll(response.getSuccessData())
         }
-        return ResponseEntity(pageList, response.code, response.msg)
+        return response
     }
 
     suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {

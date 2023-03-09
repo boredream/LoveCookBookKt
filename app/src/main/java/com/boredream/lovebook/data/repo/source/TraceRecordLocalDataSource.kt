@@ -62,6 +62,14 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
         }
     }
 
+    suspend fun getList(): ResponseEntity<ArrayList<TraceRecord>> {
+        return try {
+            ResponseEntity.success(ArrayList(traceRecordDao.loadAll()))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
+    }
+
     override suspend fun getPageList(page: Int): ResponseEntity<PageResultDto<TraceRecord>> {
         // page 从1开始
         val limit = 20

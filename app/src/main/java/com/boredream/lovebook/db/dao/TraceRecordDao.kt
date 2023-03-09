@@ -16,7 +16,7 @@ interface TraceRecordDao {
     suspend fun loadByPage(limit: Int, offset: Int): List<TraceRecord>
 
     @Query("SELECT * FROM TraceRecord")
-    suspend fun getAll(): List<TraceRecord>
+    suspend fun loadAll(): List<TraceRecord>
 
     @Query("SELECT * FROM TraceRecord WHERE dbId = :dbId")
     suspend fun loadByDbId(dbId: Long): TraceRecord

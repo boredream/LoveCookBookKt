@@ -23,13 +23,7 @@ class TraceRecordListViewModel @Inject constructor(
     val toDetailEvent: LiveData<Boolean> = _toDetailEvent
 
     fun start() {
-        refreshListVMCompose.loadPageList(repoRequest = { repository.getPageList(false) })
-    }
-
-    fun refresh(loadMore: Boolean, handlePullDownDown: Boolean = true) {
-        refreshListVMCompose.loadPageList(
-            handlePullDownDown = handlePullDownDown,
-            repoRequest = { repository.getPageList(loadMore) })
+        refreshListVMCompose.loadPageList(repoRequest = { repository.getList() })
     }
 
     fun startAdd() {
@@ -38,7 +32,7 @@ class TraceRecordListViewModel @Inject constructor(
 
     fun delete(data: TraceRecord) {
         deleteVMCompose.request(
-            onSuccess = { refresh(false) }
+            onSuccess = { start() }
         ) { repository.delete(data) }
     }
 

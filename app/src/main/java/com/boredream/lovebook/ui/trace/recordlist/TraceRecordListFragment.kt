@@ -6,15 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.amap.api.mapcore.util.it
-import com.blankj.utilcode.util.ToastUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.common.SimpleListAdapter
-import com.boredream.lovebook.common.SimpleRequestFail
-import com.boredream.lovebook.common.SimpleRequestSuccess
 import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.databinding.FragmentTraceRecordListBinding
@@ -61,14 +55,16 @@ class TraceRecordListFragment :
         }
         getBinding().refreshTraceList.setup(
             adapter,
-            onLoadMore = { viewModel.refresh(true) },
-            onRefresh = { viewModel.refresh(false) },
+            enableRefresh = false,
         )
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
         viewModel.toDetailEvent.observe(viewLifecycleOwner) { toDetail() }
+        SimpleUiStateObserver.setRequestObserver(this, this, viewModel.deleteVMCompose) {
+            // TODO: 删除如何设计，软删除然后同步？
+        }
     }
 
     private fun toDetail() {
