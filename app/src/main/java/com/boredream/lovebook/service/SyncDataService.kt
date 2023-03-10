@@ -15,6 +15,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 /**
@@ -75,11 +76,15 @@ class SyncDataService : Service() {
                 LogUtils.i("action = $action")
                 when (action) {
                     ACTION_SYNC -> scope.launch {
+                        SyncUtils.isSyncing = true
                         traceRecordRepository.syncDataPull()
                         traceRecordRepository.syncDataPush()
+                        SyncUtils.isSyncing = false
                     }
                     ACTION_PUSH -> scope.launch {
+                        SyncUtils.isSyncing = true
                         traceRecordRepository.syncDataPush()
+                        SyncUtils.isSyncing = false
                     }
                     else -> {}
                 }

@@ -23,6 +23,7 @@
             app:title="轨迹列表" />
 
         <com.boredream.lovebook.view.SyncStatusView
+            android:id="@+id/sync_status_view"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginRight="@dimen/margin_medium"

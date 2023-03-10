@@ -43,7 +43,7 @@ class TraceRecordListFragment :
         savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        initList()
+        initView()
         initObserver()
         EventBus.getDefault().register(this)
         return view
@@ -60,7 +60,7 @@ class TraceRecordListFragment :
         super.onDestroyView()
     }
 
-    private fun initList() {
+    private fun initView() {
         adapter = SimpleListAdapter(dataList, R.layout.item_trace_record)
         adapter.onItemClickListener = { TraceRecordDetailActivity.start(requireContext(), it) }
         adapter.onItemLongClickListener = {
@@ -74,8 +74,8 @@ class TraceRecordListFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
-        viewModel.isSyncingState.observe(viewLifecycleOwner) {
-            LogUtils.i("syncing = $it")
+        getBinding().syncStatusView.setOnClickListener {
+            SyncDataService.startSync(requireContext())
         }
         viewModel.toDetailEvent.observe(viewLifecycleOwner) { toDetail() }
         SimpleUiStateObserver.setRequestObserver(this, this, viewModel.deleteVMCompose) {

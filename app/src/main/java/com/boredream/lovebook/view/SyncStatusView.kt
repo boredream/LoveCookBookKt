@@ -26,10 +26,10 @@ class SyncStatusView : AppCompatImageView {
         setImageResource(R.drawable.ic_baseline_sync_24)
         refreshAnim = ValueAnimator.ofFloat(0f, 1f)
         refreshAnim.repeatCount = ValueAnimator.INFINITE
-        refreshAnim.duration = 500
+        refreshAnim.duration = 1000
         refreshAnim.addUpdateListener { animation: ValueAnimator ->
             curRotate = animation.animatedValue as Float
-            rotation = curRotate * 360
+            rotation = -curRotate * 360
         }
     }
 
