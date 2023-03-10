@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.base.BaseFragment
 import com.boredream.lovebook.common.SimpleListAdapter
 import com.boredream.lovebook.common.SimpleUiStateObserver
 import com.boredream.lovebook.data.TraceRecord
+import com.boredream.lovebook.data.event.SyncStatusEvent
 import com.boredream.lovebook.databinding.FragmentTraceRecordListBinding
 import com.boredream.lovebook.databinding.ItemTraceRecordBinding
 import com.boredream.lovebook.service.SyncDataService
@@ -20,6 +22,9 @@ import com.boredream.lovebook.utils.DialogUtils
 import com.boredream.lovebook.utils.PermissionSettingUtil
 import com.yanzhenjie.permission.AndPermission
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 @AndroidEntryPoint
@@ -40,7 +45,7 @@ class TraceRecordListFragment :
         val view = super.onCreateView(inflater, container, savedInstanceState)
         initList()
         initObserver()
-        viewModel.onCreate()
+        EventBus.getDefault().register(this)
         return view
     }
 
@@ -51,7 +56,7 @@ class TraceRecordListFragment :
     }
 
     override fun onDestroyView() {
-        viewModel.onDestroy()
+        EventBus.getDefault().unregister(this)
         super.onDestroyView()
     }
 
@@ -69,11 +74,20 @@ class TraceRecordListFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
+        viewModel.isSyncingState.observe(viewLifecycleOwner) {
+            LogUtils.i("syncing = $it")
+        }
         viewModel.toDetailEvent.observe(viewLifecycleOwner) { toDetail() }
         SimpleUiStateObserver.setRequestObserver(this, this, viewModel.deleteVMCompose) {
             // 提交成功后，开始推送信息
             SyncDataService.startPush(requireContext())
         }
+    }
+
+    //接收消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSyncStatusEvent(event: SyncStatusEvent) {
+        viewModel.setSyncStatus(event.isSyncing)
     }
 
     private fun toDetail() {

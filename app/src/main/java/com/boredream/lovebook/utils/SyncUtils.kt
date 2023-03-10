@@ -1,12 +1,20 @@
 package com.boredream.lovebook.utils
 
 import com.blankj.utilcode.util.LogUtils
+import com.boredream.lovebook.data.event.SyncStatusEvent
+import org.greenrobot.eventbus.EventBus
 
 object SyncUtils {
 
     private const val DATA_SYNC_TIMESTAMP_KEY = "data_sync_timestamp_key"
 
     fun get() = DataStoreUtils.readLongData(DATA_SYNC_TIMESTAMP_KEY, 0L)
+
+    var isSyncing = false
+        set(value) {
+            field = value
+            EventBus.getDefault().post(SyncStatusEvent(value))
+        }
 
     /**
      * 更新同步全局时间戳，一般在本地数据更新成功后调用

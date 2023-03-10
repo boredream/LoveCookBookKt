@@ -1,8 +1,11 @@
 package com.boredream.lovebook.common.vmcompose
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.data.ResponseEntity
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -35,7 +38,9 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
             _refreshUiState.value = RefreshUiState(showRefresh = true)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace();
+        }) {
             val response = repoRequest.invoke(loadMore)
             var hasMore = loadMore
             if (response.isSuccess()) {
@@ -60,7 +65,9 @@ class RefreshListVMCompose(private val viewModelScope: CoroutineScope) {
             _refreshUiState.value = RefreshUiState(showRefresh = true)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace();
+        }){
             val response = repoRequest.invoke()
             if (response.isSuccess()) {
                 // 是否还有更多，根据返回数据判断；如果无返回数据，保留原有意图

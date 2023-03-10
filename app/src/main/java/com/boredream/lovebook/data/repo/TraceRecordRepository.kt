@@ -23,23 +23,8 @@ class TraceRecordRepository @Inject constructor(
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
-    private var onStatusChangeList: LinkedList<(status: Boolean) -> Unit> = LinkedList()
-    fun addStatusChangeListener(listener: (status: Boolean) -> Unit) =
-        onStatusChangeList.add(listener)
-
-    fun removeStatusChangeListener(listener: (status: Boolean) -> Unit) =
-        onStatusChangeList.remove(listener)
-
-    private var isSyncing = false
-        set(value) {
-            field = value
-            onStatusChangeList.forEach { it.invoke(value) }
-        }
-
     suspend fun syncDataPull() {
-        if(isSyncing) return
-        isSyncing = true
-
+        SyncUtils.isSyncing = true
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
         val localTimestamp = SyncUtils.get() // TODO: SyncUtils 里有context引用
 
@@ -69,16 +54,15 @@ class TraceRecordRepository @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        isSyncing = false
+        SyncUtils.isSyncing = false
     }
 
     suspend fun syncDataPush() {
-        if(isSyncing) return
-        isSyncing = true
+        SyncUtils.isSyncing = true
         val traceRecordList = localDataSource.getUnSyncedTraceRecord().data ?: return
         LogUtils.i("getUnSyncedTraceRecord ${traceRecordList.size}")
         traceRecordList.forEach { pushDataToRemote(it) }
-        isSyncing = false
+        SyncUtils.isSyncing = false
     }
 
     suspend fun getList() = localDataSource.getList()

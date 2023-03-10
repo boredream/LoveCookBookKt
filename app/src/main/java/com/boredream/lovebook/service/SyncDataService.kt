@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.data.repo.TraceRecordRepository
 import com.boredream.lovebook.utils.SyncUtils
@@ -12,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 

@@ -44,6 +44,7 @@ class SyncStatusView : AppCompatImageView {
     }
 
     fun finishRefresh() {
+        if(status == STATUS_IDLE) return
         refreshAnim.end()
         status = STATUS_IDLE
         rotation = 0f

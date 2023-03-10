@@ -67,8 +67,8 @@ public class BindingContract {
     }
 
     @BindingAdapter("isSyncing")
-    public static void setRefreshListViewDataList(SyncStatusView view, boolean isSyncing) {
-        if (view != null) view.setRefresh(isSyncing);
+    public static void setSyncStatusViewStatus(SyncStatusView view, boolean isSyncing) {
+        if (view != null && view.isAttachedToWindow()) view.setRefresh(isSyncing);
     }
 
     // 用于解决需要转换的数据转换问题

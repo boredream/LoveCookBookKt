@@ -40,6 +40,7 @@ class RequestVMCompose<T>(
                     _failUiState.value = response
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 _failUiState.value = ResponseEntity.httpError(e)
             } finally {
                 _isRequestingUiState.value = false
