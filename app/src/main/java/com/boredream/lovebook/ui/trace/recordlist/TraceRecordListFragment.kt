@@ -88,6 +88,10 @@ class TraceRecordListFragment :
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSyncStatusEvent(event: SyncStatusEvent) {
         viewModel.setSyncStatus(event.isSyncing)
+        if(!event.isSyncing) {
+            // 刷新完成后，更新UI
+            viewModel.start()
+        }
     }
 
     private fun toDetail() {

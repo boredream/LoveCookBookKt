@@ -27,7 +27,7 @@ class TraceRecordListViewModel @Inject constructor(
     val isSyncingState: LiveData<Boolean> = _isSyncingState
 
     fun start() {
-        refreshListVMCompose.loadPageList(repoRequest = { repository.getList() })
+        refreshListVMCompose.loadList { repository.getList() }
     }
 
     fun setSyncStatus(isSyncing: Boolean) {
