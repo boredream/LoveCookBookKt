@@ -52,6 +52,9 @@ class TraceMapActivity : BaseActivity<TraceMapViewModel, ActivityTraceMapBinding
                         .setNegativeButton("删除") { _, _ -> viewModel.abandonTrace() }
                         .show()
                 }
+                is LocateMe -> binding.mapView.apply {
+                    post { locateMe() }
+                }
             }
         }
 

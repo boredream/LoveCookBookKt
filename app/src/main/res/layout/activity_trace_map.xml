@@ -29,7 +29,6 @@
             android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:isFollowing="@{vm.isFollowing()}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_bar"
@@ -62,11 +61,11 @@
             android:id="@+id/btn_follow_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> vm.toggleFollowingMode()}"
-            android:text='@{vm.isFollowing ? "关闭跟踪模式" : "打开跟踪模式"}'
+            android:onClick="@{() -> vm.locateMe()}"
+            android:text='定位到我'
             android:visibility="@{vm.uiState.myLocation != null ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/btn_start_trace"
-            app:layout_constraintLeft_toLeftOf="@+id/btn_start_trace" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

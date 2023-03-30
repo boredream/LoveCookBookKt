@@ -9,10 +9,12 @@ import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.usecase.TraceUseCase
 import com.boredream.lovebook.vm.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class UIEvent
 object ShowSaveConfirmDialog : UIEvent()
+object LocateMe : UIEvent()
 
 data class UiState(
     val myLocation: TraceLocation? = null,
@@ -61,12 +63,16 @@ class TraceMapViewModel @Inject constructor(
         _isShowHistoryTrace.value = !old
 
         if (!old) {
-//            viewModelScope.launch {
-//                val recordList = traceUseCase.getAllHistoryTraceListRecord()
-//                val historyList = ArrayList<ArrayList<TraceLocation>>()
-//                recordList.data?.dataList?.let { it -> it.forEach { historyList.add(it.traceList) } }
-//                _historyTracePointListUiState.value = historyList
-//            }
+            viewModelScope.launch {
+                val recordList = traceUseCase.getAllHistoryTraceListRecord()
+                val historyList = ArrayList<ArrayList<TraceLocation>>()
+                recordList.data?.let { it ->
+                    it.forEach {
+                        it.traceList?.let { list -> historyList.add(list) }
+                    }
+                }
+                _historyTracePointListUiState.value = historyList
+            }
         }
     }
 
@@ -83,6 +89,13 @@ class TraceMapViewModel @Inject constructor(
             traceUseCase.startTrace()
         }
         _isTracing.value = traceUseCase.isTracing()
+    }
+
+    /**
+     * 定位到我
+     */
+    fun locateMe() {
+        _uiEvent.value = LocateMe
     }
 
     /**
@@ -121,10 +134,17 @@ class TraceMapViewModel @Inject constructor(
 
         traceUseCase.addLocationSuccessListener(onLocationSuccess)
         traceUseCase.addTraceSuccessListener(onTraceSuccess)
+
+        locateMe()
     }
 
+    var firstLocation = true
     private val onLocationSuccess: (location: TraceLocation) -> Unit = {
         _uiState.value = UiState(it)
+        if(firstLocation) {
+            locateMe()
+            firstLocation = false
+        }
     }
 
     private val onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = {

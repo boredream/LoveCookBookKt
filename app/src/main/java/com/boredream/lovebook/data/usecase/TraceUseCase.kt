@@ -74,11 +74,18 @@ class TraceUseCase @Inject constructor(
     }
 
     /**
-     * TODO: 获取所有历史轨迹 / 只获取附近的
+     * 获取所有历史轨迹
+     * TODO 只获取附近的
      */
-//    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ListResult<TraceRecord>> {
-//        return traceRecordRepository.getList()
-//    }
+    suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ArrayList<TraceRecord>> {
+        val recordList = traceRecordRepository.getList()
+        if(recordList.isSuccess() && recordList.data != null) {
+            recordList.data.forEach {
+                it.traceList = traceRecordRepository.getLocationList(it.dbId).data
+            }
+        }
+        return traceRecordRepository.getList()
+    }
 
     // TODO: 回调适合用函数吗？
     fun addLocationSuccessListener(listener: (location: TraceLocation) -> Unit) {

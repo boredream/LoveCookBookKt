@@ -3,11 +3,12 @@ package com.boredream.lovebook.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import com.amap.api.mapcore.util.it
 import com.amap.api.maps.AMap.OnCameraChangeListener
+import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
+import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TraceLocation
 
@@ -22,7 +23,7 @@ class TraceMapView : MapView {
     private var myLocationMarker: Marker? = null
     private var startDrawIndex = 0
 
-    var isFollowingMode = true
+    var isFollowingMode = false
         set(value) {
             field = value
             // set true 时，先移动一次camera
@@ -54,28 +55,23 @@ class TraceMapView : MapView {
         }
     }
 
-    private var firstMoveCamera = true
     private fun moveCamera(location: TraceLocation) {
-//        if(firstMoveCamera) {
-//            map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel))
-//            firstMoveCamera = false
-//        }
-
         val position = CameraPosition.Builder()
             .target(LatLng(location.latitude, location.longitude))
             .zoom(zoomLevel)
             .build()
         map.moveCamera(CameraUpdateFactory.newCameraPosition(position))
+        LogUtils.i(position)
     }
 
     fun setMyLocation(location: TraceLocation) {
         myLocation = location
         myLocationMarker?.position = LatLng(location.latitude, location.longitude)
+        LogUtils.d(map.cameraPosition.target)
+    }
 
-        // TODO: draw my location 和 move camera 分开
-        if (isFollowingMode) {
-            moveCamera(location)
-        }
+    fun locateMe() {
+        myLocation?.let { moveCamera(it) }
     }
 
     /**
