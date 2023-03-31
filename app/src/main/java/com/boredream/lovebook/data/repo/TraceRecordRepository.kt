@@ -1,7 +1,6 @@
 package com.boredream.lovebook.data.repo
 
 import com.blankj.utilcode.util.CollectionUtils
-import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
@@ -9,6 +8,7 @@ import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource
 import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource.Companion.DATA_SYNC_TIMESTAMP_KEY
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.data.repo.source.TraceRecordRemoteDataSource
+import com.boredream.lovebook.utils.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,20 +17,21 @@ import javax.inject.Singleton
  */
 @Singleton
 class TraceRecordRepository @Inject constructor(
-    private val configDatSource: ConfigLocalDataSource,
+    private val logger: Logger,
+    private val configDataSource: ConfigLocalDataSource,
     private val remoteDataSource: TraceRecordRemoteDataSource,
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
     suspend fun syncDataPull() {
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
-        val localTimestamp = configDatSource.getLong(ConfigLocalDataSource.DATA_SYNC_TIMESTAMP_KEY)
+        val localTimestamp = configDataSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
 
         // 不关注 response
         try {
             val response = remoteDataSource.getTraceRecordListBySyncTimestamp(localTimestamp)
             response.data?.let { traceRecordList ->
-                LogUtils.i("pull data size = ${traceRecordList.size}")
+                logger.i("pull data size = ${traceRecordList.size}")
                 for (traceRecord in traceRecordList) {
                     // 1. 拉取的数据先和本地进行比较
                     val localResponse = localDataSource.getTraceRecordByDbId(traceRecord.dbId)
@@ -39,8 +40,8 @@ class TraceRecordRepository @Inject constructor(
                     // 2. 如果本地数据不存在，或者已经同步到服务器过了，直接覆盖
                     if (localRecord == null || localRecord.synced) {
                         // 还要拉取location list
-                        traceRecord.traceList = remoteDataSource.getTraceLocationList(traceRecord.id!!).data
-                        LogUtils.i("pull and save data = ${traceRecord.name} , location size = ${traceRecord.traceList?.size}")
+                        traceRecord.id?.let { traceRecord.traceList = remoteDataSource.getTraceLocationList(it).data }
+                        logger.i("pull and save data = ${traceRecord.name} , location size = ${traceRecord.traceList?.size}")
                         updateSyncTime(traceRecord.syncTimestamp)
                         add(traceRecord)
                     } else {
@@ -56,7 +57,7 @@ class TraceRecordRepository @Inject constructor(
 
     suspend fun syncDataPush() {
         localDataSource.getUnSyncedTraceRecord().data?.let { traceRecordList ->
-            LogUtils.i("getUnSyncedTraceRecord ${traceRecordList.size}")
+            logger.i("getUnSyncedTraceRecord ${traceRecordList.size}")
             traceRecordList.forEach { pushDataToRemote(it) }
         }
     }
@@ -79,7 +80,7 @@ class TraceRecordRepository @Inject constructor(
             remoteDataSource.add(data)
         }
         if (response.isSuccess() && response.data != null) {
-            LogUtils.i("push success: ${response.data.name} , " +
+            logger.i("push success: ${response.data.name} , " +
                     "local update syncTimestamp = ${response.data.syncTimestamp}")
             localDataSource.update(response.data)
             updateSyncTime(response.data.syncTimestamp)
@@ -93,11 +94,11 @@ class TraceRecordRepository @Inject constructor(
     private fun updateSyncTime(syncTimestamp: Long?) {
         val timestamp = syncTimestamp ?: return
 
-        val localTimestamp = configDatSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
+        val localTimestamp = configDataSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
         if (timestamp > localTimestamp) {
             // 如果数据同步时间比本地保存的新，替换之
-            configDatSource.set(DATA_SYNC_TIMESTAMP_KEY, timestamp)
-            LogUtils.i("update syncTimestamp $timestamp")
+            configDataSource.set(DATA_SYNC_TIMESTAMP_KEY, timestamp)
+            logger.i("update syncTimestamp $timestamp")
         }
     }
 

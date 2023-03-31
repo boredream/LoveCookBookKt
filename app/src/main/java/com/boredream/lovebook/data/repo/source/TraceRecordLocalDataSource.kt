@@ -49,7 +49,7 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
         }
     }
 
-    suspend fun getTraceRecordByDbId(dbId: String): ResponseEntity<TraceRecord> {
+    suspend fun getTraceRecordByDbId(dbId: String): ResponseEntity<TraceRecord?> {
         return try {
             ResponseEntity.success(traceRecordDao.loadByDbId(dbId))
         } catch (e: Exception) {

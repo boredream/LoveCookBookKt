@@ -16,7 +16,7 @@ interface TraceRecordDao {
     suspend fun loadAll(): List<TraceRecord>
 
     @Query("SELECT * FROM TraceRecord WHERE dbId = :dbId")
-    suspend fun loadByDbId(dbId: String): TraceRecord
+    suspend fun loadByDbId(dbId: String): TraceRecord?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(traceRecord: TraceRecord): Long

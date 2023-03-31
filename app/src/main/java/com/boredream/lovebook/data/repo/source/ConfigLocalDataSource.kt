@@ -9,7 +9,7 @@ class ConfigLocalDataSource @Inject constructor() {
         const val DATA_SYNC_TIMESTAMP_KEY = "data_sync_timestamp_key"
     }
 
-    fun <T> set(key: String, value: T) {
+    fun set(key: String, value: Any) {
         DataStoreUtils.putSyncData(key, value)
     }
 
