@@ -138,13 +138,8 @@ class TraceMapViewModel @Inject constructor(
         locateMe()
     }
 
-    var firstLocation = true
     private val onLocationSuccess: (location: TraceLocation) -> Unit = {
         _uiState.value = UiState(it)
-        if(firstLocation) {
-            locateMe()
-            firstLocation = false
-        }
     }
 
     private val onTraceSuccess: (allTracePointList: ArrayList<TraceLocation>) -> Unit = {

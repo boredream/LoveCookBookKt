@@ -1,37 +1,34 @@
 package com.boredream.lovebook.data.repo
 
-import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.CollectionUtils
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
+import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource
+import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource.Companion.DATA_SYNC_TIMESTAMP_KEY
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
 import com.boredream.lovebook.data.repo.source.TraceRecordRemoteDataSource
-import com.boredream.lovebook.net.ApiService
-import com.boredream.lovebook.utils.SyncUtils
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 /**
  * 轨迹记录，针对的是整条轨迹线路
  */
 @Singleton
 class TraceRecordRepository @Inject constructor(
-    private val service: ApiService,
+    private val configDatSource: ConfigLocalDataSource,
     private val remoteDataSource: TraceRecordRemoteDataSource,
     private val localDataSource: TraceRecordLocalDataSource,
 ) : BaseRepository() {
 
     suspend fun syncDataPull() {
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
-        val localTimestamp = SyncUtils.get() // TODO: SyncUtils 里有context引用
+        val localTimestamp = configDatSource.getLong(ConfigLocalDataSource.DATA_SYNC_TIMESTAMP_KEY)
 
         // 不关注 response
         try {
-            val response = service.getTraceRecordListBySyncTimestamp(localTimestamp)
+            val response = remoteDataSource.getTraceRecordListBySyncTimestamp(localTimestamp)
             response.data?.let { traceRecordList ->
                 LogUtils.i("pull data size = ${traceRecordList.size}")
                 for (traceRecord in traceRecordList) {
@@ -44,7 +41,7 @@ class TraceRecordRepository @Inject constructor(
                         // 还要拉取location list
                         traceRecord.traceList = remoteDataSource.getTraceLocationList(traceRecord.id!!).data
                         LogUtils.i("pull and save data = ${traceRecord.name} , location size = ${traceRecord.traceList?.size}")
-                        SyncUtils.update(traceRecord.syncTimestamp)
+                        updateSyncTime(traceRecord.syncTimestamp)
                         add(traceRecord)
                     } else {
                         // 3. 如果本地数据，同步标志位是false，即本地有修改还没提交给服务端的，处理冲突
@@ -85,9 +82,23 @@ class TraceRecordRepository @Inject constructor(
             LogUtils.i("push success: ${response.data.name} , " +
                     "local update syncTimestamp = ${response.data.syncTimestamp}")
             localDataSource.update(response.data)
-            SyncUtils.update(response.data.syncTimestamp)
+            updateSyncTime(response.data.syncTimestamp)
         }
         return response
+    }
+
+    /**
+     * 更新同步全局时间戳，一般在本地数据更新成功后调用
+     */
+    private fun updateSyncTime(syncTimestamp: Long?) {
+        val timestamp = syncTimestamp ?: return
+
+        val localTimestamp = configDatSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
+        if (timestamp > localTimestamp) {
+            // 如果数据同步时间比本地保存的新，替换之
+            configDatSource.set(DATA_SYNC_TIMESTAMP_KEY, timestamp)
+            LogUtils.i("update syncTimestamp $timestamp")
+        }
     }
 
     suspend fun update(data: TraceRecord): ResponseEntity<TraceRecord> {

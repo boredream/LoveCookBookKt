@@ -64,9 +64,14 @@ class TraceMapView : MapView {
         LogUtils.i(position)
     }
 
+    private var isFirstSetMyLocation = true
     fun setMyLocation(location: TraceLocation) {
         myLocation = location
         myLocationMarker?.position = LatLng(location.latitude, location.longitude)
+        if(isFirstSetMyLocation) {
+            locateMe()
+            isFirstSetMyLocation = false
+        }
         LogUtils.d(map.cameraPosition.target)
     }
 

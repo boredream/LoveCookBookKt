@@ -6,7 +6,8 @@ import com.boredream.lovebook.data.TraceRecord
 import com.boredream.lovebook.net.ApiService
 import javax.inject.Inject
 
-class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiService): TraceRecordDataSource {
+class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiService) :
+    TraceRecordDataSource {
 
     override suspend fun add(data: TraceRecord): ResponseEntity<TraceRecord> {
         // 提交数据时，放在 traceListStr里，减少报文大小
@@ -17,7 +18,7 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
                     .append(",").append(it.latitude)
                     .append(",").append(it.longitude)
             }
-            if(sb.isNotEmpty()) {
+            if (sb.isNotEmpty()) {
                 data.traceListStr = sb.substring(1)
             }
             it.clear()
@@ -52,5 +53,8 @@ class TraceRecordRemoteDataSource @Inject constructor(private val service: ApiSe
             ResponseEntity.httpError(e)
         }
     }
+
+    suspend fun getTraceRecordListBySyncTimestamp(localTimestamp: Long) =
+        service.getTraceRecordListBySyncTimestamp(localTimestamp)
 
 }
