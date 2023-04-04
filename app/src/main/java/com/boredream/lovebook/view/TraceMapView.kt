@@ -4,13 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.amap.api.maps.AMap.OnCameraChangeListener
-import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
+import com.blankj.utilcode.util.FileIOUtils
+import com.blankj.utilcode.util.FileIOUtils.readFile2BytesByStream
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.utils.FileUtils
+import com.loc.ef.F
 
 
 /**
@@ -41,6 +44,15 @@ class TraceMapView : MapView {
         map?.let {
             it.uiSettings.isScaleControlsEnabled = false
             it.uiSettings.isZoomControlsEnabled = false
+            // 高德自定义样式 https://geohub.amap.com/mapstyle
+            // TODO: 道路还有箭头？
+            val styleData = FileUtils.readBytesFromAssets(context, "mapstyle/style.data")
+            val styleExtraData = FileUtils.readBytesFromAssets(context, "mapstyle/style_extra.data")
+            val styleOptions = CustomMapStyleOptions()
+                .setEnable(true)
+                .setStyleData(styleData)
+                .setStyleExtraData(styleExtraData)
+            it.setCustomMapStyle(styleOptions)
             it.addOnCameraChangeListener(object : OnCameraChangeListener {
                 override fun onCameraChange(position: CameraPosition?) {
 
@@ -68,7 +80,7 @@ class TraceMapView : MapView {
     fun setMyLocation(location: TraceLocation) {
         myLocation = location
         myLocationMarker?.position = LatLng(location.latitude, location.longitude)
-        if(isFirstSetMyLocation) {
+        if (isFirstSetMyLocation) {
             locateMe()
             isFirstSetMyLocation = false
         }
@@ -106,10 +118,14 @@ class TraceMapView : MapView {
      * 绘制多条不会变化的线路
      */
     fun drawMultiFixTraceList(multiTracePointList: ArrayList<ArrayList<TraceLocation>>) {
+        // TODO: 如何擦除已绘制路线？
         multiTracePointList.forEach { it ->
             val pointList = ArrayList<LatLng>()
             it.forEach { pointList.add(it.toLatLng()) }
-            drawLine(pointList, traceLineColor = ContextCompat.getColor(context, R.color.colorPrimaryLight))
+            drawLine(
+                pointList,
+                traceLineColor = ContextCompat.getColor(context, R.color.colorPrimaryLight)
+            )
         }
     }
 

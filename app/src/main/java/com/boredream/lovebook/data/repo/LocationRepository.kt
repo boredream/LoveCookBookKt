@@ -1,5 +1,7 @@
 package com.boredream.lovebook.data.repo
 
+import com.amap.api.maps.AMapUtils
+import com.amap.api.maps.model.LatLng
 import com.boredream.lovebook.data.TraceLocation
 import com.boredream.lovebook.data.repo.source.LocationDataSource
 import com.boredream.lovebook.utils.TraceFilter
@@ -127,29 +129,22 @@ class LocationRepository @Inject constructor(
      * 添加定位轨迹追踪点
      */
     private fun appendTracePoint(location: TraceLocation) {
-        // FIXME: 暂时记录原始数据，用于调试
-//        if(!traceFilter.filterPos(location)) {
-//            return
-//        }
-
-        traceList.add(location)
-        onTraceSuccess.forEach { it.invoke(traceList) }
-
-//        // 计算新的point和上一个定位point距离
-//        val lastPointLat = if (traceList.size == 0) 0.0 else traceList[0].latitude
-//        val lastPointLng = if (traceList.size == 0) 0.0 else traceList[0].longitude
-//        val distance = AMapUtils.calculateLineDistance(
-//            LatLng(lastPointLat, lastPointLng),
-//            LatLng(location.latitude, location.longitude)
-//        )
-//        if (distance > TRACE_DISTANCE_THRESHOLD) {
-//            // 移动距离统计阈值
-//            traceList.add(location)
-//            onTraceSuccess.invoke(traceList)
-//        } else {
-//            // 距离达不到阈值时，视为原地不动，只更新最新一次时间？
-//            traceList[traceList.lastIndex].time = location.time
-//        }
+        // 计算新的point和上一个定位point距离
+        val lastPoint = traceList[traceList.lastIndex]
+        val distance = AMapUtils.calculateLineDistance(
+            LatLng(lastPoint.latitude, lastPoint.longitude),
+            LatLng(location.latitude, location.longitude)
+        )
+        // 最大距离是时间差值可以走出的最远距离，按每秒10米算
+        val maxDistance = 0.01 * (location.time - lastPoint.time)
+        if (distance > TRACE_DISTANCE_THRESHOLD && distance < maxDistance) {
+            // 移动距离设置阈值，且不能超过最大值（过滤坐标漂移的数据）
+            traceList.add(location)
+            onTraceSuccess.forEach { it.invoke(traceList) }
+        } else {
+            // 距离达不到阈值时，视为原地不动，只更新最新一次时间？
+            traceList[traceList.lastIndex].time = location.time
+        }
     }
 
 }
