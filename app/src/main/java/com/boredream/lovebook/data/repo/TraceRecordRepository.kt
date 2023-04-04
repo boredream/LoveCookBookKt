@@ -4,6 +4,7 @@ import com.blankj.utilcode.util.CollectionUtils
 import com.boredream.lovebook.base.BaseRepository
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceRecord
+import com.boredream.lovebook.data.constant.CommonConstant
 import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource
 import com.boredream.lovebook.data.repo.source.ConfigLocalDataSource.Companion.DATA_SYNC_TIMESTAMP_KEY
 import com.boredream.lovebook.data.repo.source.TraceRecordLocalDataSource
@@ -26,7 +27,6 @@ class TraceRecordRepository @Inject constructor(
     suspend fun syncDataPull() {
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
         val localTimestamp = configDataSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
-//        val localTimestamp = 1680591029400L
 
         // 不关注 response
         try {
@@ -71,14 +71,16 @@ class TraceRecordRepository @Inject constructor(
         targetLat: Double,
         targetLng: Double
     ): ResponseEntity<ArrayList<TraceRecord>> {
-        // 查询附近线路
-        val range = 0.00001 * 1000
+        // 查询附近线路 5km
+        val rangeMeter = 5000
+        val range = CommonConstant.ONE_METER_LAT_LNG * rangeMeter
         val traceRecordList = localDataSource.getNearbyList(targetLat, targetLng, range)
         // 查询线路下所有轨迹
         if(traceRecordList.isSuccess()) {
             traceRecordList.getSuccessData().forEach {
                 it.traceList = localDataSource.getTraceLocationList(it.dbId).data
             }
+            logger.i("near 「${rangeMeter}米」 history list size = ${traceRecordList.getSuccessData().size}")
         }
         return traceRecordList
     }

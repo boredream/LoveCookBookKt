@@ -74,11 +74,11 @@ class TraceRecordLocalDataSourceTest {
         nearRecord.traceList = ArrayList(nearLocationList)
         dataSource.add(nearRecord)
 
-        // far 120.001 ~ 120.005
+        // near 121.0001 ~ 121.0005
         val farRecord = TraceRecord("远", 0, 0, 0)
         val farLocationList = mutableListOf<TraceLocation>()
         for (i in 1..5) {
-            farLocationList.add(TraceLocation(targetLat + i * 0.001, targetLng))
+            farLocationList.add(TraceLocation(targetLat + 1 + i * 0.0001, targetLng))
         }
         farRecord.traceList = ArrayList(farLocationList)
         dataSource.add(farRecord)
@@ -86,9 +86,10 @@ class TraceRecordLocalDataSourceTest {
         // assert
         Assert.assertEquals(2, dataSource.getList().getSuccessData().size)
 
-        // find 120 +- 0.1
-        val range = 0.1
+        // find 120 +- 0.001
+        val range = 0.001
         val response = dataSource.getNearbyList(targetLat, targetLng, range)
         Assert.assertEquals(1, response.getSuccessData().size)
+        Assert.assertEquals("近", response.getSuccessData()[0].name)
     }
 }

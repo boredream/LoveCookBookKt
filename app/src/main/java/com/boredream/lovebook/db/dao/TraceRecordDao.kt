@@ -14,7 +14,7 @@ interface TraceRecordDao {
     @Query("SELECT * FROM TraceRecord WHERE isDelete = 0 limit :limit offset :offset")
     suspend fun loadByPage(limit: Int, offset: Int): List<TraceRecord>
 
-    @Query("SELECT * FROM TraceRecord WHERE isDelete = 0")
+    @Query("SELECT * FROM TraceRecord WHERE isDelete = 0 order by startTime desc")
     suspend fun loadAll(): List<TraceRecord>
 
     @Query("SELECT * FROM TraceRecord WHERE dbId = :dbId")
@@ -29,7 +29,7 @@ interface TraceRecordDao {
     @Update
     suspend fun update(data: TraceRecord): Int
 
-    @Query( "SELECT * FROM TraceRecord WHERE isDelete = 0 AND id IN (SELECT DISTINCT traceRecordId FROM TraceLocation WHERE " +
+    @Query( "SELECT * FROM TraceRecord WHERE isDelete = 0 AND dbId IN (SELECT DISTINCT traceRecordId FROM TraceLocation WHERE " +
                 "latitude BETWEEN :minLat AND :maxLat AND longitude BETWEEN :minLng AND :maxLng)")
     suspend fun loadNearby(
         minLat: Double, maxLat: Double,

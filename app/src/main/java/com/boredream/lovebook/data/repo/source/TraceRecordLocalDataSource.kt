@@ -73,8 +73,8 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
             val maxLat = targetLat + range
             val minLng = targetLng - range
             val maxLng = targetLng + range
-//            val list = traceRecordDao.loadNearby(minLat, maxLat, minLng, maxLng)
-            val list = traceRecordDao.loadAll()
+            val list = traceRecordDao.loadNearby(minLat, maxLat, minLng, maxLng)
+//            val list = traceRecordDao.loadAll()
             print("minLat=$minLat, maxLat=$maxLat, minLng=$minLng, maxLng=$maxLng")
             ResponseEntity.success(ArrayList(list))
         } catch (e: Exception) {
