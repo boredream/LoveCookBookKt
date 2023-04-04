@@ -16,8 +16,8 @@ import kotlin.collections.ArrayList
 
 object ServiceCreator {
 
-//    private const val HOST = "https://www.papikoala.cn/api/"
-    private const val HOST = "http://localhost:8080/api/"
+    private const val HOST = "https://www.papikoala.cn/api/"
+//    private const val HOST = "http://localhost:8080/api/"
     private const val TOKEN_KEY = "token"
     private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 10L

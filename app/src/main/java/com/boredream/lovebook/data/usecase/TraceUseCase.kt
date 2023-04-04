@@ -75,16 +75,18 @@ class TraceUseCase @Inject constructor(
 
     /**
      * 获取所有历史轨迹
-     * TODO 只获取附近的
      */
     suspend fun getAllHistoryTraceListRecord(): ResponseEntity<ArrayList<TraceRecord>> {
-        val recordList = traceRecordRepository.getList()
+        val myLocation = getMyLocation() ?: return ResponseEntity.notExistError()
+        // TODO: 我的位置不停的变化，变化后如何处理？重新获取？
+        val recordList = traceRecordRepository.getNearHistoryTraceList(myLocation.latitude, myLocation.longitude)
         if(recordList.isSuccess() && recordList.data != null) {
             recordList.data.forEach {
-                it.traceList = traceRecordRepository.getLocationList(it.dbId).data
+                val locationList = traceRecordRepository.getLocationList(it.dbId).data
+                it.traceList = locationList
             }
         }
-        return traceRecordRepository.getList()
+        return recordList
     }
 
     // TODO: 回调适合用函数吗？

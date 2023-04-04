@@ -1,11 +1,21 @@
 package com.boredream.lovebook.data
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.TimeUtils
 import com.boredream.lovebook.base.BaseEntity
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = TraceRecord::class,
+            parentColumns = ["dbId"],
+            childColumns = ["traceRecordId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 open class TraceLocation(
     var latitude: Double,
     var longitude: Double,

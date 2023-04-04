@@ -26,6 +26,7 @@ class TraceRecordRepository @Inject constructor(
     suspend fun syncDataPull() {
         // 服务端把本地时间戳之后的所有数据都查询出来，一次性返回给前端
         val localTimestamp = configDataSource.getLong(DATA_SYNC_TIMESTAMP_KEY)
+//        val localTimestamp = 1680591029400L
 
         // 不关注 response
         try {
@@ -40,7 +41,9 @@ class TraceRecordRepository @Inject constructor(
                     // 2. 如果本地数据不存在，或者已经同步到服务器过了，直接覆盖
                     if (localRecord == null || localRecord.synced) {
                         // 还要拉取location list
-                        traceRecord.id?.let { traceRecord.traceList = remoteDataSource.getTraceLocationList(it).data }
+                        traceRecord.id?.let {
+                            traceRecord.traceList = remoteDataSource.getTraceLocationList(it).data
+                        }
                         logger.i("pull and save data = ${traceRecord.name} , location size = ${traceRecord.traceList?.size}")
                         updateSyncTime(traceRecord.syncTimestamp)
                         add(traceRecord)
@@ -64,6 +67,22 @@ class TraceRecordRepository @Inject constructor(
 
     suspend fun getList() = localDataSource.getList()
 
+    suspend fun getNearHistoryTraceList(
+        targetLat: Double,
+        targetLng: Double
+    ): ResponseEntity<ArrayList<TraceRecord>> {
+        // 查询附近线路
+        val range = 0.00001 * 1000
+        val traceRecordList = localDataSource.getNearbyList(targetLat, targetLng, range)
+        // 查询线路下所有轨迹
+        if(traceRecordList.isSuccess()) {
+            traceRecordList.getSuccessData().forEach {
+                it.traceList = localDataSource.getTraceLocationList(it.dbId).data
+            }
+        }
+        return traceRecordList
+    }
+
     suspend fun getLocationList(traceRecordDbId: String) =
         localDataSource.getTraceLocationList(traceRecordDbId)
 
@@ -74,14 +93,16 @@ class TraceRecordRepository @Inject constructor(
             remoteDataSource.update(data)
         } else {
             // 如果是add新数据，同时要把location list数据也带着
-            if(CollectionUtils.isEmpty(data.traceList)) {
+            if (CollectionUtils.isEmpty(data.traceList)) {
                 data.traceList = localDataSource.getTraceLocationList(data.dbId).data
             }
             remoteDataSource.add(data)
         }
         if (response.isSuccess() && response.data != null) {
-            logger.i("push success: ${response.data.name} , " +
-                    "local update syncTimestamp = ${response.data.syncTimestamp}")
+            logger.i(
+                "push success: ${response.data.name} , " +
+                        "local update syncTimestamp = ${response.data.syncTimestamp}"
+            )
             localDataSource.update(response.data)
             updateSyncTime(response.data.syncTimestamp)
         }

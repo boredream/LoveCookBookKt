@@ -2,6 +2,8 @@ package com.boredream.lovebook.db.dao
 
 import androidx.room.*
 import com.boredream.lovebook.data.TraceRecord
+import okhttp3.Route
+
 
 @Dao
 interface TraceRecordDao {
@@ -26,5 +28,12 @@ interface TraceRecordDao {
 
     @Update
     suspend fun update(data: TraceRecord): Int
+
+    @Query( "SELECT * FROM TraceRecord WHERE isDelete = 0 AND id IN (SELECT DISTINCT traceRecordId FROM TraceLocation WHERE " +
+                "latitude BETWEEN :minLat AND :maxLat AND longitude BETWEEN :minLng AND :maxLng)")
+    suspend fun loadNearby(
+        minLat: Double, maxLat: Double,
+        minLng: Double, maxLng: Double
+    ): List<TraceRecord>
 
 }

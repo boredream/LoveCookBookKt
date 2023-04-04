@@ -1,7 +1,6 @@
 package com.boredream.lovebook.data.repo.source
 
 import androidx.room.Transaction
-import com.amap.api.mapcore.util.it
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.data.ResponseEntity
 import com.boredream.lovebook.data.TraceLocation
@@ -60,6 +59,24 @@ class TraceRecordLocalDataSource @Inject constructor(appDatabase: AppDatabase) :
     suspend fun getList(): ResponseEntity<ArrayList<TraceRecord>> {
         return try {
             ResponseEntity.success(ArrayList(traceRecordDao.loadAll()))
+        } catch (e: Exception) {
+            ResponseEntity(null, 500, e.toString())
+        }
+    }
+
+    suspend fun getNearbyList(targetLat: Double, targetLng: Double, range: Double): ResponseEntity<ArrayList<TraceRecord>> {
+        return try {
+//            val range = AMapUtils.calculateLineDistance(
+//                LatLng(targetLat, targetLng),
+//                LatLng(targetLat, targetLng))
+            val minLat = targetLat - range
+            val maxLat = targetLat + range
+            val minLng = targetLng - range
+            val maxLng = targetLng + range
+//            val list = traceRecordDao.loadNearby(minLat, maxLat, minLng, maxLng)
+            val list = traceRecordDao.loadAll()
+            print("minLat=$minLat, maxLat=$maxLat, minLng=$minLng, maxLng=$maxLng")
+            ResponseEntity.success(ArrayList(list))
         } catch (e: Exception) {
             ResponseEntity(null, 500, e.toString())
         }

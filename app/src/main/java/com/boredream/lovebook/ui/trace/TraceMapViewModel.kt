@@ -73,6 +73,8 @@ class TraceMapViewModel @Inject constructor(
                 }
                 _historyTracePointListUiState.value = historyList
             }
+        } else {
+            _historyTracePointListUiState.value = ArrayList()
         }
     }
 
@@ -81,10 +83,8 @@ class TraceMapViewModel @Inject constructor(
      */
     fun toggleTrace() {
         if (traceUseCase.isTracing()) {
-            traceUseCase.stopTrace()
             // 停止轨迹跟踪后，提示保存路径
             _uiEvent.value = ShowSaveConfirmDialog
-            // TODO: 路径缓存在本地，防止未保存等情况就直接关闭app丢失数据情况
         } else {
             traceUseCase.startTrace()
         }
@@ -110,6 +110,7 @@ class TraceMapViewModel @Inject constructor(
      * 保存当前轨迹
      */
     fun saveTrace() {
+        traceUseCase.stopTrace()
         commitVMCompose.request { traceUseCase.saveTraceRecord() }
     }
 
