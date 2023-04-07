@@ -2,7 +2,6 @@ package com.boredream.lovebook.db.dao
 
 import androidx.room.*
 import com.boredream.lovebook.data.TraceRecord
-import okhttp3.Route
 
 
 @Dao

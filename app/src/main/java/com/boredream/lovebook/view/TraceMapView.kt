@@ -1,19 +1,26 @@
 package com.boredream.lovebook.view
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.amap.api.maps.AMap.OnCameraChangeListener
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
-import com.blankj.utilcode.util.FileIOUtils
-import com.blankj.utilcode.util.FileIOUtils.readFile2BytesByStream
+import com.amap.api.services.district.DistrictSearch
+import com.amap.api.services.district.DistrictSearchQuery
 import com.blankj.utilcode.util.LogUtils
 import com.boredream.lovebook.R
 import com.boredream.lovebook.data.TraceLocation
+import com.boredream.lovebook.data.constant.CommonConstant
 import com.boredream.lovebook.utils.FileUtils
-import com.loc.ef.F
+import org.locationtech.jts.geom.Coordinate
+import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.operation.buffer.BufferOp
+import org.locationtech.jts.operation.buffer.BufferParameters
+import org.locationtech.jts.simplify.DouglasPeuckerSimplifier
 
 
 /**
@@ -106,12 +113,10 @@ class TraceMapView : MapView {
             pointList.add(allTracePointList[i].toLatLng())
         }
         val line = drawLine(pointList)
-        if (line != null) {
-            // 绘制完成后，更新 startDrawIndex
-            val newIndex = allTracePointList.lastIndex
-            println("drawTraceList $startDrawIndex to $newIndex")
-            startDrawIndex = newIndex
-        }
+        // 绘制完成后，更新 startDrawIndex
+        val newIndex = allTracePointList.lastIndex
+        println("drawTraceList $startDrawIndex to $newIndex")
+        startDrawIndex = newIndex
     }
 
     /**
@@ -126,6 +131,55 @@ class TraceMapView : MapView {
                 pointList,
                 traceLineColor = ContextCompat.getColor(context, R.color.colorPrimaryLight)
             )
+
+            var start = System.currentTimeMillis()
+            // 先经纬度转为jts的line对象
+            val factory = GeometryFactory()
+            val coordinateList = arrayListOf<Coordinate>()
+            pointList.forEach { coordinateList.add(Coordinate(it.latitude, it.longitude))}
+            val line = factory.createLineString(coordinateList.toTypedArray())
+
+            // 简化线的几何形状
+            val tolerance = CommonConstant.ONE_METER_LAT_LNG * 20 // 简化容差
+            val simplifier = DouglasPeuckerSimplifier(line)
+            simplifier.setDistanceTolerance(tolerance)
+            val simplifiedLine: Geometry = simplifier.resultGeometry
+
+            val simplePointList = simplifiedLine.coordinates.map { LatLng(it.x + CommonConstant.ONE_METER_LAT_LNG * 200, it.y) }
+            drawLine(
+                ArrayList(simplePointList),
+                traceLineColor = ContextCompat.getColor(context, R.color.txt_oran)
+            )
+            LogUtils.i("drawMultiFixTraceList simple line duration ${System.currentTimeMillis() - start}")
+
+            // 绘制区域
+            // 计算线的缓冲区
+            val bufferParams = BufferParameters()
+            bufferParams.endCapStyle = BufferParameters.CAP_ROUND
+            bufferParams.joinStyle = BufferParameters.JOIN_ROUND
+            start = System.currentTimeMillis()
+            val bufferOp = BufferOp(simplifiedLine, bufferParams)
+            val width = CommonConstant.ONE_METER_LAT_LNG * 50
+            val polygon  = bufferOp.getResultGeometry(width) as org.locationtech.jts.geom.Polygon
+            LogUtils.i("drawMultiFixTraceList line buffer duration ${System.currentTimeMillis() - start}")
+
+            // 注意环的情况
+            val polygonOptions = PolygonOptions()
+                .addAll(polygon.exteriorRing.coordinates.map { LatLng(it.x, it.y) })
+                .fillColor(Color.argb(150, 255, 0, 0))
+                .strokeWidth(0f)
+
+            if(polygon.numInteriorRing > 0) {
+                // TODO: 环如果过小，可以省略
+                for(index in 0 until polygon.numInteriorRing) {
+                    LogUtils.i("draw polygon hole = $index")
+                    val inter = polygon.getInteriorRingN(index).coordinates.map { LatLng(it.x, it.y) }
+                    polygonOptions.addHoles(PolygonHoleOptions().addAll(inter))
+                }
+            }
+            start = System.currentTimeMillis()
+            map.addPolygon(polygonOptions)
+            LogUtils.i("drawMultiFixTraceList addPolygon duration ${System.currentTimeMillis() - start}")
         }
     }
 
@@ -133,11 +187,9 @@ class TraceMapView : MapView {
         pointList: ArrayList<LatLng>,
         traceLineWidth: Float = 15f,
         traceLineColor: Int = ContextCompat.getColor(context, R.color.colorPrimary)
-    ): Polyline? {
+    ) {
         // TODO: 中途有多个点定位失败，然后走出很远距离后，再次定位成功（如坐地铁），应该分多条线绘制
-        return map.addPolyline(
-            PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor)
-        )
+        map.addPolyline(PolylineOptions().addAll(pointList).width(traceLineWidth).color(traceLineColor))
     }
 
     private fun TraceLocation.toLatLng(): LatLng {

@@ -44,7 +44,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         fragmentList.add(MineFragment())
 
         val controller = FragmentController(navView, supportFragmentManager, R.id.fl_fragment, fragmentList)
-        controller.initFragment()
+        controller.initFragment(savedInstanceState)
     }
 
 }

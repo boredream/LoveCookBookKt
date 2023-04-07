@@ -129,14 +129,20 @@ class LocationRepository @Inject constructor(
      * 添加定位轨迹追踪点
      */
     private fun appendTracePoint(location: TraceLocation) {
+        if(traceList.size == 0) {
+            traceList.add(location)
+            onTraceSuccess.forEach { it.invoke(traceList) }
+            return
+        }
+
         // 计算新的point和上一个定位point距离
         val lastPoint = traceList[traceList.lastIndex]
         val distance = AMapUtils.calculateLineDistance(
             LatLng(lastPoint.latitude, lastPoint.longitude),
             LatLng(location.latitude, location.longitude)
         )
-        // 最大距离是时间差值可以走出的最远距离，按每秒10米算
-        val maxDistance = 0.01 * (location.time - lastPoint.time)
+        // 最大距离是时间差值可以走出的最远距离，按每秒20米算
+        val maxDistance = 0.02 * (location.time - lastPoint.time)
         if (distance > TRACE_DISTANCE_THRESHOLD && distance < maxDistance) {
             // 移动距离设置阈值，且不能超过最大值（过滤坐标漂移的数据）
             traceList.add(location)

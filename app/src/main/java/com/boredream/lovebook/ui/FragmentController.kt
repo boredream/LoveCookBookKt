@@ -1,5 +1,6 @@
 package com.boredream.lovebook.ui
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.boredream.lovebook.R
@@ -14,10 +15,13 @@ class FragmentController(
     private val fragmentList: ArrayList<BaseFragment<*, *>>
 ) {
 
-    fun initFragment() {
+    fun initFragment(savedInstanceState: Bundle?) {
         val ft: FragmentTransaction = fm.beginTransaction()
         for (i in 0 until fragmentList.size) {
-            ft.add(containerId, fragmentList[i], i.toString())
+            val tag = i.toString()
+            if (savedInstanceState == null || fm.findFragmentByTag(tag) == null) {
+                ft.add(containerId, fragmentList[i], tag)
+            }
         }
         ft.commitAllowingStateLoss()
         nav.setOnItemSelectedListener { item ->

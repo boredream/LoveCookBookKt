@@ -163,6 +163,7 @@ dependencies {
     // map version + 0.1需要隐私协议
     implementation 'com.amap.api:3dmap:8.0.0'
     implementation 'com.amap.api:location:5.5.0'
+    implementation 'com.amap.api:search:7.9.0'
 
     // view refresh
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
